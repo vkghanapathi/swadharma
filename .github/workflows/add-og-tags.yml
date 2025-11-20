@@ -1,1 +1,41 @@
+name: Auto Insert OG Tags
+
+on:
+  push:
+    paths:
+      - "**/*.html"
+
+permissions:
+  contents: write
+
+jobs:
+  insert-og:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Add OG tags to missing HTML files
+        run: |
+          for f in $(find . -name "*.html"); do
+            if ! grep -q 'og:title' "$f"; then
+              echo "Adding OG tags to $f"
+              sed -i 's|<title>|<meta property="og:title" content="Swadharma — Vedic Knowledge Portal">\n<meta property="og:description" content="Explore scholar-reviewed answers on Dharma, Veda, Sanskrit, and Indian heritage.">\n<meta property="og:type" content="website">\n<meta property="og:image" content="/assets/swadharma-share.png">\n<meta property="og:url" content="https://swadharma.dharmaposhanam.in">\n<meta name="twitter:card" content="summary_large_image">\n<title>|' "$f"
+            else
+              echo "OG tags already present in $f"
+            fi
+          done
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "admin@dharmaposhanam.in"
+          git config --local user.name "Swadharma Auto Formatter"
+          if [[ -n $(git status --porcelain) ]]; then
+            git add .
+            git commit -m "Auto-add OG tags to HTML files"
+            git push
+          else
+            echo "No changes to commit."
+          fi
 
