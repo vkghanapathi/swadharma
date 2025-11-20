@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Browse Questions — Swadharma</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-[#FAF7EF] text-[#1F2937]">
+  <header class="bg-white shadow-sm">
+    <div class="max-w-5xl mx-auto p-4 flex items-center justify-between">
+      <h1 class="text-2xl font-bold text-[#D97706]">स्वधर्म • Swadharma</h1>
+      <nav class="space-x-4 text-lg">
+        <a href="/" class="hover:text-[#D97706]">Home</a>
+        <a href="/submit.html" class="hover:text-[#D97706]">Ask</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto p-6">
+    <h2 class="text-2xl font-semibold text-[#1E3A8A] mb-4">Browse Published Questions</h2>
+
+    <div class="mb-4 flex gap-3">
+      <input id="qsearch" class="flex-1 p-3 border rounded"
+        placeholder="Search by keyword, title, or language">
+
+      <select id="langFilter" class="p-3 border rounded">
+        <option value="">All languages</option>
+      </select>
+
+      <label class="flex items-center space-x-2">
+        <input type="checkbox" id="showAll"> <span>Show all pages</span>
+      </label>
+    </div>
+
+    <div id="list" class="space-y-4"></div>
+
+    <template id="itemTpl">
+      <div class="p-4 bg-white rounded-xl shadow">
+        <a class="title text-lg font-semibold" href="#"></a>
+        <div class="meta text-sm text-gray-600 mt-1"></div>
+        <p class="excerpt text-sm mt-2 text-gray-700"></p>
+      </div>
+    </template>
+  </main>
+
+  <footer class="text-center text-gray-600 p-6">
+    © 2025 Swadharma •
+    <a href="mailto:swadharma@dharmaposhanam.in">
+      swadharma@dharmaposhanam.in
+    </a>
+  </footer>
+
+<script>
+async function loadIndex() {
+  try {
+    const res = await fetch('/q/index.json');
+    const items = await res.json();
+    window.SW_ITEMS = items;
+
+    const langs = new Set(items.map(i => i.lang || 'en'));
+    const langFilter = document.getElementById('langFilter');
+
+    for (const l of Array.from(langs).sort()) {
+      const opt = document.createElement('option');
+      opt.value = l;
+      opt.textContent = l;
+      langFilter.appendChild(opt);
+    }
+
+    render(items);
+  } catch (e) {
+    document.getElementById('list').innerHTML =
+      '<div class="text-red-600">Failed to load index.json</div>';
+  }
+}
+
+function render(items) {
+  const container = document.getElementById('list');
+  container.innerHTML = '';
+
+  const tpl = document.getElementById('itemTpl');
+  const query = (document.getElementById('qsearch').value || '').toLowerCase();
+  const lang = document.getElementById('langFilter').value;
+  const showAll = document.getElementById('showAll').checked;
+
+  const filtered = items.filter(i => {
+    if (lang && i.lang !== lang) return false;
+    if (!query) return true;
+    return (
+      (i.title || '').toLowerCase().includes(query) ||
+      (i.excerpt || '').toLowerCase().includes(query) ||
+      (i.tags || '').toLowerCase().includes(query)
+    );
+  });
+
+  const list = showAll ? filtered : filtered;
+  for (const it of list) {
+    const node = tpl.content.cloneNode(true);
+    const a = node.querySelector('a.title');
+
+    a.href = '/q/' + it.slug + '.html';
+    a.textContent = it.title;
+
+    node.querySelector('.meta').textContent =
+      (it.lang || 'en') + ' • ' + (it.date || '');
+
+    node.querySelector('.excerpt').textContent = it.excerpt || '';
+
+    container.appendChild(node);
+  }
+}
+
+document.getElementById('qsearch').addEventListener('input',
+  () => render(window.SW_ITEMS || []));
+
+document.getElementById('langFilter').addEventListener('change',
+  () => render(window.SW_ITEMS || []));
+
+document.getElementById('showAll').addEventListener('change',
+  () => render(window.SW_ITEMS || []));
+
+loadIndex();
+</script>
+
+</body>
+</html>
