@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ask a Question — Swadharma</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-[#FAF7EF] text-[#1F2937]">
+  <header class="bg-white shadow-sm">
+    <div class="max-w-4xl mx-auto flex items-center justify-between p-4">
+      <h1 class="text-2xl font-bold text-[#D97706]">स्वधर्म • Swadharma</h1>
+      <nav class="space-x-4 text-lg">
+        <a href="/" class="hover:text-[#D97706]">Home</a>
+        <a href="/browse.html" class="hover:text-[#D97706]">Browse</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto p-6">
+    <h2 class="text-2xl font-semibold text-[#1E3A8A] mb-4">Submit Your Question</h2>
+
+    <form id="qform" class="space-y-4 bg-white p-6 rounded-xl shadow">
+
+      <label class="block">
+        <span class="text-sm font-medium">Language</span>
+        <select id="language" class="mt-1 block w-full p-2 border rounded">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी</option>
+          <option value="sa">संस्कृतम्</option>
+          <option value="te">తెలుగు</option>
+          <option value="ta">தமிழ்</option>
+        </select>
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-medium">Title</span>
+        <input id="title" required class="mt-1 block w-full p-2 border rounded"
+               placeholder="Short title of your question">
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-medium">Question (details)</span>
+        <textarea id="body" rows="6" required class="mt-1 block w-full p-2 border rounded"
+                  placeholder="Describe your question clearly"></textarea>
+      </label>
+
+      <label class="block">
+        <span class="text-sm">Name (optional)</span>
+        <input id="name" class="mt-1 block w-full p-2 border rounded"
+               placeholder="Your name (optional)">
+      </label>
+
+      <label class="block">
+        <span class="text-sm">Contact (email — optional)</span>
+        <input id="contact" type="email" class="mt-1 block w-full p-2 border rounded"
+               placeholder="you@example.com (optional)">
+      </label>
+
+      <div class="flex items-center justify-between">
+        <label class="flex items-center space-x-2">
+          <input id="anon" type="checkbox" checked>
+          <span class="text-sm">Submit anonymously</span>
+        </label>
+
+        <button id="submitBtn" type="button"
+          class="bg-[#D97706] text-white px-4 py-2 rounded">
+          Submit
+        </button>
+      </div>
+
+      <div id="msg" class="text-sm text-green-700 hidden">Submitted.</div>
+    </form>
+
+    <script>
+    document.getElementById('submitBtn').addEventListener('click', async () => {
+      const payload = {
+        language: document.getElementById('language').value,
+        title: document.getElementById('title').value,
+        body: document.getElementById('body').value,
+        submitter_name: document.getElementById('name').value || null,
+        submitter_contact: document.getElementById('contact').value || null,
+        anonymous: document.getElementById('anon').checked
+      };
+
+      try {
+        const res = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        document.getElementById('msg').classList.remove('hidden');
+        document.getElementById('msg').textContent =
+          'Submitted. Reference ID: ' + (data.id || data.slug || '');
+        document.getElementById('qform').reset();
+
+      } catch (e) {
+        alert('Submission failed. Try again later.');
+      }
+    });
+    </script>
+  </main>
+
+  <footer class="text-center text-gray-600 p-6">
+    Contact:
+    <a href="mailto:swadharma@dharmaposhanam.in">swadharma@dharmaposhanam.in</a>
+  </footer>
+</body>
+</html>
