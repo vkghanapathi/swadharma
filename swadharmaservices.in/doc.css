@@ -1,0 +1,138 @@
+/* Swadharma Services — shared styles for document pages (manual, privacy).
+   Tokens mirror the :root block in index.html; keep them in step if that changes. */
+
+:root {
+    --sw-navy: #1F3569;
+    --sw-navy-dark: #152347;
+    --sw-navy-light: #EAEEF7;
+    --sw-gold: #C89939;
+    --sw-gold-dark: #9E7724;
+    --sw-saffron: #0F766E;
+    --sw-saffron-dark: #0B5A54;
+    --sw-saffron-light: #E6F4F1;
+    --sw-cream: #F4F8F6;
+    --sw-text: #1F2A37;
+    --sw-muted: #51606E;
+    --sw-border: #D6DEDA;
+    --sw-border-soft: #E8EFEB;
+    --sw-radius: 10px;
+    --sw-radius-lg: 14px;
+    --sw-shadow: 0 1px 3px rgba(31, 53, 105, 0.06), 0 4px 12px rgba(31, 53, 105, 0.06);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--sw-cream);
+    color: var(--sw-text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
+
+/* ---- top bar ---- */
+.topbar {
+    background: var(--sw-navy);
+    color: #fff;
+    padding: 14px 0;
+    border-bottom: 3px solid var(--sw-gold);
+}
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.topbar .brand { font-family: Georgia, serif; font-size: 19px; color: var(--sw-gold); text-decoration: none; font-weight: 700; }
+.topbar .brand span { color: rgba(255,255,255,0.9); font-weight: 400; font-size: 15px; }
+.topbar nav a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 14px; margin-left: 18px; }
+.topbar nav a:hover { color: var(--sw-gold); }
+
+/* ---- document head ---- */
+.dochead { padding: 40px 0 8px; }
+.dochead .mark {
+    display: inline-block; font-size: 12px; letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--sw-saffron-dark); background: var(--sw-saffron-light);
+    padding: 5px 12px; border-radius: 999px; margin-bottom: 14px;
+}
+.dochead h1 { font-family: Georgia, serif; font-size: 34px; line-height: 1.2; margin: 0 0 10px; color: var(--sw-navy); }
+.dochead .sub { color: var(--sw-muted); margin: 0; font-size: 16.5px; }
+.dochead .updated { margin-top: 14px; font-size: 13.5px; color: var(--sw-muted); }
+
+/* ---- in-page nav ---- */
+.tocbox {
+    background: #fff; border: 1px solid var(--sw-border); border-radius: var(--sw-radius-lg);
+    padding: 18px 22px; margin: 28px 0 8px; box-shadow: var(--sw-shadow);
+}
+.tocbox h2 { font-size: 13px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--sw-muted); margin: 0 0 12px; }
+.tocbox ol { margin: 0; padding-left: 20px; }
+.tocbox li { margin: 5px 0; }
+.tocbox a { color: var(--sw-navy); text-decoration: none; }
+.tocbox a:hover { color: var(--sw-saffron); text-decoration: underline; }
+
+/* ---- article ---- */
+article { padding: 8px 0 56px; }
+article section { scroll-margin-top: 24px; padding-top: 26px; }
+article h2 {
+    font-family: Georgia, serif; font-size: 25px; color: var(--sw-navy);
+    margin: 30px 0 12px; padding-bottom: 8px; border-bottom: 2px solid var(--sw-border-soft);
+}
+article h3 { font-size: 18px; color: var(--sw-navy-dark); margin: 26px 0 8px; }
+article p { margin: 0 0 14px; }
+article ul, article ol { margin: 0 0 16px; padding-left: 22px; }
+article li { margin: 6px 0; }
+article a { color: var(--sw-saffron-dark); }
+article strong { color: var(--sw-navy-dark); }
+
+/* ---- tables ---- */
+.tablewrap { overflow-x: auto; margin: 0 0 20px; -webkit-overflow-scrolling: touch; }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 15px; background: #fff; }
+th, td { border: 1px solid var(--sw-border); padding: 10px 13px; text-align: left; vertical-align: top; }
+th { background: var(--sw-navy-light); color: var(--sw-navy-dark); font-weight: 600; }
+
+/* ---- callouts ---- */
+.note, .key {
+    border-radius: var(--sw-radius); padding: 16px 20px; margin: 0 0 20px;
+}
+.note { background: #fff; border: 1px solid var(--sw-border); border-left: 4px solid var(--sw-gold); }
+.key  { background: var(--sw-saffron-light); border: 1px solid #BFDDD7; border-left: 4px solid var(--sw-saffron); }
+.note p:last-child, .key p:last-child { margin-bottom: 0; }
+.note .label, .key .label {
+    display: block; font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase;
+    margin-bottom: 6px; font-weight: 700;
+}
+.note .label { color: var(--sw-gold-dark); }
+.key .label { color: var(--sw-saffron-dark); }
+
+.contactcard {
+    background: #fff; border: 1px solid var(--sw-border); border-radius: var(--sw-radius);
+    padding: 16px 20px; margin: 0 0 16px;
+}
+.contactcard p { margin: 3px 0; }
+
+/* ---- footer (matches index.html) ---- */
+footer {
+    background: var(--sw-navy-dark); color: rgba(255,255,255,0.82);
+    text-align: center; padding: 40px 20px; margin-top: 20px;
+}
+footer .fshloka { font-family: Georgia, serif; color: var(--sw-gold); font-size: 16px; margin: 0 0 6px; }
+footer a { color: var(--sw-gold); }
+footer .flinks { margin: 16px 0; display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+footer .flinks a { color: rgba(255,255,255,0.82); font-size: 13.5px; }
+footer .fine { margin-top: 14px; font-size: 12px; color: rgba(255,255,255,0.55); }
+footer .foffices {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px; max-width: 780px; margin: 22px auto 6px;
+}
+footer .foffices div { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.5; }
+footer .foffices b {
+    display: block; color: var(--sw-gold); font-size: 11.5px;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px;
+}
+footer .fnodes { margin-top: 18px; font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.7; }
+footer .fnodes b { color: rgba(255,255,255,0.8); }
+
+@media (max-width: 640px) {
+    .dochead h1 { font-size: 27px; }
+    article h2 { font-size: 21px; }
+    .topbar nav a { margin-left: 0; margin-right: 14px; }
+}

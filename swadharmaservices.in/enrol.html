@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Enrol as a Service Professional · Swadharma Services</title>
+<meta name="description" content="Register as a Purohita, Archaka, Decorator, Cook, Helper or Event Coordinator with Swadharma. Basic details, an empanelment interview, and your own profile page listed by state and town." />
+<meta property="og:title" content="Enrol as a Service Professional · Swadharma Services" />
+<meta property="og:description" content="Register with Swadharma, schedule your empanelment interview, and get a listed profile page." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://swadharmaservices.in/enrol.html" />
+<link rel="icon" href="https://dharmaposhanam.in/favicon.ico" />
+<link rel="stylesheet" href="doc.css" />
+<style>
+/* form-specific styles; page chrome comes from doc.css */
+.formcard { background:#fff; border:1px solid var(--sw-border); border-radius:var(--sw-radius-lg); padding:24px; margin:0 0 22px; box-shadow:var(--sw-shadow); }
+.formcard > h2 { margin-top:0; }
+.step { display:inline-block; width:26px; height:26px; line-height:26px; text-align:center; border-radius:999px; background:var(--sw-navy); color:#fff; font-size:14px; font-weight:700; margin-right:9px; }
+.field { margin:0 0 16px; }
+.field label { display:block; font-size:14px; font-weight:600; color:var(--sw-navy-dark); margin-bottom:5px; }
+.field .hint { display:block; font-weight:400; font-size:13px; color:var(--sw-muted); margin-top:2px; }
+.field input[type=text], .field input[type=email], .field input[type=tel], .field input[type=url], .field select, .field textarea {
+  width:100%; padding:10px 12px; border:1px solid var(--sw-border-strong,#B6C2BC); border-radius:var(--sw-radius);
+  font:inherit; font-size:15px; color:var(--sw-text); background:#fff;
+}
+.field input:focus, .field select:focus, .field textarea:focus { outline:2px solid var(--sw-saffron); outline-offset:1px; border-color:var(--sw-saffron); }
+.row2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:0 16px; }
+.checks { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:8px 16px; }
+.check { display:flex; align-items:flex-start; gap:9px; font-size:14.5px; line-height:1.45; }
+.check input { margin-top:3px; flex:0 0 auto; width:16px; height:16px; }
+.req { color:#B3261E; font-weight:700; }
+.submitrow { display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-top:6px; }
+.btnsub { background:var(--sw-navy); color:#fff; border:1px solid var(--sw-navy); padding:12px 26px; border-radius:var(--sw-radius); font:inherit; font-size:15.5px; font-weight:600; cursor:pointer; }
+.btnsub:hover { background:var(--sw-navy-dark); }
+.btnsub[disabled] { opacity:.55; cursor:not-allowed; }
+.hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+#status { margin-top:16px; }
+#status.err { color:#B3261E; font-weight:600; }
+#status.ok { color:var(--sw-saffron-dark); font-weight:600; }
+</style>
+</head>
+<body>
+
+<!--
+  MAINTAINER NOTES
+  1. BACKEND NOT BUILT. This form POSTs to POST /api/v1/professionals/apply on swadharma-api.
+     That endpoint does not exist yet — M5 (professionals) has no migrations at all.
+     The payload contract is documented in PROFESSIONAL_ENROLMENT_API.md next to this file;
+     build the endpoint to match, then remove the disabled guard in submit().
+  2. Anti-spam is deliberately light. The real gate is downstream: verification interview,
+     per-category badge, admin approval. Nobody reaches a devotee by filling this in.
+     Here: honeypot + required phone + no public listing until verified.
+  3. NO HOME ADDRESS IS COLLECTED. Service area only — the M5 privacy rule is
+     "publish the area, never the residence". Do not add an address field.
+  4. Dravya franchisee options mirror the live programme at dravya-web (5-12% commission /
+     15% stockist). Keep the percentages in step with Dravya, or drop them and link out.
+-->
+
+<div class="topbar">
+    <div class="wrap">
+        <a class="brand" href="index.html">Swadharma <span>· Dharma Satram</span></a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="manual.html#professionals">Manual</a>
+            <a href="privacy.html">Privacy</a>
+        </nav>
+    </div>
+</div>
+
+<div class="wrap">
+    <div class="dochead">
+        <span class="mark">For service professionals</span>
+        <h1>Enrol with Swadharma</h1>
+        <p class="sub">Purohita · Archaka · Decorator · Cook · Helper · Event Coordinator. Register with
+        Swadharma — not with any one temple — and serve devotees across the institutions you choose.</p>
+    </div>
+
+    <div class="key" style="margin-top:22px;">
+        <span class="label">How this works</span>
+        <p><b>1.</b> Fill in the basics below — it takes about three minutes.
+           <b>2.</b> We verify your phone number.
+           <b>3.</b> We schedule a short <b>empanelment interview</b> by video call, for each category
+           you wish to be verified in.
+           <b>4.</b> Once verified you get a <b>profile page</b> on the portal, listed by state and town,
+           carrying your testimonial links.</p>
+        <p style="margin-bottom:0;">Verification is <b>per service category</b> — verified for Abhishekam is not
+        verified for Vivāha. You may decline any engagement, at any time, without penalty.</p>
+    </div>
+
+    <form id="enrolForm" autocomplete="on" novalidate>
+
+        <div class="formcard">
+            <h2><span class="step">1</span>About you</h2>
+
+            <div class="row2">
+                <div class="field">
+                    <label for="fullName">Full name <span class="req">*</span></label>
+                    <input type="text" id="fullName" name="fullName" required maxlength="120" />
+                </div>
+                <div class="field">
+                    <label for="phone">Phone / WhatsApp <span class="req">*</span>
+                        <span class="hint">We send a verification code to this number.</span></label>
+                    <input type="tel" id="phone" name="phone" required maxlength="24" placeholder="+91 …" />
+                </div>
+            </div>
+
+            <div class="row2">
+                <div class="field">
+                    <label for="email">Email <span class="req">*</span></label>
+                    <input type="email" id="email" name="email" required maxlength="160" />
+                </div>
+                <div class="field">
+                    <label for="motherTongue">Mother tongue</label>
+                    <input type="text" id="motherTongue" name="motherTongue" maxlength="60" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="languages">Languages you can serve in
+                    <span class="hint">Comma separated — devotees filter on this.</span></label>
+                <input type="text" id="languages" name="languages" maxlength="200"
+                       placeholder="Telugu, Sanskrit, English, Kannada" />
+            </div>
+        </div>
+
+        <div class="formcard">
+            <h2><span class="step">2</span>What you offer</h2>
+
+            <div class="field">
+                <label>Services <span class="req">*</span>
+                    <span class="hint">Each is verified separately at the interview.</span></label>
+                <div class="checks">
+                    <label class="check"><input type="checkbox" name="categories" value="purohita" /> Purohita</label>
+                    <label class="check"><input type="checkbox" name="categories" value="archaka" /> Archaka</label>
+                    <label class="check"><input type="checkbox" name="categories" value="decorator" /> Decorator</label>
+                    <label class="check"><input type="checkbox" name="categories" value="cook" /> Cook</label>
+                    <label class="check"><input type="checkbox" name="categories" value="helper" /> Helper</label>
+                    <label class="check"><input type="checkbox" name="categories" value="event_coordinator" /> Event coordinator</label>
+                </div>
+            </div>
+
+            <div class="row2">
+                <div class="field">
+                    <label for="veda">Veda <span class="hint">If applicable.</span></label>
+                    <input type="text" id="veda" name="veda" maxlength="60" />
+                </div>
+                <div class="field">
+                    <label for="shakha">Śākhā</label>
+                    <input type="text" id="shakha" name="shakha" maxlength="60" />
+                </div>
+                <div class="field">
+                    <label for="sampradaya">Sampradāya</label>
+                    <input type="text" id="sampradaya" name="sampradaya" maxlength="60" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="experience">Years of practice</label>
+                <input type="text" id="experience" name="experience" maxlength="12" placeholder="e.g. 12" />
+            </div>
+        </div>
+
+        <div class="formcard">
+            <h2><span class="step">3</span>Where you serve</h2>
+            <p class="hint" style="margin:-6px 0 16px;color:var(--sw-muted);font-size:14px;">
+                We list you by <b>state and town</b>, and on a map by service area.
+                <b>We never ask for or publish your home address</b> — only the area you are willing to travel in.</p>
+
+            <div class="row2">
+                <div class="field">
+                    <label for="country">Country <span class="req">*</span></label>
+                    <select id="country" name="country" required>
+                        <option value="">Select…</option>
+                        <option value="IN">India</option>
+                        <option value="US">United States</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="state">State / Province <span class="req">*</span></label>
+                    <input type="text" id="state" name="state" required maxlength="80" />
+                </div>
+                <div class="field">
+                    <label for="town">Town / City <span class="req">*</span></label>
+                    <input type="text" id="town" name="town" required maxlength="80" />
+                </div>
+            </div>
+
+            <div class="row2">
+                <div class="field">
+                    <label for="serviceRadius">How far will you travel?</label>
+                    <select id="serviceRadius" name="serviceRadiusKm">
+                        <option value="">Select…</option>
+                        <option value="10">Within 10 km</option>
+                        <option value="25">Within 25 km</option>
+                        <option value="50">Within 50 km</option>
+                        <option value="100">Within 100 km</option>
+                        <option value="0">Anywhere — I travel for engagements</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="areas">Other towns or districts you serve</label>
+                    <input type="text" id="areas" name="areas" maxlength="240"
+                           placeholder="Rajahmundry, Kakinada, Pithapuram" />
+                </div>
+            </div>
+        </div>
+
+        <div class="formcard">
+            <h2><span class="step">4</span>Testimony</h2>
+            <p class="hint" style="margin:-6px 0 16px;color:var(--sw-muted);font-size:14px;">
+                Links to your work — Facebook, Instagram, YouTube or your own site. <b>These appear on your
+                public profile page</b> once you are verified, so give links you are happy for devotees to see.</p>
+
+            <div class="field">
+                <label for="link1">Link 1</label>
+                <input type="url" id="link1" name="link1" maxlength="300" placeholder="https://youtube.com/…" />
+            </div>
+            <div class="field">
+                <label for="link2">Link 2</label>
+                <input type="url" id="link2" name="link2" maxlength="300" placeholder="https://instagram.com/…" />
+            </div>
+            <div class="field">
+                <label for="link3">Link 3</label>
+                <input type="url" id="link3" name="link3" maxlength="300" placeholder="https://facebook.com/…" />
+            </div>
+            <div class="field">
+                <label for="about">A few lines about your practice
+                    <span class="hint">Shown on your profile page.</span></label>
+                <textarea id="about" name="about" rows="4" maxlength="800"></textarea>
+            </div>
+        </div>
+
+        <div class="formcard">
+            <h2><span class="step">5</span>Your empanelment interview</h2>
+            <p class="hint" style="margin:-6px 0 16px;color:var(--sw-muted);font-size:14px;">
+                A short video call, one per category. We confirm the slot by WhatsApp.</p>
+
+            <div class="row2">
+                <div class="field">
+                    <label for="slotPref">When suits you best?</label>
+                    <select id="slotPref" name="slotPreference">
+                        <option value="">Select…</option>
+                        <option value="weekday_morning">Weekday morning</option>
+                        <option value="weekday_evening">Weekday evening</option>
+                        <option value="weekend_morning">Weekend morning</option>
+                        <option value="weekend_evening">Weekend evening</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="tz">Your time zone</label>
+                    <input type="text" id="tz" name="timezone" maxlength="60" placeholder="IST / CST / GMT" />
+                </div>
+            </div>
+            <div class="field">
+                <label for="institutions">Institutions you would like to be empanelled with
+                    <span class="hint">Optional. You may also serve devotees directly through Swadharma.</span></label>
+                <input type="text" id="institutions" name="institutions" maxlength="240" />
+            </div>
+        </div>
+
+        <div class="formcard" id="dravya">
+            <h2><span class="step">6</span>Dravya kits — optional</h2>
+            <p class="hint" style="margin:-6px 0 16px;color:var(--sw-muted);font-size:14px;">
+                <a href="https://dravya-web-328586595579.asia-southeast1.run.app/" target="_blank" rel="noreferrer">Dravya</a>
+                delivers pooja kits for the samskāras, packed under the guidance of pundits. Empanelled
+                professionals may take part. You can decide this later — it does not affect your empanelment.</p>
+
+            <div class="checks">
+                <label class="check"><input type="checkbox" name="dravya" value="collaborator" />
+                    <span><b>Collaborator</b> — recommend kits to the families you serve, earn a commission on each booking.</span></label>
+                <label class="check"><input type="checkbox" name="dravya" value="stockist" />
+                    <span><b>Stockist / franchisee</b> — hold local stock and fulfil in your town, at a stockist margin.</span></label>
+                <label class="check"><input type="checkbox" name="dravya" value="tell_me_later" />
+                    <span><b>Tell me more later</b> — I am interested but not deciding now.</span></label>
+            </div>
+        </div>
+
+        <div class="formcard">
+            <h2><span class="step">7</span>Confirm</h2>
+
+            <div class="check" style="margin-bottom:12px;">
+                <input type="checkbox" id="cTrue" name="confirmTrue" required />
+                <label for="cTrue" style="font-weight:400;">The details above are true, and the links are to my own work. <span class="req">*</span></label>
+            </div>
+            <div class="check" style="margin-bottom:12px;">
+                <input type="checkbox" id="cLoc" name="confirmLocation" required />
+                <label for="cLoc" style="font-weight:400;">I understand that while I am travelling to a devotee's home for an
+                engagement I share my live location, that I may stop sharing at any time, and that
+                <b>I am never tracked between engagements</b>. <span class="req">*</span></label>
+            </div>
+            <div class="check" style="margin-bottom:18px;">
+                <input type="checkbox" id="cPriv" name="confirmPrivacy" required />
+                <label for="cPriv" style="font-weight:400;">I have read the <a href="privacy.html">Privacy Policy</a> and the
+                <a href="manual.html#professionals">Service Manual</a>. <span class="req">*</span></label>
+            </div>
+
+            <!-- honeypot: bots fill it, humans never see it -->
+            <div class="hp" aria-hidden="true"><label>Do not fill this<input type="text" name="website_url" tabindex="-1" autocomplete="off" /></label></div>
+
+            <div class="submitrow">
+                <button type="submit" class="btnsub" id="submitBtn">Send my registration</button>
+                <span class="hint" style="color:var(--sw-muted);">No payment. Nothing is published until you are verified.</span>
+            </div>
+            <p id="status" role="status" aria-live="polite"></p>
+        </div>
+    </form>
+</div>
+
+<footer>
+    <p class="fshloka">॥ स्वधर्म ॥</p>
+    <p>Swadharma Services · Dharma Satram — under <a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">Dharma Poshanam Inc</a></p>
+    <div class="flinks">
+        <a href="index.html#app">The App</a>
+        <a href="index.html#services">Services</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="manual.html">Service Manual</a>
+        <a href="enrol.html">Enrol</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="index.html#contact">Contact</a>
+    </div>
+
+    <div class="foffices">
+        <div><b>Frisco · Texas</b>14600 Marigold Dr, Frisco, TX 75035, USA</div>
+        <div><b>Omaha · Nebraska</b>5703 S 159th Street, Omaha, NE 68135, USA</div>
+        <div><b>Mysore · India</b><a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">dharmaposhanam.in</a></div>
+    </div>
+
+    <p class="fnodes">
+        <b>Operational nodes</b><br>
+        Datta Mukti Kshetram, Rajahmundry · Vaivasvatam, Rajahmundry ·
+        Jaya Durga Teertham, Vijayawada · Sripadavallabha Anagha Datta Kshetram, Pithapuram
+    </p>
+    <p class="fine">EIN 85-3784241 · 501(c)(3) tax-exempt since 2020</p>
+    <p class="fine">Connect · Engage · Empower · स्वधर्म</p>
+</footer>
+
+<script>
+(function () {
+  var API_BASE = "https://swadharma-api-332912113546.asia-south1.run.app";
+  var ENDPOINT = API_BASE + "/api/v1/professionals/apply";
+  // Flip to true once the endpoint exists. See PROFESSIONAL_ENROLMENT_API.md.
+  var ENDPOINT_LIVE = false;
+
+  var form = document.getElementById("enrolForm");
+  var btn = document.getElementById("submitBtn");
+  var status = document.getElementById("status");
+
+  function say(msg, cls) { status.textContent = msg; status.className = cls || ""; }
+
+  function collect() {
+    var fd = new FormData(form);
+    var cats = fd.getAll("categories");
+    return {
+      fullName: (fd.get("fullName") || "").trim(),
+      phone: (fd.get("phone") || "").trim(),
+      email: (fd.get("email") || "").trim().toLowerCase(),
+      motherTongue: (fd.get("motherTongue") || "").trim(),
+      languages: (fd.get("languages") || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean),
+      categories: cats,
+      veda: (fd.get("veda") || "").trim(),
+      shakha: (fd.get("shakha") || "").trim(),
+      sampradaya: (fd.get("sampradaya") || "").trim(),
+      experienceYears: (fd.get("experience") || "").trim(),
+      serviceArea: {
+        country: fd.get("country") || "",
+        state: (fd.get("state") || "").trim(),
+        town: (fd.get("town") || "").trim(),
+        radiusKm: fd.get("serviceRadiusKm") || "",
+        otherAreas: (fd.get("areas") || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean)
+      },
+      testimonialLinks: ["link1", "link2", "link3"]
+        .map(function (k) { return (fd.get(k) || "").trim(); })
+        .filter(Boolean),
+      about: (fd.get("about") || "").trim(),
+      interview: {
+        slotPreference: fd.get("slotPreference") || "",
+        timezone: (fd.get("timezone") || "").trim()
+      },
+      institutionsRequested: (fd.get("institutions") || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean),
+      dravyaInterest: fd.getAll("dravya"),
+      consents: {
+        detailsTrue: !!fd.get("confirmTrue"),
+        locationSharing: !!fd.get("confirmLocation"),
+        privacyPolicy: !!fd.get("confirmPrivacy")
+      },
+      source: "swadharmaservices.in/enrol"
+    };
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    // honeypot — silently accept, never tell a bot why it failed
+    if ((new FormData(form).get("website_url") || "") !== "") {
+      say("Thank you — your registration has been received.", "ok");
+      form.reset();
+      return;
+    }
+
+    var d = collect();
+    if (!d.fullName || !d.phone || !d.email) { say("Please give your name, phone and email.", "err"); return; }
+    if (!d.categories.length) { say("Please choose at least one service you offer.", "err"); return; }
+    if (!d.serviceArea.country || !d.serviceArea.state || !d.serviceArea.town) { say("Please tell us where you serve.", "err"); return; }
+    if (!d.consents.detailsTrue || !d.consents.locationSharing || !d.consents.privacyPolicy) { say("Please tick all three confirmations.", "err"); return; }
+
+    if (!ENDPOINT_LIVE) {
+      say("Registration is opening shortly. Please send these details to swadharma@dharmaposhanam.in and we will schedule your interview.", "err");
+      return;
+    }
+
+    btn.disabled = true;
+    say("Sending…");
+
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(d)
+    }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    }).then(function () {
+      form.reset();
+      say("Thank you. We will send a verification code to your phone, then confirm your interview slot.", "ok");
+    }).catch(function () {
+      btn.disabled = false;
+      say("Something went wrong. Please try again, or email swadharma@dharmaposhanam.in.", "err");
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

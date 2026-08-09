@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Service Manual · Swadharma Services</title>
+<meta name="description" content="How Swadharma works for devotees, professionals and institutions — booking, empanelment, payment, location sharing, responsibilities and how to raise a concern." />
+<meta property="og:title" content="Service Manual · Swadharma Services" />
+<meta property="og:description" content="Who does what on Swadharma — devotees, professionals, institutions and the platform." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://swadharmaservices.in/manual.html" />
+<link rel="icon" href="https://dharmaposhanam.in/favicon.ico" />
+<link rel="stylesheet" href="doc.css" />
+</head>
+<body>
+
+<!--
+  MAINTAINER NOTES — read before treating this page as a legal instrument.
+  1. Remedy specifics (credit amounts, restitution) are deliberately NOT stated here.
+     They are pending VKG decision E in docs/plan-live-location-tracking.md §14.6.
+  2. Statutory acknowledgement/resolution windows are NOT stated. Pending counsel —
+     see docs/operations-manual.md §12, items 3 and 5.
+  3. No Grievance Officer is named because none has been appointed (§12 item 9).
+     Until one is, this page does not discharge the IT Rules 2021 / Consumer Protection
+     (E-Commerce) Rules 2020 requirement to publish a named officer.
+  4. §5 "Money, contributions and tax" states the modus operandi decided by VKG on
+     2026-08-09 (M5 §6). Two deliberate omissions there:
+     (a) VKG, 2026-08-09: **no 80G is sought, and none is to be mentioned.** Razorpay
+         issues the Indian receipt at the point of payment. Do not add registration
+         particulars, and do not use "deductible" or any equivalent in India-facing copy.
+         The US line stays as is — the 501(c)(3) and EIN are already in the footer.
+     (b) RESOLVED by VKG 2026-08-09: the boundary is drawn ONCE, at registration, by an
+         explicit India / Rest-of-the-world choice — not by a rule that blocks bookings
+         later. signup.html carries the radio. Because Swadharma never touches the seva
+         money, an overseas devotee sponsoring a seva in India is unaffected; §5 says so
+         plainly rather than leaving it to be inferred.
+  Source of truth: swadharma-service-management/docs/operations-manual.md
+      and docs/plan-professionals-marketplace.md §6
+-->
+
+<div class="topbar">
+    <div class="wrap">
+        <a class="brand" href="index.html">Swadharma <span>· Dharma Satram</span></a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+    </div>
+</div>
+
+<div class="wrap">
+    <div class="dochead">
+        <span class="mark">Service Manual</span>
+        <h1>How Swadharma works</h1>
+        <p class="sub">Who does what — for devotees, for professionals, for temples and trusts, and for the platform itself.</p>
+        <p class="updated">Last updated: 9 August 2026</p>
+    </div>
+
+    <div class="tocbox">
+        <h2>On this page</h2>
+        <ol>
+            <li><a href="#routes">The three ways to book</a></li>
+            <li><a href="#devotees">For devotees</a></li>
+            <li><a href="#professionals">For professionals</a></li>
+            <li><a href="#institutions">For temples and trusts</a></li>
+            <li><a href="#money">Money, contributions and tax</a></li>
+            <li><a href="#platform">What Swadharma is responsible for</a></li>
+            <li><a href="#location">Location sharing and delivery monitoring</a></li>
+            <li><a href="#concerns">If something goes wrong</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ol>
+    </div>
+
+    <article>
+
+    <section id="routes">
+        <h2>1. The three ways to book</h2>
+        <p>Swadharma connects three kinds of people: devotees who need a ceremony performed,
+        professionals who perform it, and the institutions that vouch for them. How a booking is
+        made determines who takes your money and who answers for the ceremony — so we tell you
+        which one you are on, before you pay.</p>
+
+        <div class="tablewrap">
+        <table>
+            <thead>
+                <tr><th>You approach</th><th>Who takes payment</th><th>Who you contract with</th><th>Who monitors delivery</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>A temple or trust</strong></td>
+                    <td>That institution, on its own payment gateway</td>
+                    <td>The institution</td>
+                    <td>The institution's operator</td>
+                </tr>
+                <tr>
+                    <td><strong>A professional</strong> empanelled with an institution</td>
+                    <td>The professional, directly</td>
+                    <td>The professional</td>
+                    <td>The empanelling institution's operator</td>
+                </tr>
+                <tr>
+                    <td><strong>Swadharma</strong> — this site or the app</td>
+                    <td>The professional, directly, for the ceremony</td>
+                    <td>The professional</td>
+                    <td>The empanelling institution's operator, or ours</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <div class="key">
+            <span class="label">The one thing to remember</span>
+            <p>Swadharma <strong>never holds a professional's fee</strong>. Money for a ceremony
+            goes to the temple or to the professional, never through us and never held by us.
+            Where Swadharma receives a contribution, it is voluntary, and it is separate from
+            what you pay for the ceremony itself — <a href="#money">section 5</a> sets out all
+            three sums and who ends up with each.</p>
+        </div>
+
+        <p>Whichever route you use, <strong>someone is always watching the delivery</strong>. That
+        is the operator of the institution the professional is enrolled with. It is not always the
+        same party that took your money, and that is deliberate — see
+        <a href="#location">section 7</a>.</p>
+    </section>
+
+    <section id="devotees">
+        <h2>2. For devotees</h2>
+
+        <h3>What you can expect</h3>
+        <ul>
+            <li>To be told, before you pay, who you are contracting with, who is monitoring your
+            booking, and what happens if the ceremony is not delivered.</li>
+            <li>A professional who is <strong>verified for the specific category</strong> you
+            booked. Our verification is per category — a purohita verified for Abhishekam is not
+            thereby verified for Vivāha, and we never show it as though they were.</li>
+            <li>To see the venue on a map, and — for a ceremony at your home — the professional's
+            live location while they are travelling to you.</li>
+            <li>To rate both the professional and the institution after a completed booking.</li>
+            <li>A clear route to raise a concern, and an answer to it.</li>
+        </ul>
+
+        <h3>What we ask of you</h3>
+        <ul>
+            <li><strong>A complete and correct house address</strong> for a ceremony at home. An
+            address that cannot be found is the commonest cause of a late or failed engagement.</li>
+            <li>To be present and reachable at the scheduled time.</li>
+            <li>A clean, quiet and appropriate space for the ritual.</li>
+            <li>Ritual details — gotra, nakshatra, sankalpa — where the ceremony requires them.</li>
+        </ul>
+
+        <div class="note">
+            <span class="label">Your house address</span>
+            <p>If you book a ceremony at your home, your address is given to the professional
+            assigned to it, so that they can reach you. They are an independent person, not our
+            employee — they receive it in their own right and are responsible for how they handle
+            it. Your address is never shown in any list, never given to a professional who is not
+            assigned to your booking, and never sold. Our
+            <a href="privacy.html">Privacy Policy</a> sets this out in full.</p>
+        </div>
+    </section>
+
+    <section id="professionals">
+        <h2>3. For professionals</h2>
+
+        <h3>Joining</h3>
+        <p>Enrolment is open. You register with Swadharma — not with any one temple — and then
+        seek empanelment with the institutions you wish to serve.</p>
+        <ol>
+            <li><strong>Register and complete your profile</strong>: languages, Veda, śākhā,
+            sampradāya, your specializations, and the <strong>area you serve</strong>.
+            We ask for a service area, never your home address. We publish where you serve, never
+            where you live.</li>
+            <li><strong>Add your credentials</strong> — documents, and links you offer as
+            testimony.</li>
+            <li><strong>Request verification</strong>, for each category you wish to be verified
+            in. We schedule a video call.</li>
+            <li><strong>Request empanelment</strong> with an institution. Its administrator
+            decides.</li>
+            <li><strong>Keep your availability honest.</strong> The roster is drafted from it
+            automatically, and an availability record that does not reflect reality produces
+            engagements you cannot keep.</li>
+        </ol>
+
+        <h3>What is expected of you</h3>
+        <ul>
+            <li>Accept only engagements in categories you are verified for.</li>
+            <li>Start location sharing before you depart, and mark <em>Departed</em>,
+            <em>Arrived</em> and <em>Completed</em> in the app.</li>
+            <li>Attend on time — or give notice as early as you can. Notice is not a fault;
+            silence is.</li>
+            <li>Where you were introduced through an institution, remit its published minimum
+            under its policy.</li>
+            <li>Conduct yourself in a devotee's home as you would in the temple.</li>
+            <li>Do not keep, publish or reuse a devotee's address, phone number or photographs
+            beyond what the engagement requires.</li>
+        </ul>
+
+        <h3>What you are entitled to</h3>
+        <div class="key">
+            <span class="label">Your position on this platform</span>
+            <ul>
+                <li>You may <strong>decline any engagement, without penalty</strong>. Declining
+                work is never a ground for suspension.</li>
+                <li>You may <strong>stop sharing your location at any time</strong>, including
+                mid-journey. Your safety outranks our convenience. We will tell the operator and
+                the devotee that live location is unavailable — we will not prevent you.</li>
+                <li><strong>You are not tracked between engagements.</strong> Outside an open
+                engagement the platform holds no location for you at all.</li>
+                <li>We do not direct your route, set your working hours, or tell you how to
+                perform the ceremony.</li>
+                <li>You are entitled to a written reason for any rejection, suspension or
+                delisting, and to contest it.</li>
+                <li>You are entitled to your own rating history, and to have a factually wrong
+                review corrected.</li>
+            </ul>
+        </div>
+
+        <h3>When empanelment can be withdrawn</h3>
+        <p>By Swadharma, or by an institution for its own empanelment: credentials found to be
+        false; repeated non-attendance, or non-attendance without notice; long-unpaid dues to an
+        institution; refusal to share location as a pattern rather than an incident; or conduct
+        in a devotee's home that would not be acceptable in the temple.</p>
+    </section>
+
+    <section id="institutions">
+        <h2>4. For temples and trusts</h2>
+
+        <p>An institution holding a Swadharma account decides who may serve its devotees, confirms
+        its bookings, and watches delivery. Three roles carry that work.</p>
+
+        <div class="tablewrap">
+        <table>
+            <thead><tr><th>Role</th><th>Does</th><th>Does not</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><strong>Administrator</strong></td>
+                    <td>Approves and rejects empanelment, with reasons recorded. Grants roles.
+                    Sets collection mode, remittance policy and the cancellation policy. Owns the
+                    institution's own published pages.</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>Operator</strong></td>
+                    <td>Confirms availability and issues appointment confirmations. Runs the
+                    roster. <strong>Monitors delivery.</strong> Corrects map pins that resolved
+                    badly. Records anything that went wrong.</td>
+                    <td>Approve empanelment. See a professional's location between engagements.</td>
+                </tr>
+                <tr>
+                    <td><strong>Staff</strong></td>
+                    <td>Performs assigned engagements. Employed by the institution.</td>
+                    <td>—</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <div class="note">
+            <span class="label">Approving an empanelment carries a duty</span>
+            <p>When your administrator approves a professional, your operator becomes the person
+            who watches whether that professional reached the devotee — on every engagement they
+            take through Swadharma, including engagements that did not originate with you. This is
+            not incidental to empanelment; it is the substance of it. Approve accordingly.</p>
+        </div>
+
+        <h3>What the institution answers for</h3>
+        <ul>
+            <li>Its own collections, receipts and refunds where it took the payment.</li>
+            <li>The accuracy of its published minimums, policies and pages.</li>
+            <li>The conduct of the staff it employs.</li>
+            <li>The monitoring duty it accepted at empanelment.</li>
+        </ul>
+    </section>
+
+    <section id="money">
+        <h2>5. Money, contributions and tax</h2>
+
+        <p>Three separate sums move on this platform, and they are easiest to hold apart by asking
+        who ends up with each one. Only the third ever reaches Swadharma, and only if you choose to
+        give it.</p>
+
+        <div class="tablewrap">
+        <table>
+            <thead>
+                <tr><th>The sum</th><th>Paid by</th><th>Received by</th><th>Does Swadharma hold it?</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>For the ceremony</strong></td>
+                    <td>The devotee</td>
+                    <td>The institution, where it took the booking — otherwise the professional, directly</td>
+                    <td><strong>Never.</strong> On any route</td>
+                </tr>
+                <tr>
+                    <td><strong>The institution's minimum</strong></td>
+                    <td>The professional</td>
+                    <td>The institution that introduced them</td>
+                    <td>No. We record it; we do not carry it</td>
+                </tr>
+                <tr>
+                    <td><strong>A contribution to Swadharma</strong></td>
+                    <td>The devotee, if they wish to</td>
+                    <td>Dharma Poshanam</td>
+                    <td>Yes — and this is the only money we receive</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <h3>What you pay for the ceremony</h3>
+        <p>It goes to the temple that took your booking, or to the professional who performs it.
+        It does not pass through Swadharma. We do not hold it during the engagement, take a
+        percentage of it, split it, or pay anybody out of it. There is no wallet, no escrow and no
+        settlement cycle on this platform, because there is nothing of yours in it.</p>
+
+        <h3>The institution's minimum</h3>
+        <p>Where a professional was introduced to you through a temple or trust, that professional
+        remits the institution's published minimum under the institution's own policy. It is an
+        obligation between those two parties. Swadharma keeps the register and nothing more —
+        long-unpaid dues are a ground for withdrawing empanelment, and that is the only lever we
+        hold, precisely because we never hold the money.</p>
+
+        <h3>A contribution to Swadharma</h3>
+        <p>Swadharma makes information available: who is verified, for what, where they serve, and
+        when they are free. A devotee who finds that worth supporting may offer a contribution — in
+        the same spirit as what is left at the temple, and on the same footing. It is goodwill, not
+        a price.</p>
+
+        <div class="key">
+            <span class="label">It is a contribution, not a fee — and here is how you can tell</span>
+            <ul>
+                <li><strong>Your booking completes whether you contribute or not.</strong> Nothing
+                is withheld, delayed, downgraded or reordered. Nothing is asked twice.</li>
+                <li><strong>No amount is ever pre-filled or pre-selected.</strong> Suggested
+                amounts are suggestions, freely edited, and zero is among them.</li>
+                <li><strong>Declining is offered as plainly as giving.</strong> You will not have to
+                hunt for it.</li>
+                <li><strong>It is not payment for the ceremony</strong>, and no part of it reaches
+                the professional. What you owe for the seva is unaffected by it, in either
+                direction.</li>
+                <li><strong>If your booking fails, we return it.</strong> A contribution is
+                ordinarily not refundable; one given inside a booking that then did not happen is
+                returned regardless.</li>
+            </ul>
+        </div>
+
+        <h3>Where you register, and what it fixes</h3>
+        <p>You register on <strong>one side — India, or the rest of the world</strong> — and you
+        choose which when you open your account. It is the same principle as a driving licence:
+        you obtain it where you live, from the authority you actually answer to, not wherever you
+        happen to be standing.</p>
+
+        <div class="tablewrap">
+        <table>
+            <thead><tr><th>You register in</th><th>You pay in</th><th>Your receipt comes from</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><strong>India</strong></td>
+                    <td>Indian rupees</td>
+                    <td>Issued with the payment itself, through Razorpay</td>
+                </tr>
+                <tr>
+                    <td><strong>Rest of the world</strong></td>
+                    <td>US dollars</td>
+                    <td>Dharma Poshanam Inc — 501(c)(3), EIN 85-3784241, tax-exempt since 2020</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <p>That choice is made once and is not changed afterwards, because it decides which country
+        receipts you and under which registration. <strong>A contribution never crosses a
+        border</strong> — which keeps every devotee's giving inside a single tax system, where the
+        receipt can actually be used when they file.</p>
+
+        <div class="note">
+            <span class="label">Rely on the receipt, not on this page</span>
+            <p>The receipt issued to you carries the receiving entity's registration particulars and
+            states what may be claimed. That document is the authority when you file — this page is
+            only an explanation of how the arrangement works.</p>
+        </div>
+
+        <div class="key">
+            <span class="label">Living abroad, sponsoring a seva at home</span>
+            <p>A devotee outside India who wishes to sponsor an archana or sankalpa at a temple in
+            India is not shut out by any of this. You register on the side you live and file in;
+            what you give for the ceremony reaches that temple directly, exactly as it would if you
+            walked in — <strong>it never enters Swadharma's books</strong>, so there is nothing to
+            cross a border. Only a contribution to Swadharma is receipted, and it is receipted where
+            you registered.</p>
+        </div>
+    </section>
+
+    <section id="platform">
+        <h2>6. What Swadharma is responsible for</h2>
+
+        <p>Swadharma is a product of <strong>Dharma Poshanam Inc</strong>. We are the platform,
+        not the priest and not the temple. Being precise about that is what makes the rest of this
+        page trustworthy.</p>
+
+        <h3>We do</h3>
+        <ul>
+            <li>Provide and operate the platform, and keep it available and secure.</li>
+            <li>Run the verification programme, per service category, and keep its record.</li>
+            <li>Maintain the registers — empanelment, dues, contributions, ratings and
+            complaints.</li>
+            <li>Publish minimum rate charts, so that fair remuneration has a floor.</li>
+            <li>Answer for the <strong>introduction</strong> where you came to us: that a verified,
+            suitable professional was assigned and attended.</li>
+        </ul>
+
+        <h3>We do not</h3>
+        <ul>
+            <li>Hold, route or pay out a professional's fee, on any route.</li>
+            <li>Employ professionals, direct their method, or set their hours.</li>
+            <li>Collect tax on behalf of any person.</li>
+            <li><strong>Store anyone's location.</strong></li>
+            <li>Sell, rent or trade anybody's personal information.</li>
+        </ul>
+    </section>
+
+    <section id="location">
+        <h2>7. Location sharing and delivery monitoring</h2>
+
+        <p>When a ceremony is performed at a devotee's home, someone should know whether the
+        professional arrived. On Swadharma that someone is the operator of the institution the
+        professional is enrolled with.</p>
+
+        <h3>How it works</h3>
+        <ul>
+            <li>The professional shares their live location using <strong>Google Maps' own
+            location-sharing feature</strong>, from their own Google account, for the duration of
+            the engagement.</li>
+            <li>The devotee sees that live location while the professional is travelling to them.
+            The operator sees it too, alongside the booking.</li>
+            <li>The professional marks <em>Departed</em>, <em>Arrived</em> and <em>Completed</em>.
+            Those marks are the record of delivery.</li>
+            <li>If a professional has not set out shortly before the scheduled time, the operator
+            is alerted — so that a delay can be handled before it becomes a disappointment.</li>
+        </ul>
+
+        <div class="key">
+            <span class="label">What the platform does and does not see</span>
+            <p><strong>Swadharma does not receive or store the professional's position.</strong>
+            The location is shared between the professional, Google and the people watching that
+            engagement. Our system holds only a link. We keep no movement history of anyone.</p>
+            <p>And it runs one way only: a devotee may see a professional travelling to them. No
+            devotee is ever tracked.</p>
+        </div>
+    </section>
+
+    <section id="concerns">
+        <h2>8. If something goes wrong</h2>
+
+        <p>Raise it at the level closest to the problem — most delivery issues are resolved
+        there — and escalate if you are not satisfied.</p>
+
+        <ol>
+            <li><strong>The institution's operator</strong>, for anything about a booking, a
+            schedule or an arrival.</li>
+            <li><strong>The institution's administrator</strong>, if the operator cannot resolve
+            it.</li>
+            <li><strong>Swadharma</strong>, at
+            <a href="mailto:swadharma@dharmaposhanam.in">swadharma@dharmaposhanam.in</a>, for
+            anything about your account, the platform, a professional's conduct, or a complaint
+            the institution has not resolved.</li>
+        </ol>
+
+        <p>A professional raising a concern — about a rejection, a suspension, a delisting or a
+        disputed rating — follows the same ladder from the institution's administrator upward, and
+        will receive a written outcome.</p>
+
+        <p>We acknowledge every complaint and tell you who is handling it. Where a ceremony you
+        paid for was not delivered, the remedy depends on who took your payment; the applicable
+        terms are shown to you before you pay and are set out in the terms of service for the
+        booking you made.</p>
+    </section>
+
+    <section id="contact">
+        <h2>9. Contact</h2>
+        <div class="contactcard">
+            <p><strong>Swadharma Services · Dharma Satram</strong></p>
+            <p>A product of Dharma Poshanam Inc — 501(c)(3)</p>
+            <p>Email: <a href="mailto:swadharma@dharmaposhanam.in">swadharma@dharmaposhanam.in</a></p>
+            <p>WhatsApp · India: <a href="https://wa.me/919900082065">+91 99000 82065</a></p>
+            <p>WhatsApp · USA: <a href="https://wa.me/15157704705">+1 (515) 770-4705</a></p>
+            <p>14600 Marigold Dr, Frisco, TX 75035, United States</p>
+            <p>5703 S 159th Street, Omaha, NE 68135, United States</p>
+            <p>Mysore, India — <a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">dharmaposhanam.in</a></p>
+        </div>
+        <p>For a booking made with a particular temple or trust, that institution publishes its own
+        contact and grievance details on its Swadharma site.</p>
+    </section>
+
+    </article>
+</div>
+
+<footer>
+    <p class="fshloka">॥ स्वधर्म ॥</p>
+    <p>Swadharma Services · Dharma Satram — under <a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">Dharma Poshanam Inc</a></p>
+    <div class="flinks">
+        <a href="index.html#services">Services</a>
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="manual.html">Service Manual</a>
+        <a href="enrol.html">Enrol</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="index.html#contact">Contact</a>
+    </div>
+    <div class="foffices">
+        <div><b>Frisco · Texas</b>14600 Marigold Dr, Frisco, TX 75035, USA</div>
+        <div><b>Omaha · Nebraska</b>5703 S 159th Street, Omaha, NE 68135, USA</div>
+        <div><b>Mysore · India</b><a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">dharmaposhanam.in</a></div>
+    </div>
+
+    <p class="fnodes">
+        <b>Operational nodes</b><br>
+        Datta Mukti Kshetram, Rajahmundry · Vaivasvatam, Rajahmundry ·
+        Jaya Durga Teertham, Vijayawada · Sripadavallabha Anagha Datta Kshetram, Pithapuram
+    </p>
+    <p class="fine">EIN 85-3784241 · 501(c)(3) tax-exempt since 2020</p>
+    <p class="fine">Connect · Engage · Empower · स्वधर्म</p>
+</footer>
+
+</body>
+</html>

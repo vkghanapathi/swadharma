@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Swadharma — Temple Service Management by Dharma Poshanam</title>
+<meta name="description" content="Swadharma - temple service management by Dharma Poshanam. What each of the four roles sees, how an assignment carries its venue and map, and the installations running today." />
+<meta property="og:title" content="Swadharma — Temple Service Management by Dharma Poshanam" />
+<meta property="og:description" content="One platform for the whole seva cycle - booking, approval, assignment, payment, acceptance letter and feedback." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://swadharmaservices.in/demo" />
+<link rel="icon" href="https://dharmaposhanam.in/favicon.ico" />
+</head>
+<body>
+
+<style>
+  /* ════════ Tokens ════════
+     Light palette on bare :root; dark redefines tokens only,
+     under both the un-stamped media query and the explicit stamp. */
+  :root {
+    --bg:          #FAF6EE;
+    --surface:     #FFFFFF;
+    --surface-alt: #F2EADB;
+    --invert:      #1F2937;
+    --invert-ink:  #F3EDE2;
+    --invert-soft: #B9AE9C;
+
+    --ink:       #2A231D;
+    --ink-soft:  #6B6257;
+    --ink-faint: #9A8F80;
+    --rule:      #DED4C2;
+    --rule-soft: #EBE3D4;
+
+    --maroon:  #9A3412;
+    --gold:    #B4620A;
+    --saffron: #F59E0B;
+    --on-accent: #FAF6EE;
+
+    --display: "Iowan Old Style", "Palatino Linotype", Palatino,
+               "Book Antiqua", "Hoefler Text", Georgia, serif;
+    --body: "Segoe UI", Frutiger, "Helvetica Neue", system-ui,
+            -apple-system, sans-serif;
+
+    --measure: 1120px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:          #15120E;
+      --surface:     #1E1913;
+      --surface-alt: #241E17;
+      --invert:      #241E17;
+      --invert-ink:  #F3EDE2;
+      --invert-soft: #B9AE9C;
+
+      --ink:       #EFE7D9;
+      --ink-soft:  #B6AA98;
+      --ink-faint: #8A7F6F;
+      --rule:      #3A3127;
+      --rule-soft: #2C251D;
+
+      --maroon:  #E07A4E;
+      --gold:    #E0A340;
+      --saffron: #F5B443;
+      --on-accent: #1A1510;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:          #15120E;
+    --surface:     #1E1913;
+    --surface-alt: #241E17;
+    --invert:      #241E17;
+    --invert-ink:  #F3EDE2;
+    --invert-soft: #B9AE9C;
+
+    --ink:       #EFE7D9;
+    --ink-soft:  #B6AA98;
+    --ink-faint: #8A7F6F;
+    --rule:      #3A3127;
+    --rule-soft: #2C251D;
+
+    --maroon:  #E07A4E;
+    --gold:    #E0A340;
+    --saffron: #F5B443;
+    --on-accent: #1A1510;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 { margin: 0; font-family: var(--display); font-weight: 600; text-wrap: balance; }
+  p { margin: 0; }
+  a { color: inherit; }
+
+  .wrap {
+    width: 100%;
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* ════════ Masthead ════════ */
+  .topbar { border-bottom: 1px solid var(--rule); background: var(--surface); }
+  .topbar-in {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .brand-mark {
+    font-family: var(--display);
+    font-size: 23px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--maroon);
+  }
+  .brand-by { font-size: 12.5px; color: var(--ink-soft); }
+  .brand-by b { color: var(--ink); font-weight: 600; }
+  .topbar-contact { font-size: 13px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+  /* ════════ Hero ════════ */
+  .hero { background: var(--invert); color: var(--invert-ink); position: relative; }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 5px;
+    background: linear-gradient(90deg,
+      var(--maroon) 0 34%, var(--gold) 34% 62%, var(--saffron) 62% 100%);
+  }
+  .hero-in {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 56px;
+    align-items: center;
+    padding-top: 72px;
+    padding-bottom: 76px;
+  }
+  .hero h1 {
+    font-size: clamp(38px, 5.4vw, 62px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin-top: 14px;
+  }
+  .hero h1 em { font-style: italic; color: var(--saffron); }
+  .hero-lede {
+    margin-top: 22px;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--invert-soft);
+    max-width: 34em;
+  }
+  .hero-lede b { color: var(--invert-ink); font-weight: 600; }
+  .hero-cta { margin-top: 30px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    display: inline-block;
+    font: inherit;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    padding: 13px 24px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--saffron); color: #241505; }
+  .btn-primary:hover { background: #FFB733; }
+  .btn-ghost { border-color: rgba(243, 237, 226, 0.34); color: var(--invert-ink); }
+  .btn-ghost:hover { border-color: var(--invert-ink); }
+  .btn:focus-visible { outline: 2px solid var(--saffron); outline-offset: 3px; }
+
+  /* first-account proof card in hero */
+  .proof {
+    border: 1px solid rgba(243, 237, 226, 0.2);
+    border-left: 3px solid var(--saffron);
+    padding: 24px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.16);
+  }
+  .proof-label {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--saffron);
+  }
+  .proof-name { font-family: var(--display); font-size: 21px; line-height: 1.2; }
+  .proof-body { font-size: 13.5px; line-height: 1.6; color: var(--invert-soft); }
+  .proof-stats { display: flex; gap: 26px; padding-top: 4px; }
+  .proof-stats div { display: flex; flex-direction: column; }
+  .proof-num {
+    font-family: var(--display); font-size: 26px; line-height: 1;
+    color: var(--invert-ink); font-variant-numeric: tabular-nums;
+  }
+  .proof-cap {
+    font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--invert-soft); margin-top: 5px;
+  }
+
+  /* ════════ Section frame ════════ */
+  .band { padding-top: 72px; padding-bottom: 72px; }
+  .band-alt { background: var(--surface-alt); }
+  .band-head { max-width: 46em; display: flex; flex-direction: column; gap: 12px; }
+  .band-head h2 {
+    font-size: clamp(28px, 3.4vw, 40px);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+  }
+  .band-head h2 em { font-style: italic; color: var(--maroon); }
+  .band-head p { font-size: 17px; line-height: 1.6; color: var(--ink-soft); }
+
+  /* ════════ Domains ════════ */
+  .domains { margin-top: 44px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .domain {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--maroon);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .domain-url {
+    display: block;
+    font-family: ui-monospace, "Cascadia Mono", "Consolas", monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--maroon);
+    word-break: break-word;
+    text-decoration: none;
+  }
+  a.domain-url:hover { text-decoration: underline; }
+  a.domain-url:focus-visible { outline: 2px solid var(--saffron); outline-offset: 3px; }
+  .domain h3 { font-size: 18px; line-height: 1.25; }
+  .domain p { font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
+  .domain-generic { border-top-color: var(--ink-faint); border-style: dashed; }
+  .domain-generic .domain-url { color: var(--ink-soft); }
+
+  /* ════════ Roles ════════ */
+  .roles { margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .role {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--maroon);
+    padding: 26px 26px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .role-iast {
+    font-family: var(--display); font-style: italic;
+    font-size: 14px; color: var(--gold);
+  }
+  .role h3 { font-size: 24px; line-height: 1.1; margin-top: 3px; }
+  .role-job {
+    font-size: 14.5px; line-height: 1.5; color: var(--ink-soft);
+    padding-bottom: 14px; border-bottom: 1px solid var(--rule-soft);
+  }
+  ul.feats { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+  ul.feats li {
+    display: grid; grid-template-columns: 1fr auto; gap: 12px;
+    align-items: baseline; font-size: 14.5px; line-height: 1.45;
+  }
+
+  /* ════════ Chips ════════ */
+  .chip {
+    flex-shrink: 0;
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.11em;
+    text-transform: uppercase; padding: 3px 7px; border-radius: 2px;
+    white-space: nowrap;
+  }
+  .chip-live { background: var(--maroon); color: var(--on-accent); }
+  .chip-dev  { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
+  .chip-road { background: transparent; color: var(--ink-faint); border: 1px dashed var(--ink-faint); }
+
+  /* ════════ Split feature (venue + map) ════════ */
+  .split {
+    margin-top: 44px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    gap: 48px;
+    align-items: start;
+  }
+  .split-copy { display: flex; flex-direction: column; gap: 18px; }
+  .split-copy p { font-size: 16px; line-height: 1.62; color: var(--ink-soft); }
+  .split-copy p.first { font-size: 18px; color: var(--ink); }
+
+  ul.plain { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  ul.plain li {
+    display: grid; grid-template-columns: auto 1fr; gap: 14px;
+    font-size: 15px; line-height: 1.5;
+  }
+  .key {
+    font-family: var(--display); font-weight: 700; font-size: 15px;
+    color: var(--maroon); min-width: 92px;
+  }
+
+  figure.fig { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .fig-frame {
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    padding: 16px;
+  }
+  .fig svg { width: 100%; height: auto; display: block; }
+  .fig figcaption { font-size: 13px; line-height: 1.5; color: var(--ink-soft); }
+  .fig figcaption b { color: var(--ink); }
+
+  /* dispatch card mock */
+  .dispatch {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+  }
+  .dispatch-top {
+    background: var(--invert); color: var(--invert-ink);
+    padding: 14px 18px;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  }
+  .dispatch-top strong { font-family: var(--display); font-size: 16px; font-weight: 600; }
+  .dispatch-when { font-size: 12.5px; color: var(--invert-soft); font-variant-numeric: tabular-nums; }
+  .dispatch-rows { display: flex; flex-direction: column; }
+  .drow {
+    display: grid; grid-template-columns: 88px 1fr;
+    gap: 14px; padding: 11px 18px;
+    border-bottom: 1px solid var(--rule-soft);
+    font-size: 14px; line-height: 1.45;
+  }
+  .drow:last-child { border-bottom: 0; }
+  .drow dt {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-faint); padding-top: 3px;
+  }
+  .drow dd { margin: 0; }
+  .venue-pill {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--saffron); color: #241505;
+    padding: 2px 8px; border-radius: 2px; margin-bottom: 6px;
+  }
+  .maplink { color: var(--maroon); font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; }
+
+  /* ════════ Companions ════════ */
+  .companions { margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .companion {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--gold);
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .companion-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .companion-head h3 { font-size: 27px; line-height: 1.05; color: var(--maroon); }
+  .companion-sanskrit { font-size: 17px; color: var(--ink-faint); }
+  .companion-role {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gold); margin-top: -4px;
+  }
+  .companion-body { font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+  ul.companion-facts {
+    list-style: none; margin: 0; padding: 12px 0 0;
+    border-top: 1px solid var(--rule-soft);
+    display: flex; flex-direction: column; gap: 6px;
+    font-size: 13.5px; color: var(--ink-soft);
+  }
+  ul.companion-facts li { display: grid; grid-template-columns: auto 1fr; gap: 9px; }
+  ul.companion-facts li::before { content: "·"; color: var(--gold); font-weight: 700; }
+  .companion-link {
+    margin-top: auto; padding-top: 6px;
+    font-size: 14.5px; font-weight: 600; color: var(--maroon);
+    text-decoration: none;
+  }
+  .companion-link:hover { text-decoration: underline; }
+  .companion-link:focus-visible { outline: 2px solid var(--saffron); outline-offset: 3px; }
+
+  /* ════════ Platform ════════ */
+  .platform { margin-top: 44px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px 40px; }
+  .platform div { display: flex; flex-direction: column; gap: 7px; }
+  .platform dt {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gold);
+  }
+  .platform dd { margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink); }
+
+  /* ════════ Enrol ════════ */
+  .enrol { background: var(--invert); color: var(--invert-ink); }
+  .enrol-in {
+    padding-top: 66px; padding-bottom: 70px;
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+    gap: 52px; align-items: start;
+  }
+  .enrol h2 { font-size: clamp(28px, 3.4vw, 40px); line-height: 1.08; letter-spacing: -0.015em; }
+  .enrol h2 em { font-style: italic; color: var(--saffron); }
+  .enrol p { margin-top: 16px; font-size: 17px; line-height: 1.6; color: var(--invert-soft); }
+  .enrol-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+  .enrol-steps li {
+    display: grid; grid-template-columns: auto 1fr; gap: 18px;
+    padding: 15px 0; border-bottom: 1px solid rgba(243, 237, 226, 0.16);
+    font-size: 15px; line-height: 1.5;
+  }
+  .enrol-steps li:last-child { border-bottom: 0; }
+  .step-n {
+    font-family: var(--display); font-size: 14px; font-weight: 700;
+    color: var(--saffron); font-variant-numeric: tabular-nums;
+  }
+  .enrol-steps b { display: block; color: var(--invert-ink); font-weight: 600; margin-bottom: 2px; }
+  .enrol-steps span.sub { color: var(--invert-soft); }
+
+  /* ════════ Legend + footer ════════ */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 22px; align-items: center;
+    margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--rule);
+    font-size: 13px; color: var(--ink-soft);
+  }
+  .legend .item { display: inline-flex; align-items: center; gap: 8px; }
+
+  footer.foot { background: var(--surface); border-top: 1px solid var(--rule); }
+  .foot-in {
+    padding-top: 30px; padding-bottom: 34px;
+    display: grid; grid-template-columns: 1fr auto; gap: 26px; align-items: end;
+    font-size: 13px; line-height: 1.65; color: var(--ink-soft);
+  }
+  .foot-in strong { color: var(--ink); font-weight: 600; }
+  .foot-in .right { text-align: right; }
+
+  /* ════════ Print ════════ */
+  @media print {
+    body { background: #fff; font-size: 10.2pt; }
+    .wrap { max-width: 100%; padding: 0 12mm; }
+    .band, .hero-in, .enrol-in { padding-top: 9mm; padding-bottom: 9mm; }
+    .hero, .enrol { background: #1F2937 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hero-in { page-break-after: avoid; }
+    .band-alt { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .role, .domain, .fig-frame, .dispatch, .companion { break-inside: avoid; }
+    .hero h1 { font-size: 30pt; }
+    .band-head h2, .enrol h2 { font-size: 20pt; }
+    .btn { display: none; }
+  }
+  @page { size: A4; margin: 10mm 0; }
+
+  /* ════════ Responsive ════════ */
+  @media (max-width: 940px) {
+    .hero-in, .enrol-in, .split { grid-template-columns: 1fr; gap: 36px; }
+    .roles, .domains, .platform, .companions { grid-template-columns: 1fr; }
+    .foot-in { grid-template-columns: 1fr; }
+    .foot-in .right { text-align: left; }
+  }
+</style>
+
+<!-- ═══════════════ Masthead ═══════════════ -->
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <div class="brand">
+      <span class="brand-mark">Swadharma</span>
+      <span class="brand-by">a product of <b>Dharma Poshanam Inc</b></span>
+    </div>
+    <div class="topbar-contact">swadharma@dharmaposhanam.in</div>
+  </div>
+</div>
+
+<!-- ═══════════════ Hero ═══════════════ -->
+<header class="hero">
+  <div class="wrap hero-in">
+    <div>
+      <span class="eyebrow">Temple service management</span>
+      <h1>Run every seva, <em>and everyone</em> who makes it happen.</h1>
+      <p class="hero-lede">Swadharma gives a temple, matha or charitable trust one platform for
+        the whole seva cycle — the devotee's booking, the office's approval, the purohita's
+        assignment, the payment, the acceptance letter and the feedback that closes it.
+        <b>Your own site, on your own domain, in your own languages.</b></p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="mailto:swadharma@dharmaposhanam.in?subject=Swadharma%20—%20new%20account%20enquiry">Enrol your temple</a>
+        <a class="btn btn-ghost" href="mailto:swadharma@dharmaposhanam.in?subject=Swadharma%20—%20request%20a%20walkthrough">Request a walkthrough</a>
+      </div>
+    </div>
+
+    <aside class="proof">
+      <span class="proof-label">Your organisation, your data</span>
+      <p class="proof-name">Your records stay yours</p>
+      <p class="proof-body">Every record in the platform — every booking, devotee, payment,
+        staff member and rate — carries your organisation's identity. Each request resolves to
+        your organisation and to no other, so nothing you hold can be read from another
+        account. Your catalogue, your content and your rates are yours to set and yours alone
+        to see.</p>
+      <div class="proof-stats">
+        <div><span class="proof-num">4</span><span class="proof-cap">Roles</span></div>
+        <div><span class="proof-num">2</span><span class="proof-cap">Languages live</span></div>
+        <div><span class="proof-num">1</span><span class="proof-cap">Platform</span></div>
+      </div>
+    </aside>
+  </div>
+</header>
+
+<!-- ═══════════════ Domains ═══════════════ -->
+<section class="band">
+  <div class="wrap">
+    <div class="band-head">
+      <span class="eyebrow">Our installations</span>
+      <h2>Every organisation gets <em>its own site</em></h2>
+      <p>An account is not a page on someone else's website. It is your own address, your own
+        service catalogue, your own content and rates, your own languages — served by one
+        platform we run and keep current.</p>
+    </div>
+
+    <div class="domains">
+      <article class="domain">
+        <a class="domain-url" href="https://swadharma.dattamukti.in" target="_blank" rel="noopener">swadharma.dattamukti.in&nbsp;→</a>
+        <h3>Datta Mukti Kshetram</h3>
+        <p>Sri Datta Gnana Bodha Sabha Trust, Rajahmundry — sevas, accommodation, staff and
+          payments across four kshetrams, in English and Telugu.</p>
+      </article>
+      <article class="domain">
+        <a class="domain-url" href="https://swadharma.dharmaposhanam.in" target="_blank" rel="noopener">swadharma.dharmaposhanam.in&nbsp;→</a>
+        <h3>Dharma Poshanam Services</h3>
+        <p>Our own services list, running on exactly the same platform we give every account.</p>
+      </article>
+      <article class="domain domain-generic">
+        <span class="domain-url">swadharma.yourtemple.in</span>
+        <h3>Your organisation</h3>
+        <p>Point one DNS record at us and your site is live on your own domain, with your
+          catalogue and your branding.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ Roles ═══════════════ -->
+<section class="band band-alt">
+  <div class="wrap">
+    <div class="band-head">
+      <span class="eyebrow">Four roles, one platform</span>
+      <h2>Everyone sees <em>the view they need</em></h2>
+      <p>No one has to be told what happened by someone else. The devotee, the priest, the desk
+        and the trustee each open the same platform and find their own work in it.</p>
+    </div>
+
+    <div class="roles">
+
+      <article class="role">
+        <div>
+          <span class="role-iast">Bhakta</span>
+          <h3>The Devotee</h3>
+        </div>
+        <p class="role-job">Book a seva, and see every engagement — past, present and forthcoming — in one place.</p>
+        <ul class="feats">
+          <li><span>Browse sevas by kshetram, in your own languages</span><span class="chip chip-live">Live</span></li>
+          <li><span>Book against real availability — time slots, daily quota, open-time sevas</span><span class="chip chip-live">Live</span></li>
+          <li><span>Gotra, nakshatra and sankalpa details captured with the booking</span><span class="chip chip-live">Live</span></li>
+          <li><span>Pay online; receipt and acceptance letter by email</span><span class="chip chip-live">Live</span></li>
+          <li><span>Reserve accommodation alongside the seva</span><span class="chip chip-live">Live</span></li>
+          <li><span>Engagement history with contributions to date</span><span class="chip chip-dev">Building</span></li>
+          <li><span>Rate a completed seva; message the temple</span><span class="chip chip-dev">Building</span></li>
+        </ul>
+      </article>
+
+      <article class="role">
+        <div>
+          <span class="role-iast">Sevaka — Purohita · Cook · Helper</span>
+          <h3>The Service Provider</h3>
+        </div>
+        <p class="role-job">The day's appointments on your own phone, with everything needed to perform them — including where to go.</p>
+        <ul class="feats">
+          <li><span>My schedule — today, this week, by kshetram</span><span class="chip chip-dev">Building</span></li>
+          <li><span>Where the seva happens: temple or devotee's home, with address and map</span><span class="chip chip-dev">Building</span></li>
+          <li><span>Full job card — seva, devotee, gotra, nakshatra, prasadam requirements</span><span class="chip chip-dev">Building</span></li>
+          <li><span>Set your own weekly availability</span><span class="chip chip-dev">Building</span></li>
+          <li><span>Mark completed, or decline with a recorded reason</span><span class="chip chip-dev">Building</span></li>
+          <li><span>Register profile — role, specializations, languages</span><span class="chip chip-live">Live</span></li>
+        </ul>
+      </article>
+
+      <article class="role">
+        <div>
+          <span class="role-iast">Vyavasthāpaka</span>
+          <h3>The Operator</h3>
+        </div>
+        <p class="role-job">Run the day — approvals, assignments, payments and the front desk.</p>
+        <ul class="feats">
+          <li><span>Approve bookings; assign purohita and room</span><span class="chip chip-live">Live</span></li>
+          <li><span>Verify payments; resend confirmations and acceptance letters</span><span class="chip chip-live">Live</span></li>
+          <li><span>Job cards, room checklists and maintenance tasks</span><span class="chip chip-live">Live</span></li>
+          <li><span>Hotel-style reservation calendar with capacity badges</span><span class="chip chip-live">Live</span></li>
+          <li><span>Enquiry inbox from the public contact form</span><span class="chip chip-live">Live</span></li>
+          <li><span>Record an offline or cash receipt against a booking</span><span class="chip chip-dev">Building</span></li>
+          <li><span>Message providers and devotees directly</span><span class="chip chip-dev">Building</span></li>
+        </ul>
+      </article>
+
+      <article class="role">
+        <div>
+          <span class="role-iast">Adhikārī</span>
+          <h3>The Administrator</h3>
+        </div>
+        <p class="role-job">Configure the platform and see the whole organisation at once.</p>
+        <ul class="feats">
+          <li><span>Services, rates, time slots and daily quotas</span><span class="chip chip-live">Live</span></li>
+          <li><span>Several kshetrams under one trust, each with its own catalogue</span><span class="chip chip-live">Live</span></li>
+          <li><span>Staff register with roles and specializations</span><span class="chip chip-live">Live</span></li>
+          <li><span>Reports and booking analytics</span><span class="chip chip-live">Live</span></li>
+          <li><span>Content and legal pages maintained in every language you serve</span><span class="chip chip-live">Live</span></li>
+          <li><span>Broadcast an announcement to staff or devotees</span><span class="chip chip-dev">Building</span></li>
+        </ul>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ Venue / dispatch ═══════════════ -->
+<section class="band">
+  <div class="wrap">
+    <div class="band-head">
+      <span class="eyebrow">For the staff and pundits</span>
+      <h2>Every assignment says <em>exactly where to go</em></h2>
+      <p>A seva is performed at the temple or at the devotee's home. The staff and pundits
+        attached to your temple see which — and when it is a home visit, the address and a map
+        link travel with the assignment.</p>
+    </div>
+
+    <div class="split">
+      <div class="split-copy">
+        <p class="first">No more telephoning the office to ask for a house number. The purohita,
+          the cook and the helper each open their schedule and find the address already there.</p>
+        <ul class="plain">
+          <li><span class="key">At the temple</span><span>The assignment carries the kshetram and its address. No devotee address is shown at all.</span></li>
+          <li><span class="key">At the home</span><span>The service address is captured at booking and cannot be left blank — an assignment can never ship undispatchable.</span></li>
+          <li><span class="key">On the map</span><span>One tap opens the location in Google Maps, with directions from wherever the provider is.</span></li>
+          <li><span class="key">Kept private</span><span>A devotee's address is visible only to the assigned provider and the office — never in a list, never to other staff.</span></li>
+        </ul>
+      </div>
+
+      <div class="dispatch">
+        <div class="dispatch-top">
+          <strong>Sahasranama Archana</strong>
+          <span class="dispatch-when">Mon 10 Aug · 11:00</span>
+        </div>
+        <dl class="dispatch-rows">
+          <div class="drow">
+            <dt>Devotee</dt>
+            <dd>Sri Rajkiran Rao<br><span style="color:var(--ink-soft)">Gotra Bharadvāja · Nakshatra Rohiṇī</span></dd>
+          </div>
+          <div class="drow">
+            <dt>Where</dt>
+            <dd>
+              <span class="venue-pill">Home visit</span><br>
+              12-3-45 Danavaipeta,<br>Rajahmundry 533103<br>
+              <a class="maplink" href="https://www.google.com/maps/search/?api=1&amp;query=Danavaipeta%2C%20Rajahmundry" target="_blank" rel="noopener">Open in Google Maps →</a>
+            </dd>
+          </div>
+          <div class="drow">
+            <dt>Prasadam</dt>
+            <dd>Pulihora · Payasam — 30 servings</dd>
+          </div>
+          <div class="drow">
+            <dt>Assigned</dt>
+            <dd>Pt. Badari Garu — Purohita<br>Smt. Lakshmi — Cook</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ Map discovery ═══════════════ -->
+<section class="band band-alt">
+  <div class="wrap">
+    <div class="band-head">
+      <span class="eyebrow">On the roadmap</span>
+      <h2>Seek a Service — <em>on a map</em></h2>
+      <p>Choose the seva from a dropdown and see where it can be performed and who is free to
+        perform it: temples offering that seva, and qualified purohitas, cooks and helpers
+        available in the devotee's area.</p>
+    </div>
+
+    <div class="split">
+      <div class="split-copy">
+        <p class="first">Temple platforms almost universally present a static list and leave the
+          devotee to work out the rest by telephone. Swadharma turns discovery around —
+          availability becomes something you can <em>see</em>, the way you see a cab on a map.</p>
+        <p>Availability comes from the same slot engine that drives booking, so what appears on
+          the map is genuinely bookable, not merely present. Providers publish a
+          <b>service area</b>; a provider's home address is never plotted.</p>
+        <ul class="plain">
+          <li><span class="key">Choose</span><span>Sahasranama Archana · Shraddham · Gruhapravesham · Annadanam …</span></li>
+          <li><span class="key">See</span><span>Temples and available professionals within reach, with distance and next free slot</span></li>
+          <li><span class="key">Book</span><span>Straight into the same booking, payment and acceptance-letter flow</span></li>
+        </ul>
+      </div>
+
+      <figure class="fig">
+        <div class="fig-frame">
+          <svg viewBox="0 0 300 250" role="img"
+               aria-label="Schematic map: a central devotee location with concentric reach rings, three temple markers and four available professionals plotted around it.">
+            <defs>
+              <radialGradient id="reach" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.2"/>
+                <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+
+            <g stroke="#B9AE9C" stroke-width="0.4" opacity="0.55">
+              <path d="M0 50H300M0 100H300M0 150H300M0 200H300"/>
+              <path d="M50 0V250M100 0V250M150 0V250M200 0V250M250 0V250"/>
+            </g>
+
+            <path d="M-5 175 C 60 160, 95 200, 150 188 S 250 150, 305 168"
+                  fill="none" stroke="#B9AE9C" stroke-width="5"
+                  stroke-linecap="round" opacity="0.5"/>
+
+            <circle cx="150" cy="120" r="96" fill="url(#reach)"/>
+            <g fill="none" stroke="#B4620A" stroke-width="0.8" stroke-dasharray="3 4" opacity="0.9">
+              <circle cx="150" cy="120" r="44"/>
+              <circle cx="150" cy="120" r="70"/>
+              <circle cx="150" cy="120" r="96"/>
+            </g>
+
+            <g fill="#9A3412">
+              <circle cx="112" cy="92"  r="4.5"/>
+              <circle cx="188" cy="146" r="4.5"/>
+              <circle cx="132" cy="168" r="4.5"/>
+              <circle cx="205" cy="86"  r="4.5"/>
+            </g>
+            <g fill="none" stroke="#9A3412" stroke-width="0.9" opacity="0.45">
+              <circle cx="112" cy="92"  r="9"/>
+              <circle cx="188" cy="146" r="9"/>
+              <circle cx="132" cy="168" r="9"/>
+              <circle cx="205" cy="86"  r="9"/>
+            </g>
+
+            <g fill="#7A6E5E">
+              <path d="M62 66 l9 -18 9 18 z"/><rect x="66" y="66" width="10" height="7"/>
+              <path d="M232 178 l9 -18 9 18 z"/><rect x="236" y="178" width="10" height="7"/>
+              <path d="M96 214 l9 -18 9 18 z"/><rect x="100" y="214" width="10" height="7"/>
+            </g>
+
+            <path d="M150 120 L188 146" stroke="#9A3412" stroke-width="1.6" stroke-dasharray="4 3"/>
+            <circle cx="150" cy="120" r="9" fill="#F59E0B" stroke="#FAF6EE" stroke-width="2.5"/>
+            <circle cx="150" cy="120" r="3" fill="#9A3412"/>
+          </svg>
+        </div>
+        <figcaption><b>Schematic.</b> Saffron marks the devotee; maroon dots are professionals
+          free for the chosen seva, each inside a published service area. Grey markers are
+          temples offering it. Rings show reach, not precision.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ Platform ═══════════════ -->
+<section class="band">
+  <div class="wrap">
+    <div class="band-head">
+      <span class="eyebrow">What every account carries</span>
+      <h2>Built for how a <em>temple actually runs</em></h2>
+    </div>
+
+    <dl class="platform">
+      <div><dt>Many kshetrams</dt><dd>One trust, several kshetrams, each with its own service catalogue, content and rates.</dd></div>
+      <div><dt>Languages</dt><dd>English and Telugu in production; Devanagari and Kannada supported.</dd></div>
+      <div><dt>Payments</dt><dd>Razorpay, with verification, receipts and corpus-fund declaration.</dd></div>
+      <div><dt>Reaching devotees</dt><dd>Email and WhatsApp today; in-app messages joining them.</dd></div>
+      <div><dt>Signing in</dt><dd>Google sign-in and password, with one identity across all four roles.</dd></div>
+      <div><dt>Your data</dt><dd>Every record carries your organisation's identity; no request can reach across accounts.</dd></div>
+      <div><dt>Hosting</dt><dd>Google Cloud, Mumbai region, with automatic deployment and backups.</dd></div>
+    </dl>
+
+    <div class="legend">
+      <span class="item"><span class="chip chip-live">Live</span> in production today</span>
+      <span class="item"><span class="chip chip-dev">Building</span> in development now</span>
+      <span class="item"><span class="chip chip-road">Roadmap</span> planned next</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ Companion services ═══════════════ -->
+<section class="band band-alt">
+  <div class="wrap">
+    <div class="band-head">
+      <span class="eyebrow">Separate products · free to start</span>
+      <h2>Two more from <em>Dharma Poshanam</em></h2>
+      <p>Not part of Swadharma and not billed with it. Two independent products from the same
+        house, offered free to start to any organisation holding a Swadharma account.</p>
+    </div>
+
+    <div class="companions">
+      <article class="companion">
+        <div class="companion-head">
+          <h3>Dravya</h3>
+          <span class="companion-sanskrit">द्रव्य</span>
+        </div>
+        <p class="companion-role">Pooja materials supply</p>
+        <p class="companion-body">Pre-printed pooja kits, delivered worldwide — assembled kits
+          covering the samskaras, curated by scholars and shipped to arrive before the
+          ceremonial date.</p>
+        <a class="companion-link" href="https://dravya-web-328586595579.asia-southeast1.run.app/" target="_blank" rel="noopener">Visit Dravya&nbsp;→</a>
+      </article>
+
+      <article class="companion">
+        <div class="companion-head">
+          <h3>Viyat</h3>
+          <span class="companion-sanskrit">वियत्</span>
+        </div>
+        <p class="companion-role">Jyotish</p>
+        <p class="companion-body">A jyotish application from Dharma Poshanam.</p>
+        <a class="companion-link" href="https://viyat-3fcf1.web.app/#/home" target="_blank" rel="noopener">Visit Viyat&nbsp;→</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ Enrol ═══════════════ -->
+<section class="enrol">
+  <div class="wrap enrol-in">
+    <div>
+      <span class="eyebrow">Enrol</span>
+      <h2>Open an account for <em>your organisation</em></h2>
+      <p>Write to us with your organisation's name and the sevas you offer. We will set up your
+        account, load your catalogue and hand you the keys.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="mailto:swadharma@dharmaposhanam.in?subject=Swadharma%20—%20new%20account%20enquiry">swadharma@dharmaposhanam.in</a>
+      </div>
+    </div>
+
+    <ol class="enrol-steps">
+      <li><span class="step-n">01</span><span><b>Tell us about your organisation</b><span class="sub">Name, trust details, kshetrams and the languages you serve.</span></span></li>
+      <li><span class="step-n">02</span><span><b>We load your catalogue</b><span class="sub">Sevas, rates, time slots, daily quotas and accommodation, with your own content.</span></span></li>
+      <li><span class="step-n">03</span><span><b>Point one DNS record at us</b><span class="sub">Your site goes live at your own address — swadharma.yourtemple.in.</span></span></li>
+      <li><span class="step-n">04</span><span><b>Add your people</b><span class="sub">Staff, purohitas, cooks and helpers, each with their own sign-in.</span></span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══════════════ Footer ═══════════════ -->
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div>
+      <strong>Swadharma Service Management</strong> — a product of <strong>Dharma Poshanam Inc</strong><br>
+      swadharma@dharmaposhanam.in · swadharma.dharmaposhanam.in<br>
+      Installations: swadharma.dattamukti.in · swadharma.dharmaposhanam.in<br>
+      Separate products, free to start: Dravya — pooja materials · Viyat — jyotish
+    </div>
+    <div class="right">
+      Prepared 7 August 2026
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

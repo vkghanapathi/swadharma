@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Add Your Organisation · Swadharma Services</title>
+<meta name="description" content="Onboard your temple, trust or organisation to Swadharma Services (Dharma Satram). Connect your own Stripe (USA) or Razorpay (India) account and start accepting donations for ceremonies and services." />
+<meta property="og:title" content="Add Your Organisation · Swadharma Services" />
+<meta property="og:type" content="website" />
+<link rel="icon" href="https://dharmaposhanam.in/favicon.ico" />
+<style>
+:root {
+    --sw-navy: #1F3569; --sw-navy-dark: #152347; --sw-navy-light: #EAEEF7;
+    --sw-gold: #C89939; --sw-gold-dark: #9E7724;
+    --sw-saffron: #0F766E; --sw-saffron-dark: #0B5A54; --sw-saffron-light: #E6F4F1;
+    --sw-cream: #F4F8F6; --sw-cream-dark: #E7EFEB;
+    --sw-text: #1F2A37; --sw-muted: #51606E;
+    --sw-border: #D6DEDA; --sw-border-strong: #B6C2BC; --sw-border-soft: #E8EFEB;
+    --sw-success: #2D6B4E; --sw-danger: #B4432E;
+    --sw-radius: 10px; --sw-radius-lg: 14px; --sw-radius-xl: 22px; --sw-radius-pill: 999px;
+    --sw-shadow-xs: 0 1px 2px rgba(31, 53, 105, 0.06);
+    --sw-shadow: 0 1px 3px rgba(31,53,105,0.06), 0 4px 12px rgba(31,53,105,0.06);
+    --sw-shadow-md: 0 2px 6px rgba(31,53,105,0.08), 0 12px 28px rgba(31,53,105,0.10);
+    --sw-grad-navy: linear-gradient(135deg, #1F3569 0%, #152347 100%);
+    --sw-fast: 180ms ease;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--sw-text); background: var(--sw-cream); line-height: 1.5; -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+.band { display: flex; height: 6px; }
+.band > span { flex: 1; }
+.band > span:nth-child(1) { background: var(--sw-navy); }
+.band > span:nth-child(2) { background: var(--sw-gold); }
+.band > span:nth-child(3) { background: var(--sw-saffron); }
+
+nav.top {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 12px 24px; background: white; border-bottom: 1px solid var(--sw-border);
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand .glyph { font-family: Georgia, serif; font-size: 22px; color: var(--sw-saffron-dark); }
+.brand .wm { display: flex; flex-direction: column; line-height: 1.05; }
+.brand .wm b { color: var(--sw-navy); font-size: 15.5px; }
+.brand .wm small { color: var(--sw-muted); font-size: 11px; letter-spacing: 0.4px; text-transform: uppercase; }
+nav.top .back { font-size: 14px; color: var(--sw-muted); font-weight: 500; }
+nav.top .back:hover { color: var(--sw-navy); }
+
+.head {
+    text-align: center; padding: 48px 24px 12px;
+    background: radial-gradient(60% 60% at 50% 0%, rgba(200,153,57,0.16) 0%, transparent 60%), var(--sw-cream);
+}
+.head .eyebrow {
+    display: inline-block; padding: 5px 16px; background: white; color: var(--sw-saffron-dark);
+    border: 1px solid var(--sw-border-strong); border-radius: var(--sw-radius-pill);
+    font-size: 11.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 16px;
+}
+.head h1 { color: var(--sw-navy); font-size: clamp(26px, 3.6vw, 36px); margin: 0 0 10px; letter-spacing: -0.4px; }
+.head p { color: var(--sw-muted); font-size: 16px; max-width: 640px; margin: 0 auto; }
+
+form { max-width: 760px; margin: 0 auto; padding: 24px 24px 64px; }
+fieldset {
+    border: 1px solid var(--sw-border); border-radius: var(--sw-radius-xl); background: white;
+    padding: 26px 24px 28px; margin: 0 0 22px; box-shadow: var(--sw-shadow-xs); position: relative;
+}
+legend {
+    padding: 0 12px; margin-left: -4px; color: var(--sw-navy); font-weight: 700; font-size: 16.5px;
+    display: flex; align-items: center; gap: 10px;
+}
+legend .step {
+    display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--sw-grad-navy); color: white; font-size: 13px; font-family: Georgia, serif;
+}
+.fs-note { color: var(--sw-muted); font-size: 13.5px; margin: -6px 0 20px; }
+.fs-note.info {
+    background: var(--sw-saffron-light); border: 1px solid rgba(15,118,110,0.25); color: var(--sw-saffron-dark);
+    padding: 10px 14px; border-radius: var(--sw-radius); margin: 4px 0 20px;
+}
+.fs-note.info b { color: var(--sw-saffron-dark); }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px; }
+.row.one { grid-template-columns: 1fr; }
+@media (max-width: 620px) { .row { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+.field.full { grid-column: 1 / -1; }
+label { font-size: 13.5px; font-weight: 600; color: var(--sw-text); }
+label .req { color: var(--sw-danger); }
+label .hint { font-weight: 400; color: var(--sw-muted); font-size: 12.5px; }
+input[type=text], input[type=email], input[type=tel], input[type=url], select, textarea {
+    font: inherit; font-size: 14.5px; padding: 10px 12px; border: 1px solid var(--sw-border-strong);
+    border-radius: var(--sw-radius); background: white; color: var(--sw-text); transition: border-color var(--sw-fast), box-shadow var(--sw-fast);
+}
+input:focus, select:focus, textarea:focus {
+    outline: none; border-color: var(--sw-saffron); box-shadow: 0 0 0 3px rgba(15,118,110,0.12);
+}
+textarea { resize: vertical; min-height: 74px; }
+.prefix {
+    display: flex; align-items: stretch; border: 1px solid var(--sw-border-strong);
+    border-radius: var(--sw-radius); overflow: hidden; background: white;
+}
+.prefix:focus-within { border-color: var(--sw-saffron); box-shadow: 0 0 0 3px rgba(15,118,110,0.12); }
+.prefix .p { background: var(--sw-cream-dark); color: var(--sw-muted); padding: 10px 12px; font-size: 14px; white-space: nowrap; border-right: 1px solid var(--sw-border); }
+.prefix .s { background: var(--sw-cream-dark); color: var(--sw-muted); padding: 10px 12px; font-size: 14px; white-space: nowrap; border-left: 1px solid var(--sw-border); }
+.prefix input { border: 0; flex: 1; box-shadow: none !important; }
+
+.choices { display: grid; gap: 12px; }
+.choice {
+    display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--sw-border-strong);
+    border-radius: var(--sw-radius-lg); cursor: pointer; transition: border-color var(--sw-fast), background var(--sw-fast);
+}
+.choice:hover { border-color: var(--sw-saffron); }
+.choice input { margin-top: 3px; accent-color: var(--sw-saffron); }
+.choice .c-body b { display: block; color: var(--sw-navy); font-size: 14.5px; }
+.choice .c-body span { color: var(--sw-muted); font-size: 13px; }
+.choice.sel { border-color: var(--sw-saffron); background: var(--sw-saffron-light); }
+
+.checks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+@media (max-width: 620px) { .checks { grid-template-columns: 1fr; } }
+.check { display: flex; gap: 9px; align-items: flex-start; font-size: 14px; color: var(--sw-text); cursor: pointer; }
+.check input { margin-top: 3px; accent-color: var(--sw-saffron); }
+.check small { display: block; color: var(--sw-muted); font-size: 12.5px; }
+
+.hidden { display: none !important; }
+.err { color: var(--sw-danger); font-size: 12.5px; }
+
+.actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
+.consent { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; color: var(--sw-muted); max-width: 440px; }
+.consent input { margin-top: 3px; accent-color: var(--sw-saffron); }
+.btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border: 0; cursor: pointer;
+    border-radius: var(--sw-radius-pill); font: inherit; font-size: 15px; font-weight: 600;
+    background: var(--sw-navy); color: white; transition: transform 0.15s ease, box-shadow 0.15s ease, background var(--sw-fast);
+}
+.btn:hover { transform: translateY(-1px); box-shadow: var(--sw-shadow-md); background: var(--sw-navy-dark); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn::after { content: "→"; font-weight: 700; }
+
+.success {
+    max-width: 600px; margin: 48px auto; background: white; border: 1px solid var(--sw-border);
+    border-radius: var(--sw-radius-xl); padding: 40px 32px; text-align: center; box-shadow: var(--sw-shadow);
+}
+.success .tick { font-size: 44px; }
+.success h2 { color: var(--sw-navy); margin: 8px 0 10px; }
+.success p { color: var(--sw-muted); font-size: 15px; }
+.success .ref { display: inline-block; margin-top: 10px; font-family: Georgia, serif; color: var(--sw-gold-dark); font-weight: 700; letter-spacing: 1px; }
+
+footer { background: var(--sw-navy-dark); color: rgba(255,255,255,0.8); padding: 26px 24px; text-align: center; font-size: 13px; }
+footer a { color: var(--sw-gold); }
+</style>
+</head>
+<body>
+
+<div class="band" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<nav class="top">
+    <a class="brand" href="index.html">
+        <span class="glyph">॥</span>
+        <span class="wm"><b>Swadharma Services</b><small>Dharma Satram · धर्म सत्रम्</small></span>
+    </a>
+    <a class="back" href="index.html">← Back to home</a>
+</nav>
+
+<div class="head">
+    <span class="eyebrow">Add your organisation</span>
+    <h1>Onboard to Swadharma Services</h1>
+    <p>Set up a branded ceremony &amp; donation portal for your temple, trust or organisation. Connect your own payment account — funds settle directly to you.</p>
+</div>
+
+<form id="onboard" novalidate>
+
+    <!-- 1. Organisation -->
+    <fieldset>
+        <legend><span class="step">1</span> Organisation</legend>
+        <div class="row">
+            <div class="field full">
+                <label for="orgName">Organisation / Temple / Trust name <span class="req">*</span></label>
+                <input type="text" id="orgName" name="orgName" required placeholder="e.g. Sri Datta Gnana Bodha Sabha Trust" />
+                <span class="err hidden" data-for="orgName"></span>
+            </div>
+            <div class="field">
+                <label for="orgType">Type <span class="req">*</span></label>
+                <select id="orgType" name="orgType" required>
+                    <option value="">Select…</option>
+                    <option>Temple</option>
+                    <option>Trust / Foundation</option>
+                    <option>Pāṭhaśālā / Veda school</option>
+                    <option>Individual Purohita</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div class="field full">
+                <label>Where is this organisation registered? <span class="req">*</span><br><span class="hint">This fixes your currency, your gateway and the entity that issues your receipts. It cannot be changed later.</span></label>
+                <div class="choices">
+                    <label class="choice">
+                        <input type="radio" name="region" value="IN" required />
+                        <span class="c-body"><b>India</b><span>INR · Razorpay · receipted in India</span></span>
+                    </label>
+                    <label class="choice">
+                        <input type="radio" name="region" value="WORLD" />
+                        <span class="c-body"><b>Rest of the world</b><span>USD · Stripe · receipted by Dharma Poshanam Inc, 501(c)(3)</span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="field full">
+                <label for="domain">Your website domain <span class="hint">(optional — your portal will be swadharma.&lt;domain&gt;)</span></label>
+                <input type="text" id="domain" name="domain" placeholder="e.g. dattamukti.in" />
+            </div>
+            <div class="field full">
+                <label for="slug">Portal subdomain <span class="req">*</span></label>
+                <div class="prefix">
+                    <span class="p">swadharma.</span>
+                    <input type="text" id="slug" name="slug" required placeholder="yourorg.in" autocomplete="off" />
+                </div>
+                <span class="err hidden" data-for="slug"></span>
+            </div>
+        </div>
+    </fieldset>
+
+    <!-- 2. Primary contact -->
+    <fieldset>
+        <legend><span class="step">2</span> Primary contact</legend>
+        <div class="row">
+            <div class="field">
+                <label for="contactName">Full name <span class="req">*</span></label>
+                <input type="text" id="contactName" name="contactName" required />
+                <span class="err hidden" data-for="contactName"></span>
+            </div>
+            <div class="field">
+                <label for="role">Role / designation</label>
+                <input type="text" id="role" name="role" placeholder="e.g. Trustee, Coordinator" />
+            </div>
+            <div class="field">
+                <label for="email">Email <span class="req">*</span></label>
+                <input type="email" id="email" name="email" required />
+                <span class="err hidden" data-for="email"></span>
+            </div>
+            <div class="field">
+                <label for="phone">Phone / WhatsApp <span class="req">*</span></label>
+                <input type="tel" id="phone" name="phone" required placeholder="+91… / +1…" />
+                <span class="err hidden" data-for="phone"></span>
+            </div>
+            <div class="field full">
+                <label for="city">City &amp; country</label>
+                <input type="text" id="city" name="city" placeholder="e.g. Rajahmundry, India" />
+            </div>
+        </div>
+    </fieldset>
+
+    <!-- 3. Payments -->
+    <fieldset>
+        <legend><span class="step">3</span> How you'll receive donations</legend>
+        <p class="fs-note info">
+            🔒 For your security, <b>never enter secret API keys here.</b> Choose your method below and provide only
+            public identifiers. After onboarding, our team will collect any secret credentials through a secure channel
+            (stored in Google Secret Manager) — <b>Phase 2</b>. No live payments are processed by this form.
+        </p>
+        <div class="choices" id="payChoices">
+            <label class="choice">
+                <input type="radio" name="payMethod" value="own_gateway" required />
+                <span class="c-body">
+                    <b>My own gateway account</b>
+                    <span>I have (or will create) my own <span class="rail-name">Stripe / Razorpay</span> account. Donations settle <b>directly to my bank</b>. Swadharma charges only the subscription.</span>
+                </span>
+            </label>
+            <label class="choice">
+                <input type="radio" name="payMethod" value="facilitated" />
+                <span class="c-body">
+                    <b>Facilitated by a Dharma Poshanam affiliate</b>
+                    <span>For smaller organisations without a gateway account. An affiliate collects on your behalf and remits to you, minus a small <b>facilitation fee</b>.</span>
+                </span>
+            </label>
+        </div>
+
+        <!-- own gateway public identifiers -->
+        <div id="ownFields" class="hidden" style="margin-top:18px">
+            <div class="row">
+                <div class="field full" data-rail="US">
+                    <label for="stripeAcct">Stripe account email or Account ID <span class="hint">(public — not the secret key)</span></label>
+                    <input type="text" id="stripeAcct" name="stripeAcct" placeholder="acct_… or billing@yourorg.org" />
+                </div>
+                <div class="field full" data-rail="IN">
+                    <label for="razorpayKeyId">Razorpay Key ID <span class="hint">(public key id, starts with rzp_ — not the secret)</span></label>
+                    <input type="text" id="razorpayKeyId" name="razorpayKeyId" placeholder="rzp_live_…" />
+                </div>
+            </div>
+        </div>
+
+        <!-- facilitated -->
+        <div id="facFields" class="hidden" style="margin-top:18px">
+            <div class="field full">
+                <label for="facAffiliate">Preferred processing affiliate <span class="hint">(optional — we can assign one)</span></label>
+                <input type="text" id="facAffiliate" name="facAffiliate" placeholder="e.g. Dharma Poshanam Trust (DPT)" />
+            </div>
+            <p class="fs-note">Facilitation fee and settlement schedule will be confirmed with you before go-live.</p>
+        </div>
+    </fieldset>
+
+    <!-- 4. Donations setup (from SSM) -->
+    <fieldset>
+        <legend><span class="step">4</span> Donations &amp; services</legend>
+        <p class="fs-note">These map to the Swadharma Service Module (SSM). Select what your portal should accept — you can refine later.</p>
+        <div class="field full" style="margin-bottom:16px">
+            <label>Donation / service categories to enable</label>
+            <div class="checks" style="margin-top:6px">
+                <label class="check"><input type="checkbox" name="cat" value="shraddha" checked /> <span>Shrāddha (Hiraṇya, Pārvaṇa, Mahālaya)</span></label>
+                <label class="check"><input type="checkbox" name="cat" value="samskara" checked /> <span>Samskāras (16 rituals)</span></label>
+                <label class="check"><input type="checkbox" name="cat" value="homa" /> <span>Homa / Havana services</span></label>
+                <label class="check"><input type="checkbox" name="cat" value="annadana" /> <span>Anna-dāna / food services</span></label>
+                <label class="check"><input type="checkbox" name="cat" value="accommodation" /> <span>Pilgrim accommodation</span></label>
+                <label class="check"><input type="checkbox" name="cat" value="corpus" /> <span>Corpus fund contribution</span></label>
+                <label class="check"><input type="checkbox" name="cat" value="general" checked /> <span>General donation</span></label>
+                <label class="check"><input type="checkbox" name="cat" value="materials" /> <span>Pooja materials (Dravya)</span></label>
+            </div>
+        </div>
+        <div class="checks">
+            <label class="check"><input type="checkbox" name="opt" value="corpus_declaration" /> <span>Enable corpus-fund declaration<small>Lets donors declare a donation as a corpus contribution</small></span></label>
+            <label class="check"><input type="checkbox" name="opt" value="donor_address" checked /> <span>Collect donor address<small>For 80G (India) / 501(c)(3) (USA) receipts</small></span></label>
+        </div>
+    </fieldset>
+
+    <!-- 5. Plan -->
+    <fieldset>
+        <legend><span class="step">5</span> Subscription plan</legend>
+        <div class="choices">
+            <label class="choice">
+                <input type="radio" name="plan" value="monthly" required />
+                <span class="c-body"><b>Monthly — $49/month</b><span>Founding rate $31/month for the first 10 organisations.</span></span>
+            </label>
+            <label class="choice">
+                <input type="radio" name="plan" value="annual" />
+                <span class="c-body"><b>Annual — $499/year</b><span>Founding rate $360/year. Two months free vs. monthly.</span></span>
+            </label>
+        </div>
+        <label class="check" style="margin-top:16px"><input type="checkbox" name="opt" value="founding" /> <span>Apply for the founding 40% discount (first 10 organisations)</span></label>
+    </fieldset>
+
+    <div class="actions">
+        <label class="consent">
+            <input type="checkbox" id="consent" required />
+            <span>I confirm the details are accurate and agree to be contacted about onboarding. No payment is taken now.</span>
+        </label>
+        <button class="btn" type="submit" id="submitBtn">Submit application</button>
+    </div>
+    <p class="err hidden" data-for="_form" style="text-align:right; margin-top:10px"></p>
+</form>
+
+<!-- success state -->
+<div class="success hidden" id="successPanel">
+    <div class="tick">🎉</div>
+    <h2>Application received</h2>
+    <p>Thank you. Our team will reach out at the email you provided to complete onboarding and connect your payment account.</p>
+    <span class="ref" id="refCode"></span>
+</div>
+
+<footer>
+    Swadharma Services · Dharma Satram — under <a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">Dharma Poshanam Inc</a> ·
+    <a href="mailto:swadharma@dharmaposhanam.in">swadharma@dharmaposhanam.in</a>
+</footer>
+
+<script>
+(function () {
+    "use strict";
+
+    // Vitta Fin owns the subscription payment flow. The form submits to Vitta's
+    // portal (signup-request -> start-checkout) and redirects the browser to the
+    // gateway (India->Razorpay, else->Stripe). On payment, Vitta approves and
+    // notifies SSM to provision the swadharma.<domain> booking portal.
+    var VITTA_API_BASE = "https://vitta-api-ijxrwoeiyq-el.a.run.app";
+    // Dharma Satram is one module. NOTE: pricing reconciliation pending — Vitta's
+    // 'single' tier is $9.90/mo; the $49/$499 marketing price needs a standalone
+    // Dharma-Satram price (like 'vipani') or a tier decision by VKG.
+    var VITTA_TIER = "single";
+    var FALLBACK_EMAIL = "swadharma@dharmaposhanam.in";
+
+    var form = document.getElementById("onboard");
+    // region is a radio group (India / Rest of the world) — read the checked one.
+    function regionValue() {
+        var r = form.querySelector('input[name=region]:checked');
+        return r ? r.value : "";
+    }
+    var payChoices = document.getElementById("payChoices");
+    var ownFields = document.getElementById("ownFields");
+    var facFields = document.getElementById("facFields");
+    var submitBtn = document.getElementById("submitBtn");
+
+    // reflect region → which rail label + which own-gateway field shows
+    function applyRegion() {
+        var r = regionValue();
+        var label = r === "IN" ? "Razorpay" : r === "WORLD" ? "Stripe" : "Stripe / Razorpay";
+        Array.prototype.forEach.call(document.querySelectorAll(".rail-name"), function (el) { el.textContent = label; });
+        document.querySelectorAll("#ownFields [data-rail]").forEach(function (el) {
+            var rail = el.getAttribute("data-rail");
+            // WORLD settles on the US rail — that is where the 501(c)(3) receipts it.
+            var show = (r === "IN" && rail === "IN") || (r === "WORLD" && rail === "US") || !r;
+            el.classList.toggle("hidden", !show);
+        });
+    }
+    form.addEventListener("change", function (e) {
+        if (e.target && e.target.name === "region") applyRegion();
+    });
+
+    // payment method → show relevant sub-fields + highlight selected
+    payChoices.addEventListener("change", function () {
+        var v = (form.querySelector('input[name=payMethod]:checked') || {}).value;
+        ownFields.classList.toggle("hidden", v !== "own_gateway");
+        facFields.classList.toggle("hidden", v !== "facilitated");
+        applyRegion();
+    });
+
+    // visual selected state for radio "choice" cards
+    form.addEventListener("change", function (e) {
+        if (e.target.type === "radio") {
+            var group = e.target.name;
+            form.querySelectorAll('input[name="' + group + '"]').forEach(function (inp) {
+                var card = inp.closest(".choice");
+                if (card) card.classList.toggle("sel", inp.checked);
+            });
+        }
+    });
+
+    function setError(name, msg) {
+        var el = document.querySelector('.err[data-for="' + name + '"]');
+        if (el) { el.textContent = msg || ""; el.classList.toggle("hidden", !msg); }
+    }
+    function slugify(v) { return v.toLowerCase().trim().replace(/[^a-z0-9.-]+/g, "-").replace(/^-+|-+$/g, ""); }
+
+    // live slug clean-up
+    var slug = document.getElementById("slug");
+    slug.addEventListener("blur", function () { slug.value = slugify(slug.value); });
+
+    function validate() {
+        var ok = true;
+        [["orgName","Please enter the organisation name."],
+         ["contactName","Please enter a contact name."],
+         ["slug","Choose a subdomain."]].forEach(function (p) {
+            var f = document.getElementById(p[0]);
+            var bad = !f.value.trim();
+            setError(p[0], bad ? p[1] : ""); if (bad) ok = false;
+        });
+        var email = document.getElementById("email");
+        var eBad = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim());
+        setError("email", eBad ? "Enter a valid email address." : ""); if (eBad) ok = false;
+        var phone = document.getElementById("phone");
+        var pBad = phone.value.replace(/[^0-9]/g, "").length < 7;
+        setError("phone", pBad ? "Enter a valid phone number." : ""); if (pBad) ok = false;
+        if (!regionValue()) ok = false;
+        if (!form.querySelector('input[name=payMethod]:checked')) ok = false;
+        if (!form.querySelector('input[name=plan]:checked')) ok = false;
+        if (!document.getElementById("consent").checked) ok = false;
+        setError("_form", ok ? "" : "Please complete the required fields marked *.");
+        return ok;
+    }
+
+    // Map the form to Vitta Fin's /portal/signup-request contract.
+    function vittaPayload() {
+        var fd = new FormData(form);
+        var region = fd.get("region");
+        var country = region === "IN" ? "IN" : "US"; // WORLD → US entity / Stripe
+        var slug = slugify((fd.get("slug") || "").split(".")[0]); // tenant slug (no dots)
+        return {
+            tenantName: fd.get("orgName"),
+            tenantSlug: slug,
+            contactName: fd.get("contactName"),
+            contactEmail: fd.get("email"),
+            contactPhone: fd.get("phone"),
+            country: country,
+            orgType: "npo",                    // temples/trusts/schools are non-profit
+            selectedTier: VITTA_TIER,
+            selectedModules: ["dharma_satram"],
+            billingCycle: fd.get("plan") === "annual" ? "annual" : "monthly"
+        };
+    }
+
+    function collect() {
+        var fd = new FormData(form);
+        var cats = fd.getAll("cat");
+        var opts = fd.getAll("opt");
+        return {
+            organisation: {
+                name: fd.get("orgName"), type: fd.get("orgType"),
+                region: fd.get("region"), domain: fd.get("domain") || null,
+                subdomain: "swadharma." + (fd.get("slug") || "")
+            },
+            contact: {
+                name: fd.get("contactName"), role: fd.get("role") || null,
+                email: fd.get("email"), phone: fd.get("phone"), city: fd.get("city") || null
+            },
+            payments: {
+                method: fd.get("payMethod"),
+                stripeAccount: fd.get("stripeAcct") || null,
+                razorpayKeyId: fd.get("razorpayKeyId") || null,
+                facilitationAffiliate: fd.get("facAffiliate") || null
+            },
+            donations: {
+                categories: cats,
+                corpusDeclaration: opts.indexOf("corpus_declaration") > -1,
+                collectDonorAddress: opts.indexOf("donor_address") > -1
+            },
+            subscription: {
+                plan: fd.get("plan"),
+                requestFoundingDiscount: opts.indexOf("founding") > -1
+            },
+            source: "swadharmaservices.in/signup",
+            submittedAtClient: new Date().toISOString()
+        };
+    }
+
+    function refCode() {
+        // simple human-readable reference (client-side only; server assigns the real id)
+        var s = (document.getElementById("slug").value || "org").split(".")[0].toUpperCase().slice(0, 4);
+        return "SW-" + s + "-" + String(new Date().getFullYear());
+    }
+
+    function showSuccess(code) {
+        form.classList.add("hidden");
+        document.querySelector(".head").classList.add("hidden");
+        var panel = document.getElementById("successPanel");
+        document.getElementById("refCode").textContent = "Ref: " + code;
+        panel.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function emailFallback(payload, code) {
+        var subject = "Swadharma onboarding — " + payload.organisation.name + " (" + code + ")";
+        var body = "New Swadharma Services application\n\nRef: " + code + "\n\n" +
+            JSON.stringify(payload, null, 2);
+        window.location.href = "mailto:" + FALLBACK_EMAIL +
+            "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    }
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!validate()) {
+            var firstErr = form.querySelector('.err:not(.hidden)');
+            if (firstErr) firstErr.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+        }
+        var code = refCode();
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting…";
+
+        var vp = vittaPayload();
+        function fail() { emailFallback(collect(), code); showSuccess(code); }
+        function jsonRes(res) { return res.json().catch(function () { return {}; }).then(function (j) { return { ok: res.ok, j: j }; }); }
+
+        // Step 1 — create the Vitta signup request
+        fetch(VITTA_API_BASE + "/portal/signup-request", {
+            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(vp)
+        }).then(jsonRes).then(function (r) {
+            if (!r.ok || !r.j || !r.j.requestId) throw new Error("signup-request failed");
+            var reqId = r.j.requestId;
+            // No payment configured yet → confirmation screen with the reference.
+            if (!r.j.paymentRequired) { showSuccess(reqId); return; }
+            // Step 2 — start checkout, then redirect the browser to pay
+            return fetch(VITTA_API_BASE + "/portal/start-checkout", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ signupRequestId: reqId })
+            }).then(jsonRes).then(function (cr) {
+                if (cr.ok && cr.j && cr.j.url) { window.location.href = cr.j.url; return; }
+                // Gateway not configured (503) → confirmation fallback, nothing lost.
+                showSuccess(reqId);
+            });
+        }).catch(fail);
+    });
+})();
+</script>
+
+</body>
+</html>
