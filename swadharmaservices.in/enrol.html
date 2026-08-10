@@ -52,8 +52,12 @@
      Here: honeypot + required phone + no public listing until verified.
   3. NO HOME ADDRESS IS COLLECTED. Service area only — the M5 privacy rule is
      "publish the area, never the residence". Do not add an address field.
-  4. Dravya franchisee options mirror the live programme at dravya-web (5-12% commission /
-     15% stockist). Keep the percentages in step with Dravya, or drop them and link out.
+  4. Dravya franchisee options carry NO percentages by design — they would drift against
+     Dravya's own terms. The section links out to dravya4u.com/purohita/apply, which is the
+     single source of truth for commission and stockist margin.
+  5. dravyaInterest is a LEAD, not an enrolment. When the endpoint goes live, swadharma-api
+     forwards it to Dravya's signed lead feed; the contract is in DRAVYA_LEAD_FORWARD.md
+     next to this file. Dravya failing must never block a Swadharma empanelment.
 -->
 
 <div class="topbar">
@@ -275,6 +279,12 @@
                 <label class="check"><input type="checkbox" name="dravya" value="tell_me_later" />
                     <span><b>Tell me more later</b> — I am interested but not deciding now.</span></label>
             </div>
+
+            <p class="hint" style="margin:14px 0 0;color:var(--sw-muted);font-size:13.5px;">
+                Ticking a box above simply passes your name to Dravya, who will contact you
+                separately — it has no effect on your Swadharma empanelment. Dravya runs its own
+                programme on its own terms; you can read them and apply directly at
+                <a href="https://dravya4u.com/purohita/apply" target="_blank" rel="noreferrer">dravya4u.com/purohita/apply</a>.</p>
         </div>
 
         <div class="formcard">
