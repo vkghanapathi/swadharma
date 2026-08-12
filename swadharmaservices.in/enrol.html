@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Enrol as a Service Professional · Swadharma Services</title>
-<meta name="description" content="Register as a Purohita, Archaka, Decorator, Cook, Helper or Event Coordinator with Swadharma. Basic details, an empanelment interview, and your own profile page listed by state and town." />
+<meta name="description" content="Register as a Purohita, Archaka, Decorator, Cook, Helper, Event Coordinator or Bhokta with Swadharma. Basic details, an empanelment interview, and your own profile page listed by state and town." />
 <meta property="og:title" content="Enrol as a Service Professional · Swadharma Services" />
 <meta property="og:description" content="Register with Swadharma, schedule your empanelment interview, and get a listed profile page." />
 <meta property="og:type" content="website" />
@@ -52,8 +52,12 @@
      Here: honeypot + required phone + no public listing until verified.
   3. NO HOME ADDRESS IS COLLECTED. Service area only — the M5 privacy rule is
      "publish the area, never the residence". Do not add an address field.
-  4. Dravya franchisee options mirror the live programme at dravya-web (5-12% commission /
-     15% stockist). Keep the percentages in step with Dravya, or drop them and link out.
+  4. Dravya franchisee options carry NO percentages by design — they would drift against
+     Dravya's own terms. The section links out to dravya4u.com/purohita/apply, which is the
+     single source of truth for commission and stockist margin.
+  5. dravyaInterest is a LEAD, not an enrolment. When the endpoint goes live, swadharma-api
+     forwards it to Dravya's signed lead feed; the contract is in DRAVYA_LEAD_FORWARD.md
+     next to this file. Dravya failing must never block a Swadharma empanelment.
 -->
 
 <div class="topbar">
@@ -71,7 +75,7 @@
     <div class="dochead">
         <span class="mark">For service professionals</span>
         <h1>Enrol with Swadharma</h1>
-        <p class="sub">Purohita · Archaka · Decorator · Cook · Helper · Event Coordinator. Register with
+        <p class="sub">Purohita · Archaka · Decorator · Cook · Helper · Event Coordinator · Bhokta. Register with
         Swadharma — not with any one temple — and serve devotees across the institutions you choose.</p>
     </div>
 
@@ -136,6 +140,7 @@
                     <label class="check"><input type="checkbox" name="categories" value="cook" /> Cook</label>
                     <label class="check"><input type="checkbox" name="categories" value="helper" /> Helper</label>
                     <label class="check"><input type="checkbox" name="categories" value="event_coordinator" /> Event coordinator</label>
+                    <label class="check"><input type="checkbox" name="categories" value="bhokta" /> Bhokta</label>
                 </div>
             </div>
 
@@ -184,6 +189,11 @@
                 <div class="field">
                     <label for="town">Town / City <span class="req">*</span></label>
                     <input type="text" id="town" name="town" required maxlength="80" />
+                </div>
+                <div class="field">
+                    <label for="postalCode">PIN / ZIP code <span class="req">*</span>
+                        <span class="hint">This is what places you near an event. Devotees search by it.</span></label>
+                    <input type="text" id="postalCode" name="postalCode" required maxlength="12" placeholder="533101 / 75035" />
                 </div>
             </div>
 
@@ -263,7 +273,7 @@
         <div class="formcard" id="dravya">
             <h2><span class="step">6</span>Dravya kits — optional</h2>
             <p class="hint" style="margin:-6px 0 16px;color:var(--sw-muted);font-size:14px;">
-                <a href="https://dravya-web-328586595579.asia-southeast1.run.app/" target="_blank" rel="noreferrer">Dravya</a>
+                <a href="https://dravya4u.com/" target="_blank" rel="noreferrer">Dravya</a>
                 delivers pooja kits for the samskāras, packed under the guidance of pundits. Empanelled
                 professionals may take part. You can decide this later — it does not affect your empanelment.</p>
 
@@ -275,6 +285,12 @@
                 <label class="check"><input type="checkbox" name="dravya" value="tell_me_later" />
                     <span><b>Tell me more later</b> — I am interested but not deciding now.</span></label>
             </div>
+
+            <p class="hint" style="margin:14px 0 0;color:var(--sw-muted);font-size:13.5px;">
+                Ticking a box above simply passes your name to Dravya, who will contact you
+                separately — it has no effect on your Swadharma empanelment. Dravya runs its own
+                programme on its own terms; you can read them and apply directly at
+                <a href="https://dravya4u.com/purohita/apply" target="_blank" rel="noreferrer">dravya4u.com/purohita/apply</a>.</p>
         </div>
 
         <div class="formcard">
@@ -367,6 +383,7 @@
         country: fd.get("country") || "",
         state: (fd.get("state") || "").trim(),
         town: (fd.get("town") || "").trim(),
+        postalCode: (fd.get("postalCode") || "").trim(),
         radiusKm: fd.get("serviceRadiusKm") || "",
         otherAreas: (fd.get("areas") || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean)
       },
@@ -403,6 +420,7 @@
     if (!d.fullName || !d.phone || !d.email) { say("Please give your name, phone and email.", "err"); return; }
     if (!d.categories.length) { say("Please choose at least one service you offer.", "err"); return; }
     if (!d.serviceArea.country || !d.serviceArea.state || !d.serviceArea.town) { say("Please tell us where you serve.", "err"); return; }
+    if (!d.serviceArea.postalCode) { say("Please give your PIN / ZIP code — devotees find you by proximity to it.", "err"); return; }
     if (!d.consents.detailsTrue || !d.consents.locationSharing || !d.consents.privacyPolicy) { say("Please tick all three confirmations.", "err"); return; }
 
     if (!ENDPOINT_LIVE) {
