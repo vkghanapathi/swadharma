@@ -364,15 +364,17 @@ footer a { color: var(--sw-gold); }
 (function () {
     "use strict";
 
-    // Vitta Fin owns the subscription payment flow. The form submits to Vitta's
-    // portal (signup-request -> start-checkout) and redirects the browser to the
-    // gateway (India->Razorpay, else->Stripe). On payment, Vitta approves and
-    // notifies SSM to provision the swadharma.<domain> booking portal.
-    var VITTA_API_BASE = "https://vitta-api-ijxrwoeiyq-el.a.run.app";
-    // Dharma Satram is one module. NOTE: pricing reconciliation pending — Vitta's
-    // 'single' tier is $9.90/mo; the $49/$499 marketing price needs a standalone
-    // Dharma-Satram price (like 'vipani') or a tier decision by VKG.
-    var VITTA_TIER = "single";
+    // Subscription billing lives in swadharma-api, talking to Stripe directly
+    // (VKG, 2026-08-11 — Vitta Fin is not used for Swadharma Services).
+    //
+    // The form does two calls:
+    //   1. POST /accounts/apply            → records the application, returns { reference, gateway }
+    //   2. POST /accounts/<ref>/checkout   → returns a Stripe Checkout URL to redirect to
+    //
+    // Payment confirmation is NOT the browser's job. Stripe's signature-verified
+    // webhook provisions the swadharma.<domain> booking portal; this page only
+    // has to get the institution to the payment page and say so if it cannot.
+    var SSM_API_BASE = "https://swadharma-api-332912113546.asia-south1.run.app";
     var FALLBACK_EMAIL = "swadharma@dharmaposhanam.in";
 
     var form = document.getElementById("onboard");
@@ -454,26 +456,6 @@ footer a { color: var(--sw-gold); }
         return ok;
     }
 
-    // Map the form to Vitta Fin's /portal/signup-request contract.
-    function vittaPayload() {
-        var fd = new FormData(form);
-        var region = fd.get("region");
-        var country = region === "IN" ? "IN" : "US"; // WORLD → US entity / Stripe
-        var slug = slugify((fd.get("slug") || "").split(".")[0]); // tenant slug (no dots)
-        return {
-            tenantName: fd.get("orgName"),
-            tenantSlug: slug,
-            contactName: fd.get("contactName"),
-            contactEmail: fd.get("email"),
-            contactPhone: fd.get("phone"),
-            country: country,
-            orgType: "npo",                    // temples/trusts/schools are non-profit
-            selectedTier: VITTA_TIER,
-            selectedModules: ["dharma_satram"],
-            billingCycle: fd.get("plan") === "annual" ? "annual" : "monthly"
-        };
-    }
-
     function collect() {
         var fd = new FormData(form);
         var cats = fd.getAll("cat");
@@ -538,30 +520,47 @@ footer a { color: var(--sw-gold); }
             if (firstErr) firstErr.scrollIntoView({ behavior: "smooth", block: "center" });
             return;
         }
-        var code = refCode();
+        var localCode = refCode();
+        var payload = collect();
+        var billingCycle = payload.subscription.plan === "annual" ? "annual" : "monthly";
+
         submitBtn.disabled = true;
         submitBtn.textContent = "Submitting…";
 
-        var vp = vittaPayload();
-        function fail() { emailFallback(collect(), code); showSuccess(code); }
-        function jsonRes(res) { return res.json().catch(function () { return {}; }).then(function (j) { return { ok: res.ok, j: j }; }); }
+        function fail() { emailFallback(payload, localCode); showSuccess(localCode); }
+        function jsonRes(res) {
+            return res.json().catch(function () { return {}; })
+                .then(function (j) { return { ok: res.ok, status: res.status, j: j }; });
+        }
+        // successResponse wraps everything as { success, data, meta }.
+        function dataOf(r) { return (r.j && r.j.data) || {}; }
 
-        // Step 1 — create the Vitta signup request
-        fetch(VITTA_API_BASE + "/portal/signup-request", {
-            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(vp)
+        // Step 1 — record the application. This takes no money and provisions
+        // nothing; it returns the reference the institution quotes to us.
+        fetch(SSM_API_BASE + "/api/v1/accounts/apply", {
+            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload)
         }).then(jsonRes).then(function (r) {
-            if (!r.ok || !r.j || !r.j.requestId) throw new Error("signup-request failed");
-            var reqId = r.j.requestId;
-            // No payment configured yet → confirmation screen with the reference.
-            if (!r.j.paymentRequired) { showSuccess(reqId); return; }
-            // Step 2 — start checkout, then redirect the browser to pay
-            return fetch(VITTA_API_BASE + "/portal/start-checkout", {
+            var applied = dataOf(r);
+            if (!r.ok || !applied.reference) throw new Error("apply failed");
+            var reference = applied.reference;
+
+            // India settles on Razorpay, and Razorpay subscription checkout is not
+            // built yet — sending an Indian institution to a USD Stripe page would
+            // charge the wrong entity in the wrong currency. Confirm the
+            // application instead and let the team follow up.
+            if (applied.gateway !== "stripe") { showSuccess(reference); return; }
+
+            // Step 2 — start checkout and hand the browser to Stripe.
+            return fetch(SSM_API_BASE + "/api/v1/accounts/" + encodeURIComponent(reference) + "/checkout", {
                 method: "POST", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ signupRequestId: reqId })
+                body: JSON.stringify({ billingCycle: billingCycle })
             }).then(jsonRes).then(function (cr) {
-                if (cr.ok && cr.j && cr.j.url) { window.location.href = cr.j.url; return; }
-                // Gateway not configured (503) → confirmation fallback, nothing lost.
-                showSuccess(reqId);
+                var checkout = dataOf(cr);
+                if (cr.ok && checkout.url) { window.location.href = checkout.url; return; }
+                // 503 Stripe not yet configured, 409 already subscribed, or anything
+                // else: the application is safely recorded, so confirm it rather than
+                // losing the submission. Nothing is owed until someone pays.
+                showSuccess(reference);
             });
         }).catch(fail);
     });
