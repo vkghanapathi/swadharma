@@ -50,6 +50,5 @@ logs/
 Thumbs.db
 ehthumbs.db
 
-# Large media and Office lock files — kept out of git
-"Sample Document.mp4"
+# Office lock files
 ~$*
