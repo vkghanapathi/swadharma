@@ -104,8 +104,9 @@ gcloud run services update vitta-api --project aayojana --region asia-south1 \
 
 ## Step 3 — Redeploy the static signup site (has the Vitta wiring)
 ```bash
-# Copy the current index.html + signup.html into the Cloud Run build dir, then:
-gcloud run deploy swadharmaservices --source <build-dir> \
+# Run from the repository root. The build dir is this folder — it holds the
+# Dockerfile and nginx.conf, so there is nothing to copy anywhere first.
+gcloud run deploy swadharmaservices --source swadharmaservices.in \
   --project swadharma-service-management --region asia-south1 \
   --allow-unauthenticated --port 8080 --min-instances 0 --max-instances 2 --quiet
 ```

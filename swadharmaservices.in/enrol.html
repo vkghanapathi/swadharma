@@ -37,6 +37,19 @@
 #status { margin-top:16px; }
 #status.err { color:#B3261E; font-weight:600; }
 #status.ok { color:var(--sw-saffron-dark); font-weight:600; }
+/* Phone verification — shown only after the registration is accepted. */
+.verify { background:var(--sw-saffron-light); border:1px solid var(--sw-border); border-radius:var(--sw-radius-lg); padding:22px 24px; margin:0 0 22px; }
+.verify h2 { margin-top:0; }
+.verify .ref { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-weight:700; letter-spacing:.5px; }
+.verifyrow { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin:16px 0 6px; }
+.verifyrow input { width:9ch; padding:10px 12px; border:1px solid var(--sw-border-strong,#B6C2BC); border-radius:var(--sw-radius);
+  font:inherit; font-size:20px; font-weight:700; letter-spacing:4px; text-align:center; background:#fff; color:var(--sw-text); }
+.verifyrow input:focus { outline:2px solid var(--sw-saffron); outline-offset:1px; border-color:var(--sw-saffron); }
+.linkbtn { background:none; border:0; padding:0; font:inherit; color:var(--sw-saffron-dark); font-weight:600; text-decoration:underline; cursor:pointer; }
+.linkbtn[disabled] { opacity:.55; cursor:not-allowed; text-decoration:none; }
+#verifyStatus { margin-top:14px; }
+#verifyStatus.err { color:#B3261E; font-weight:600; }
+#verifyStatus.ok { color:var(--sw-saffron-dark); font-weight:600; }
 </style>
 </head>
 <body>
@@ -322,6 +335,29 @@
             <p id="status" role="status" aria-live="polite"></p>
         </div>
     </form>
+
+    <!--
+      Phone verification. Hidden until the registration is accepted, then it
+      replaces the form. Nothing about the application progresses until the
+      number verifies — that is the anti-spam design, and it is why the form
+      itself asks for no CAPTCHA.
+    -->
+    <section id="verifyPanel" class="verify" hidden aria-labelledby="verifyHeading">
+        <h2 id="verifyHeading">Verify your phone</h2>
+        <p id="verifyIntro"></p>
+        <p>Your reference is <span class="ref" id="verifyRef"></span> — keep it for any correspondence.</p>
+
+        <div class="verifyrow">
+            <input type="text" id="verifyCode" inputmode="numeric" pattern="[0-9]*" maxlength="6"
+                   autocomplete="one-time-code" placeholder="000000" aria-label="Six-digit verification code" />
+            <button type="button" class="btnsub" id="verifyBtn">Verify my number</button>
+        </div>
+
+        <p class="hint" style="color:var(--sw-muted);">
+            Did not receive it? <button type="button" class="linkbtn" id="resendBtn">Send another code</button>
+        </p>
+        <p id="verifyStatus" role="status" aria-live="polite"></p>
+    </section>
 </div>
 
 <footer>
@@ -356,7 +392,11 @@
 (function () {
   var API_BASE = "https://swadharma-api-332912113546.asia-south1.run.app";
   var ENDPOINT = API_BASE + "/api/v1/professionals/apply";
-  // Flip to true once the endpoint exists. See PROFESSIONAL_ENROLMENT_API.md.
+  // The endpoint is built (POST /api/v1/professionals/apply, with phone
+  // verification and resend). Flip to true only AFTER swadharma-api is deployed
+  // with it — this static site and the API deploy separately, and a live form
+  // posting to a route that is not yet on Cloud Run fails in front of the
+  // applicant. See PROFESSIONAL_ENROLMENT_API.md §8.
   var ENDPOINT_LIVE = false;
 
   var form = document.getElementById("enrolForm");
@@ -436,14 +476,124 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(d)
     }).then(function (r) {
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      return r.json();
-    }).then(function () {
+      return r.json().then(function (body) { return { ok: r.ok, body: body }; });
+    }).then(function (result) {
+      if (!result.ok) {
+        // The API explains a refusal in terms the applicant can act on — a
+        // missing confirmation, a missing PIN code. Show that, not "HTTP 422".
+        var msg = (result.body && result.body.error && result.body.error.message) ||
+                  "Something went wrong. Please try again, or email swadharma@dharmaposhanam.in.";
+        btn.disabled = false;
+        say(msg, "err");
+        return;
+      }
+
+      var data = (result.body && result.body.data) || {};
       form.reset();
-      say("Thank you. We will send a verification code to your phone, then confirm your interview slot.", "ok");
+      say("");
+      openVerification(data.reference, d.phone, data.verification);
     }).catch(function () {
       btn.disabled = false;
       say("Something went wrong. Please try again, or email swadharma@dharmaposhanam.in.", "err");
+    });
+  });
+
+  // ---- Phone verification -------------------------------------------------
+
+  var panel = document.getElementById("verifyPanel");
+  var intro = document.getElementById("verifyIntro");
+  var refOut = document.getElementById("verifyRef");
+  var codeIn = document.getElementById("verifyCode");
+  var verifyBtn = document.getElementById("verifyBtn");
+  var resendBtn = document.getElementById("resendBtn");
+  var verifyStatus = document.getElementById("verifyStatus");
+  var reference = "";
+
+  function vsay(msg, cls) { verifyStatus.textContent = msg; verifyStatus.className = cls || ""; }
+
+  function openVerification(ref, phone, delivery) {
+    reference = ref || "";
+    refOut.textContent = reference;
+    form.hidden = true;
+    panel.hidden = false;
+
+    if (delivery === "sent") {
+      intro.textContent = "We have sent a six-digit code to " + phone + ". Enter it below to complete your registration.";
+    } else {
+      // Honest about the case where no provider took the message: the applicant
+      // must not be left staring at a phone that will never ring.
+      intro.textContent = "Your registration is recorded. We could not send the code to " + phone +
+        " just now — our team will telephone you to verify. If a code does arrive, you can enter it here.";
+    }
+
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    codeIn.focus();
+  }
+
+  function cooldown(seconds) {
+    resendBtn.disabled = true;
+    var left = seconds;
+    var label = resendBtn.textContent;
+    var tick = setInterval(function () {
+      left -= 1;
+      resendBtn.textContent = left > 0 ? "Send another code (" + left + "s)" : label;
+      if (left <= 0) { clearInterval(tick); resendBtn.disabled = false; }
+    }, 1000);
+  }
+
+  verifyBtn.addEventListener("click", function () {
+    var code = (codeIn.value || "").replace(/[^0-9]/g, "");
+    if (code.length !== 6) { vsay("Please enter the six-digit code.", "err"); return; }
+
+    verifyBtn.disabled = true;
+    vsay("Checking…");
+
+    fetch(API_BASE + "/api/v1/professionals/applications/" + encodeURIComponent(reference) + "/verify-phone", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: code })
+    }).then(function (r) {
+      return r.json().then(function (body) { return { ok: r.ok, body: body }; });
+    }).then(function (result) {
+      if (!result.ok) {
+        verifyBtn.disabled = false;
+        vsay((result.body && result.body.error && result.body.error.message) ||
+             "That code is not valid. Please check and try again.", "err");
+        return;
+      }
+      codeIn.disabled = true;
+      resendBtn.disabled = true;
+      vsay("Thank you — your number is verified. We will be in touch to schedule your verification interview.", "ok");
+    }).catch(function () {
+      verifyBtn.disabled = false;
+      vsay("Something went wrong. Please try again, or email swadharma@dharmaposhanam.in.", "err");
+    });
+  });
+
+  resendBtn.addEventListener("click", function () {
+    resendBtn.disabled = true;
+    vsay("Sending a new code…");
+
+    fetch(API_BASE + "/api/v1/professionals/applications/" + encodeURIComponent(reference) + "/resend-code", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }
+    }).then(function (r) {
+      return r.json().then(function (body) { return { ok: r.ok, body: body }; });
+    }).then(function (result) {
+      if (!result.ok) {
+        vsay((result.body && result.body.error && result.body.error.message) ||
+             "Please wait a moment before asking for another code.", "err");
+        cooldown(60);
+        return;
+      }
+      // A resent code invalidates the previous one, so clear what was typed.
+      codeIn.value = "";
+      codeIn.focus();
+      vsay("A new code is on its way. The previous code no longer works.", "ok");
+      cooldown(60);
+    }).catch(function () {
+      resendBtn.disabled = false;
+      vsay("Could not send another code. Please email swadharma@dharmaposhanam.in.", "err");
     });
   });
 })();
