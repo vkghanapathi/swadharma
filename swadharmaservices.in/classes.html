@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sanskrit Classes — Swadharma Services</title>
+<meta name="description" content="Enrol in Sanskrit classes, or sponsor a student. Monthly, region-based fees.">
+<!--
+  Sanskrit Classes — enrolment & sponsorship.
+  Served at https://swadharmaservices.in/classes.html
+
+  Self-contained by the same rule as enrol.html and signup.html: inline style
+  and script, no external assets. Tokens mirror the :root block in index.html
+  and doc.css — keep them in step if those change.
+
+  Backend is vitta-api /classes/* (NOT swadharma-api, which serves the
+  professional enrolment and account signup pages). Prices and availability
+  come from GET /classes/pricing, so no amount is hard-coded here — change
+  vitta-api/src/lib/classes.ts and this page follows.
+
+  Payment rails (VKG, 2026-08-14):
+    Region A  India      ₹1,000/mo → Razorpay (money stays in India)
+    Region B  Trinidad      $16/mo → Stripe, Dharma Poshanam Inc (USA)
+    Region C  USA           $50/mo → Stripe, Dharma Poshanam Inc (USA)
+    Sponsors  any amount USD/mo    → Stripe, Dharma Poshanam Inc (USA)
+
+  ⚠ TWO PLACES MUST AGREE: the API_BASE constant near the bottom of this file
+    and the connect-src entry in nginx.conf. The CSP blocks the fetch outright
+    if they differ, and the page will just show "Could not load rates".
+
+  RETURN FLOW: Stripe sends payers back here with ?enrollment=<id> or
+  ?sponsorship=<id> and the page polls for confirmation. Razorpay
+  Subscriptions accept no return URL, so Region A students finish on
+  Razorpay's own page — the webhook activates them either way.
+-->
+<style>
+:root{
+    --sw-navy:#1F3569; --sw-navy-dark:#152347; --sw-navy-light:#EAEEF7;
+    --sw-gold:#C89939; --sw-gold-dark:#9E7724;
+    --sw-saffron:#0F766E; --sw-saffron-dark:#0B5A54; --sw-saffron-light:#E6F4F1;
+    --sw-cream:#F4F8F6; --sw-text:#1F2A37; --sw-muted:#51606E;
+    --sw-border:#D6DEDA; --sw-border-soft:#E8EFEB;
+    --sw-radius:10px; --sw-radius-lg:14px;
+    --sw-shadow:0 1px 3px rgba(31,53,105,.06), 0 4px 12px rgba(31,53,105,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sw-cream);color:var(--sw-text);font-size:16px;
+     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+     line-height:1.6}
+.wrap{max-width:960px;margin:0 auto;padding:36px 20px 72px}
+header{text-align:center;margin-bottom:12px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:34px;margin:0 0 6px;
+   color:var(--sw-navy)}
+h1 em{color:var(--sw-saffron-dark);font-style:italic}
+.lede{color:var(--sw-muted);margin:0 auto;max-width:52ch}
+h2{font-family:Georgia,"Times New Roman",serif;font-size:20px;color:var(--sw-navy);
+   margin:38px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--sw-border)}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:#fff;border:1px solid var(--sw-border);border-radius:var(--sw-radius-lg);
+      padding:20px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--sw-shadow)}
+.card.pick{cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.card.pick:hover{border-color:var(--sw-saffron)}
+.card.sel{border-color:var(--sw-saffron);box-shadow:0 0 0 2px var(--sw-saffron-light)}
+.card h3{margin:0;font-family:Georgia,serif;font-size:17px;color:var(--sw-navy)}
+.price{font-family:Georgia,serif;font-size:30px;font-weight:700;color:var(--sw-saffron-dark);
+       line-height:1.15}
+.per{font-size:13.5px;color:var(--sw-muted);font-weight:400;font-family:inherit}
+.rail{font-size:12.5px;color:var(--sw-muted);margin-top:auto;padding-top:6px}
+.off{opacity:.45;pointer-events:none}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;
+       background:var(--sw-navy-light);color:var(--sw-navy);vertical-align:middle}
+form{background:#fff;border:1px solid var(--sw-border);border-radius:var(--sw-radius-lg);
+     padding:22px;margin-top:16px;display:grid;gap:14px;box-shadow:var(--sw-shadow)}
+label{font-size:13.5px;color:var(--sw-muted);display:block;margin-bottom:5px;font-weight:600}
+input{width:100%;padding:11px 13px;border:1px solid var(--sw-border);
+      border-radius:var(--sw-radius);font:inherit;font-size:15px;background:#fff;
+      color:var(--sw-text)}
+input:focus{outline:none;border-color:var(--sw-saffron);
+            box-shadow:0 0 0 3px var(--sw-saffron-light)}
+button{padding:13px 20px;border:0;border-radius:var(--sw-radius);
+       background:var(--sw-navy);color:#fff;font:inherit;font-weight:700;cursor:pointer;
+       transition:background .15s}
+button:hover:not(:disabled){background:var(--sw-navy-dark)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.msg{padding:12px 15px;border-radius:var(--sw-radius);font-size:14px;display:none}
+.msg.err{display:block;background:#FDECEA;color:#9B1C1C;border:1px solid #F5C6C2}
+.msg.ok{display:block;background:var(--sw-saffron-light);color:var(--sw-saffron-dark);
+        border:1px solid #BFE0DB}
+.msg.info{display:block;background:#FBF3E3;color:var(--sw-gold-dark);
+          border:1px solid #EDDCB8}
+.note{font-size:13px;color:var(--sw-muted);margin:0}
+#statusPanel{background:#fff;border:1px solid var(--sw-border);
+             border-radius:var(--sw-radius-lg);padding:36px 26px;text-align:center;
+             box-shadow:var(--sw-shadow)}
+#statusPanel h2{border:0;margin:0 0 10px;font-size:24px;padding:0}
+#statusIcon{font-size:40px;line-height:1;margin-bottom:6px}
+.linkish{background:none;border:0;color:var(--sw-saffron-dark);text-decoration:underline;
+         cursor:pointer;font:inherit;padding:0;margin-top:18px;font-weight:600}
+.linkish:hover{background:none;color:var(--sw-navy)}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--sw-border);
+       text-align:center;font-size:13px;color:var(--sw-muted)}
+footer a{color:var(--sw-saffron-dark)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Sanskrit <em>Classes</em></h1>
+    <p class="lede">Structured monthly instruction. Fees are set by region so that
+      students everywhere can take part.</p>
+  </header>
+
+  <!-- Return-from-checkout view -->
+  <section id="statusPanel" hidden>
+    <div id="statusIcon">🙏</div>
+    <h2 id="statusTitle">Checking your payment…</h2>
+    <p class="note" id="statusBody">One moment.</p>
+    <button class="linkish" id="statusBack" type="button">Back to enrolment</button>
+  </section>
+
+  <!-- Normal view -->
+  <section id="mainPanel">
+    <div class="msg" id="cancelMsg"></div>
+
+    <h2>Students</h2>
+    <div class="grid" id="regions"><p class="note">Loading rates…</p></div>
+
+    <form id="enrolForm" hidden>
+      <div>
+        <label for="sName">Full name</label>
+        <input id="sName" name="name" required autocomplete="name">
+      </div>
+      <div>
+        <label for="sEmail">Email</label>
+        <input id="sEmail" name="email" type="email" required autocomplete="email">
+      </div>
+      <div>
+        <label for="sPhone">Phone <span style="font-weight:400">(optional)</span></label>
+        <input id="sPhone" name="phone" autocomplete="tel">
+      </div>
+      <div class="msg" id="enrolMsg"></div>
+      <button type="submit" id="enrolBtn">Continue to payment</button>
+      <p class="note" id="enrolNote"></p>
+    </form>
+
+    <h2>Sponsors</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Sponsor a student <span class="badge">USA</span></h3>
+        <div class="price">Any amount <span class="per">/ month</span></div>
+        <p class="note">Recurring monthly support for students who cannot meet the fee.</p>
+        <div class="rail" id="sponsorRail"></div>
+      </div>
+    </div>
+
+    <form id="sponsorForm">
+      <div>
+        <label for="pName">Full name</label>
+        <input id="pName" name="name" required autocomplete="name">
+      </div>
+      <div>
+        <label for="pEmail">Email</label>
+        <input id="pEmail" name="email" type="email" required autocomplete="email">
+      </div>
+      <div>
+        <label for="pAmount">Monthly amount (USD)</label>
+        <input id="pAmount" name="amountUsd" type="number" min="1" step="1" value="50" required>
+      </div>
+      <div class="msg" id="sponsorMsg"></div>
+      <button type="submit" id="sponsorBtn">Continue to payment</button>
+      <p class="note">Billed monthly in USD. Cancel any time.</p>
+    </form>
+  </section>
+
+  <footer>
+    Payments are collected on the provider's own secure page — no card details
+    reach this site. &middot; <a href="/privacy.html">Privacy</a>
+  </footer>
+</div>
+
+<script>
+// ── SET THIS ────────────────────────────────────────────────────────────
+// Origin of the deployed vitta-api. MUST match the connect-src entry in
+// nginx.conf, or the browser's CSP blocks every call from this page.
+var API_BASE = "https://vitta-api-lcglwq774q-uc.a.run.app";
+// ────────────────────────────────────────────────────────────────────────
+
+var $ = function (id) { return document.getElementById(id); };
+var selectedRegion = null;
+
+function show(el, kind, text) { el.className = 'msg ' + kind; el.textContent = text; }
+function clear(el) { el.className = 'msg'; el.textContent = ''; }
+
+// ── Return from checkout ────────────────────────────────────────────────
+// The webhook can land a moment after the browser does, so poll briefly
+// rather than declaring failure on the first 'pending' read.
+function handleReturn() {
+  var q = new URLSearchParams(window.location.search);
+  var enrollmentId  = q.get('enrollment');
+  var sponsorshipId = q.get('sponsorship');
+
+  if (q.get('cancelled')) {
+    show($('cancelMsg'), 'info',
+      'Payment was cancelled — nothing has been charged. You can start again below.');
+    return Promise.resolve(false);
+  }
+  if (!enrollmentId && !sponsorshipId) return Promise.resolve(false);
+
+  var kind = enrollmentId ? 'enrollment' : 'sponsorship';
+  var id   = enrollmentId || sponsorshipId;
+
+  $('mainPanel').hidden   = true;
+  $('statusPanel').hidden = false;
+  $('statusBack').addEventListener('click', function () {
+    window.location.assign(window.location.pathname);
+  });
+
+  var deadline = Date.now() + 30000;   // give the webhook 30s
+
+  function poll() {
+    return fetch(API_BASE + '/classes/' + kind + '/' + encodeURIComponent(id))
+      .then(function (res) {
+        if (res.status === 404) return paint(kind, 'notfound');
+        if (!res.ok) return retry();
+        return res.json().then(function (data) {
+          if (data.state && data.state !== 'pending') return paint(kind, data.state);
+          return retry();
+        });
+      })
+      // A transient network blip shouldn't fail the page.
+      .catch(retry);
+  }
+  function retry() {
+    if (Date.now() >= deadline) return paint(kind, 'slow');
+    return new Promise(function (r) { setTimeout(r, 2000); }).then(poll);
+  }
+  return poll();
+}
+
+function paint(kind, state) {
+  var noun  = kind === 'enrollment' ? 'enrolment' : 'sponsorship';
+  var views = {
+    active: ['🙏', 'Thank you — you are enrolled.',
+      'Your ' + noun + ' is active. The payment provider has emailed your receipt, ' +
+      'and we will be in touch with class details.'],
+    past_due: ['⚠️', 'Payment did not go through',
+      'Your card was declined and nothing has been charged. Please try again, ' +
+      'or use a different card.'],
+    cancelled: ['—', 'This ' + noun + ' was cancelled',
+      'Nothing further will be charged. Start again below if this was a mistake.'],
+    expired: ['—', 'This ' + noun + ' has ended',
+      'Please start a new one below.'],
+    notfound: ['❓', 'We could not find that record',
+      'If you were charged, please contact us and we will sort it out.'],
+    slow: ['⏳', 'Payment received — still confirming',
+      'Your payment went through and your ' + noun + ' will activate shortly. ' +
+      'You can safely close this page; nothing more is needed from you.']
+  };
+  var v = views[state] || views.slow;
+  $('statusIcon').textContent  = v[0];
+  $('statusTitle').textContent = v[1];
+  $('statusBody').textContent  = v[2];
+  return true;
+}
+
+// ── Pricing ─────────────────────────────────────────────────────────────
+function loadPricing() {
+  var box = $('regions');
+  return fetch(API_BASE + '/classes/pricing')
+    .then(function (res) {
+      if (!res.ok) throw new Error('Pricing unavailable (' + res.status + ')');
+      return res.json();
+    })
+    .then(function (data) {
+      box.innerHTML = '';
+      data.regions.forEach(function (r) {
+        var card = document.createElement('div');
+        card.className = 'card' + (r.available ? ' pick' : ' off');
+        card.setAttribute('data-region', r.region);
+        card.innerHTML =
+          '<h3>' + r.label + '</h3>' +
+          '<div class="price">' + r.displayAmount + ' <span class="per">/ month</span></div>' +
+          '<div class="rail">' + (r.available
+            ? 'Secure checkout via ' + (r.processor === 'razorpay' ? 'Razorpay' : 'Stripe')
+            : 'Temporarily unavailable — please contact us') + '</div>';
+        if (r.available) {
+          card.addEventListener('click', function () { selectRegion(r); });
+        }
+        box.appendChild(card);
+      });
+
+      if (data.sponsor) {
+        $('sponsorRail').textContent = data.sponsor.available
+          ? 'Secure checkout via Stripe'
+          : 'Temporarily unavailable — please contact us';
+        $('pAmount').min = data.sponsor.minAmountUsd;
+        $('pAmount').max = data.sponsor.maxAmountUsd;
+        $('sponsorBtn').disabled = !data.sponsor.available;
+      }
+    })
+    .catch(function (err) {
+      box.innerHTML = '<p class="note">Could not load rates: ' + err.message + '</p>';
+    });
+}
+
+function selectRegion(r) {
+  selectedRegion = r;
+  Array.prototype.forEach.call(
+    document.querySelectorAll('#regions .card'),
+    function (c) {
+      c.classList.toggle('sel', c.getAttribute('data-region') === r.region);
+    });
+  $('enrolForm').hidden = false;
+  $('enrolNote').textContent =
+    r.label + ' — ' + r.displayAmount + ' per month, billed by ' +
+    (r.processor === 'razorpay' ? 'Razorpay' : 'Stripe') + '.';
+  clear($('enrolMsg'));
+  $('enrolForm').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ── Checkout ────────────────────────────────────────────────────────────
+// Hands off with location.assign — a top-level navigation, which the CSP's
+// form-action directive does not govern (same as signup.html).
+function startCheckout(path, payload, msgEl, btn) {
+  clear(msgEl);
+  btn.disabled = true;
+  var original = btn.textContent;
+  btn.textContent = 'Starting checkout…';
+
+  fetch(API_BASE + path, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload)
+  })
+    .then(function (res) {
+      return res.json().catch(function () { return {}; })
+        .then(function (data) {
+          if (!res.ok) throw new Error(data.error || 'Checkout failed (' + res.status + ')');
+          if (!data.url) throw new Error('No checkout URL was returned.');
+          show(msgEl, 'ok', 'Redirecting to secure payment…');
+          window.location.assign(data.url);
+        });
+    })
+    .catch(function (err) {
+      show(msgEl, 'err', err.message);
+      btn.disabled = false;
+      btn.textContent = original;
+    });
+}
+
+$('enrolForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  if (!selectedRegion) { show($('enrolMsg'), 'err', 'Please choose a region first.'); return; }
+  startCheckout('/classes/enroll', {
+    region: selectedRegion.region,
+    name:   $('sName').value.trim(),
+    email:  $('sEmail').value.trim(),
+    phone:  $('sPhone').value.trim() || undefined
+  }, $('enrolMsg'), $('enrolBtn'));
+});
+
+$('sponsorForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  startCheckout('/classes/sponsor', {
+    name:      $('pName').value.trim(),
+    email:     $('pEmail').value.trim(),
+    amountUsd: Number($('pAmount').value)
+  }, $('sponsorMsg'), $('sponsorBtn'));
+});
+
+// A return visit shows only the status panel; otherwise render the page.
+handleReturn().then(function (isReturn) { if (!isReturn) loadPricing(); });
+</script>
+</body>
+</html>
