@@ -130,7 +130,7 @@ footer a{color:var(--sw-saffron-dark)}
     <div class="msg" id="cancelMsg"></div>
 
     <h2>Students</h2>
-    <div class="grid" id="regions"><p class="note">Loading rates…</p></div>
+    <div class="grid" id="regions"><p class="note">Loading regions…</p></div>
 
     <form id="enrolForm" hidden>
       <div>
@@ -284,9 +284,11 @@ function loadPricing() {
         var card = document.createElement('div');
         card.className = 'card' + (r.available ? ' pick' : ' off');
         card.setAttribute('data-region', r.region);
+        // Deliberately no price on the region cards (VKG, 2026-08-15): the
+        // student picks where they are enrolling from, and the amount is
+        // disclosed once they select a region and the enrolment form opens.
         card.innerHTML =
           '<h3>' + r.label + '</h3>' +
-          '<div class="price">' + r.displayAmount + ' <span class="per">/ month</span></div>' +
           '<div class="rail">' + (r.available
             ? 'Secure checkout via ' + (r.processor === 'razorpay' ? 'Razorpay' : 'Stripe')
             : 'Temporarily unavailable — please contact us') + '</div>';
@@ -306,7 +308,7 @@ function loadPricing() {
       }
     })
     .catch(function (err) {
-      box.innerHTML = '<p class="note">Could not load rates: ' + err.message + '</p>';
+      box.innerHTML = '<p class="note">Could not load regions: ' + err.message + '</p>';
     });
 }
 
