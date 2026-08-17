@@ -25,6 +25,16 @@
 
   Subject selection is carried to the registration page as ?subjects=a,b,c so a
   student never has to state their interest twice.
+
+  THE MASTER PAGE (VKG, 2026-08-16). Every education surface is reached from
+  here — student registration, the classes prospectus, the Shabda app, the
+  student portal, the payment links, and Swadharma PRO empanelment. `enrol.html`
+  now redirects to the empanelment form rather than collecting its own answers,
+  because the two were separate doors onto the same question.
+
+  Off-site links point at the shabda-classroom service, which owns the forms and
+  the database. Kept as absolute URLs rather than proxied paths: this host does
+  not forward /api/*, so a relative link would 404.
 -->
 <style>
 :root{
@@ -107,7 +117,7 @@ footer a{color:var(--sw-saffron-dark)}
     <p>Sanskrit is where we begin. Other subjects are being added.</p>
   </div>
 
-  <h2>What you can join today</h2>
+  <h2>For students</h2>
   <div class="grid">
     <div class="card">
       <h3>Register for lessons</h3>
@@ -123,13 +133,47 @@ footer a{color:var(--sw-saffron-dark)}
     </div>
     <div class="card">
       <h3>Shabda — practice &amp; self-study</h3>
-      <p>Lessons, exercises and games for learning Sanskrit at your own pace,
-        alongside or ahead of class.</p>
+      <p>Lessons, exercises and games for learning Sanskrit at your own pace.
+        Open to enrolled students on a monthly subscription.</p>
       <a class="go" href="https://shabda-web-404772120601.asia-south1.run.app/">Open Shabda →</a>
+    </div>
+    <div class="card">
+      <h3>Your registration</h3>
+      <p>Sign in to see where your application stands, whether you have been
+        placed, and which classes you are on.</p>
+      <a class="go" href="https://shabda-classroom-lnaq6djqfq-el.a.run.app/portal">Student portal →</a>
+    </div>
+    <div class="card">
+      <h3>Tuition &amp; sponsorship</h3>
+      <p>Start the monthly tuition once your place is confirmed, or sponsor a
+        student's learning.</p>
+      <a class="go" href="https://shabda-classroom-lnaq6djqfq-el.a.run.app/#payments">Payment links →</a>
     </div>
   </div>
 
-  <h2>Tell us what you would like to study</h2>
+  <h2>For teachers and professionals</h2>
+  <div class="intro" style="border-left-color:var(--sw-saffron)">
+    <p><strong>Swadharma PRO — one form for every professional.</strong> Teachers,
+      scholars, editors, reciters, purohitas, jyotiṣa and vāstu consultants,
+      musicians, translators — and those who make a ceremony possible: archakas,
+      decorators, cooks, helpers, event coordinators and bhoktas.</p>
+    <p>Tick everything you can offer, and say for each whether you can take it on
+      <strong>short term</strong> or <strong>long term</strong>. Many people can
+      do one and not the other, and saying so here saves being asked for the
+      wrong one later.</p>
+    <p><strong>There is no fee, at this or any later stage.</strong> What follows
+      is a short conversation — an acquaintance interview — so that we know one
+      another before anything is settled. Nothing you write is published until
+      you are empanelled and the wording is agreed with you.</p>
+  </div>
+  <div class="cta">
+    <a class="btn" href="https://shabda-classroom-lnaq6djqfq-el.a.run.app/empanel.html">Offer your service →</a>
+    <a class="btn" style="background:var(--sw-saffron)"
+       href="https://shabda-classroom-lnaq6djqfq-el.a.run.app/professionals.html">See who is empanelled →</a>
+    <p class="note">Replaces the earlier enrolment form — both now lead here.</p>
+  </div>
+
+  <h2 id="subjects-heading">Tell us what you would like to study</h2>
   <form id="interest">
     <fieldset>
       <legend>Subjects of interest</legend>
@@ -144,7 +188,18 @@ footer a{color:var(--sw-saffron-dark)}
   </form>
 
   <footer>
-    <p>Swadharma Services · <a href="/">Home</a> · <a href="/classes.html">Sanskrit Classes</a></p>
+    <p>Swadharma Services ·
+      <a href="/">Home</a> ·
+      <a href="/classes.html">Sanskrit Classes</a> ·
+      <a href="https://shabda-classroom-lnaq6djqfq-el.a.run.app/empanel.html">Empanelment</a> ·
+      <a href="/credits">Credits</a> ·
+      <a href="/policies">Policies</a></p>
+    <p style="margin-top:6px">
+      <a href="/policies#disclaimer">Disclaimer</a> ·
+      <a href="/policies#terms">Terms</a> ·
+      <a href="/policies#refunds">Refunds</a> ·
+      <a href="/policies#privacy">Privacy &amp; Piracy</a>
+    </p>
   </footer>
 </div>
 

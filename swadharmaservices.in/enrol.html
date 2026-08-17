@@ -3,6 +3,29 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<!--
+  SUPERSEDED — one empanelment form, not two (VKG, 2026-08-16).
+
+  This page and shabda-classroom's `empanel.html` were two doors onto the same
+  question: what can you do for us, and how long can you do it for. The service
+  categories below (Purohita, Archaka, Decorator, Cook, Helper, Event
+  Coordinator, Bhokta) now live in shabda-classroom's `src/lib/professions.js`
+  alongside the teaching roles, and the merged form asks for each service
+  whether it is offered short term, long term, or both.
+
+  NOTHING WAS LOST BY REDIRECTING. `ENDPOINT_LIVE` below is `false` and always
+  was: `POST /api/v1/professionals/apply` on swadharma-api was built but never
+  deployed, so this form has never submitted an application anywhere.
+
+  THE FORM BENEATH IS DELIBERATELY LEFT INTACT, not deleted. It carries work the
+  merged form does not yet have — WhatsApp phone verification with a
+  send/resend code flow (see PROFESSIONAL_ENROLMENT_API.md §8). Delete the
+  refresh below to bring this page back while that is ported.
+-->
+<meta http-equiv="refresh" content="0; url=https://shabda-classroom-lnaq6djqfq-el.a.run.app/empanel.html" />
+<link rel="canonical" href="https://shabda-classroom-lnaq6djqfq-el.a.run.app/empanel.html" />
+
 <title>Enrol as a Service Professional · Swadharma Services</title>
 <meta name="description" content="Register as a Purohita, Archaka, Decorator, Cook, Helper, Event Coordinator or Bhokta with Swadharma. Basic details, an empanelment interview, and your own profile page listed by state and town." />
 <meta property="og:title" content="Enrol as a Service Professional · Swadharma Services" />
@@ -53,6 +76,16 @@
 </style>
 </head>
 <body>
+
+<!-- Shown only if the meta refresh above is blocked or disabled. Without it,
+     someone in that position would fill in a form that submits nowhere. -->
+<noscript-fallback style="display:block;background:#EAEEF7;border-bottom:2px solid #1F3569;
+     padding:16px 20px;text-align:center;font:16px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+  <strong>This form has moved.</strong>
+  Empanelment for every professional — teaching and services alike — is now one form.
+  <a href="https://shabda-classroom-lnaq6djqfq-el.a.run.app/empanel.html"
+     style="color:#0B5A54;font-weight:700">Continue to the empanelment form →</a>
+</noscript-fallback>
 
 <!--
   MAINTAINER NOTES
