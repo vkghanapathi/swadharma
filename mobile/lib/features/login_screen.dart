@@ -24,16 +24,27 @@ class LoginScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  Brand.appName,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w700,
-                    color: Brand.primary,
+                // The logo already carries the wordmark, so the name is not
+                // repeated beneath it.
+                Center(
+                  child: Image.asset(
+                    'assets/logo.png',
+                    height: 132,
+                    semanticLabel: Brand.appName,
+                    // A missing or corrupt asset must not leave a blank screen
+                    // with no way to sign in.
+                    errorBuilder: (context, _, _) => Text(
+                      Brand.appName,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        color: Brand.primary,
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 const Text(
                   'Sign in to see your jobs',
                   textAlign: TextAlign.center,
