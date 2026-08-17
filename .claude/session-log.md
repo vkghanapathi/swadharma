@@ -767,3 +767,68 @@ _No modified files at session end._
 - `swadharmaservices.in/index.html`
 - `swadharmaservices.in/nginx.conf`
 - `swadharma.code-workspace`
+
+## Session ended 2026-08-13 06:25:38 | Branch: feat/dravya-lead-forward
+
+## Session ended 2026-08-13 06:42:44 | Branch: feat/dravya-lead-forward
+
+## Session ended 2026-08-13 06:43:27 | Branch: feat/dravya-lead-forward
+
+## Session ended 2026-08-13 06:44:12 | Branch: feat/dravya-lead-forward
+
+## Session ended 2026-08-13 06:44:15 | Branch: feat/dravya-lead-forward
+
+## Session ended 2026-08-13 06:51:56 | Branch: feat/dravya-lead-forward
+
+## Session ended 2026-08-13 07:05:22 | Branch: feat/dravya-lead-forward
+
+## Session ended 2026-08-13 07:41:23 | Branch: feat/dravya-lead-forward
+
+## Session ended 2026-08-13 07:47:02 | Branch: feat/dravya-lead-forward
+
+## Session ended 2026-08-13 07:57:02 | Branch: feat/dravya-lead-forward
+
+## Session ended 2026-08-15 08:20:53 | Branch: feat/dravya-lead-forward
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+- `swadharmaservices.in/nginx.conf`
+- `swadharmaservices.in/classes.html`
+
+## Session ended 2026-08-15 23:46:24 | Branch: feat/dravya-lead-forward
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-08-16 13:41:51 | Branch: feat/dravya-lead-forward
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+- `swadharmaservices.in/edu.html`
+- `swadharmaservices.in/enrol.html`
+- `swadharmaservices.in/credits.html`
+- `swadharmaservices.in/policies.html`
+
+## Session ended 2026-08-16 16:58:10 | Branch: feat/dravya-lead-forward
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+- `swadharmaservices.in/edu.html`
+- `swadharmaservices.in/enrol.html`
+- `swadharmaservices.in/credits.html`
+- `swadharmaservices.in/policies.html`
+
+## Session ended 2026-08-17 12:32:33 | Branch: feat/operator-mobile
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-08-17 12:48:44 | Branch: feat/operator-mobile
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-08-17 14:09:30 | Branch: feat/operator-mobile
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
