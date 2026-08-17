@@ -52,3 +52,8 @@ ehthumbs.db
 
 # Office lock files
 ~$*
+
+# Nested repository with its own remote (Dharma-Poshanam/swadharma-service-management).
+# Tracked there, not here — an accidental `git add -A` turns it into a gitlink
+# that clones of this repo cannot resolve.
+swadharma-service-management/
