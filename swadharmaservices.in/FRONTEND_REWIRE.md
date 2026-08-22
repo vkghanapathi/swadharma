@@ -157,6 +157,29 @@ and a failing API are both covered before either happens.
 
 ---
 
+## Two CI interactions to know about
+
+**`.github/workflows/add-og-tags.yml`** rewrites any `*.html` in the repo that
+lacks an `og:title`, injecting a boilerplate block and committing it. Today it
+skips every generated page, because `_layout/shell.html` already emits `og:title`.
+**If that tag is ever removed from the shell, the Action will inject its
+boilerplate into all twelve generated pages and `build_pages.py --check` will
+then fail on every run** — the committed HTML no longer matches its source, and
+the next build silently reverts the Action, which re-commits, and so on. Keep
+`og:title` in the shell.
+
+(Its boilerplate also advertises `swadharma.dharmaposhanam.in` and a generic
+description, which is wrong for this site. It currently only reaches
+`credits.html` and `policies.html`. Worth fixing at the Action, separately.)
+
+**`.github/workflows/deploy.yml`** publishes the whole repository to GitHub
+Pages on push to `main`, with `path: '.'`. That is a different site from this
+one, but when this branch merges to `main` it will publish `_layout/`,
+`build_pages.py`, the test suites, `DEPLOY_RUNBOOK.md`, `ONBOARDING_API.md` and
+`PROFESSIONAL_ENROLMENT_API.md` to a public URL. The Cloud Run image and the
+`.gcloudignore` both exclude those; GitHub Pages does not. Narrow that `path:`
+before merging to `main`.
+
 ## Content sources
 
 The catalogue is the nine service groups drawn from **dharmaposhanam.in/swadharma**
