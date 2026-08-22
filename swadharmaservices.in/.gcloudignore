@@ -1,0 +1,27 @@
+# What `gcloud run deploy --source swadharmaservices.in` uploads to Cloud Build.
+#
+# This is NOT the same question as what the Dockerfile COPYs. Without this file
+# gcloud uploads the whole directory to a Cloud Build source bucket, and this
+# directory holds things that must not go there:
+#
+#   Edu/          student rosters — personal data. The repository already
+#                 refuses them (.gitignore, "keep student rosters out of the
+#                 repository"); a GCS build bucket is no better a home.
+#   _layout/      the page sources, plus build_pages.py and relink_legacy.py
+#   *.md          DEPLOY_RUNBOOK, ONBOARDING_API, PROFESSIONAL_ENROLMENT_API —
+#                 internal notes and API contracts
+#   test_*.py     the test suites
+#   .claude/      session logs
+#
+# So this is an allowlist, not a denylist: everything is excluded, then the five
+# things the image actually needs are added back. A file dropped into this
+# folder later is excluded by default rather than uploaded by default, which is
+# the safer way round for a directory that has held personal data.
+
+*
+
+!Dockerfile
+!nginx.conf
+!*.html
+!*.css
+!*.js
