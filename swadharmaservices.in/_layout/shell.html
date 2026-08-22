@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESCRIPTION}}" />
+<link rel="canonical" href="{{CANONICAL}}" />
+<meta property="og:title" content="{{TITLE}}" />
+<meta property="og:description" content="{{DESCRIPTION}}" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="{{CANONICAL}}" />
+<link rel="icon" href="https://dharmaposhanam.in/favicon.ico" />
+<link rel="stylesheet" href="/app.css" />
+</head>
+<body class="{{BODYCLASS}}">
+
+<a class="sw-skip" href="#main">Skip to content</a>
+<div class="band" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<!-- TopNav — global destinations only. Context lives in the SideNav; the two
+     never repeat each other (spec section 10). -->
+<nav class="sw-top" aria-label="Primary">
+    <a class="brand" href="/">
+        <span class="glyph">॥</span>
+        <span class="wm"><b>Swadharma Services</b><small>Dharma Satram · धर्म सत्रम्</small></span>
+    </a>
+    <div class="sw-top-links">
+{{TOPLINKS}}
+    </div>
+    <div class="sw-top-act">
+        <a class="sw-signin" href="/signin">Sign In</a>
+        <a class="sw-cta" href="/request">Start a Service Request</a>
+        <button class="sw-burger" id="swBurger" type="button" aria-label="Open menu" aria-controls="swDrawer"><i></i></button>
+    </div>
+</nav>
+
+<div class="sw-drawer" id="swDrawer" hidden>
+    <div class="sw-drawer-panel" role="dialog" aria-label="Menu" aria-modal="true">
+        <div class="sw-drawer-head">
+            <b>Swadharma</b>
+            <button class="sw-drawer-close" type="button" aria-label="Close menu">&times;</button>
+        </div>
+{{DRAWERLINKS}}
+    </div>
+</div>
+
+{{MAIN}}
+
+<footer class="sw-foot">
+    <p class="fshloka">॥ स्वधर्म ॥</p>
+    <p>Swadharma Services · Dharma Satram — under <a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">Dharma Poshanam Inc</a></p>
+    <div class="flinks">
+{{FOOTERLINKS}}
+    </div>
+
+    <div class="foffices">
+        <div><b>McKinney · Texas</b>800 Stacy Rd, McKinney, TX 75070, USA</div>
+        <div><b>Frisco · Texas</b>14600 Marigold Dr, Frisco, TX 75035, USA</div>
+        <div><b>Omaha · Nebraska</b>5703 S 159th Street, Omaha, NE 68135, USA</div>
+        <div><b>Mysore · India</b><a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">dharmaposhanam.in</a></div>
+    </div>
+
+    <p class="fnodes">
+        <b>Operational nodes</b><br>
+        Datta Mukti Kshetram, Rajahmundry · Vaivasvatam, Rajahmundry ·
+        Jaya Durga Teertham, Vijayawada · Sripadavallabha Anagha Datta Kshetram, Pithapuram
+    </p>
+    <p class="fine">EIN 85-3784241 · 501(c)(3) tax-exempt since 2020</p>
+    <p class="fine">Connect · Engage · Empower · स्वधर्म</p>
+</footer>
+
+<script src="/catalogue.js"></script>
+<script src="/app.js"></script>
+{{SCRIPTS}}
+</body>
+</html>

@@ -1,0 +1,117 @@
+title: Swadharma Services · Ceremonies, Purohita, Ṛtviks &amp; Pilgrim Care
+description: Arrange any Dharmic ceremony — Śrāddha, the sixteen Saṃskāras, Homa, temple Pratiṣṭhā, classes, materials and pilgrim care. Find a verified Purohita or temple by territory, or start a service request.
+route: /
+context: none
+scripts: page-home.js
+---
+<header class="home-hero">
+    <div class="home-hero-in">
+        <span class="eyebrow">Swadharma · Module No.7 · Dharma Satram</span>
+        <p class="shloka">स्वधर्मे निधनं श्रेयः परधर्मो भयावहः</p>
+        <p class="shloka-en">“Better is one's own Dharma, though imperfectly performed.” — Bhagavad Gītā 3.35</p>
+
+        <h1>What do you need to <em>arrange?</em></h1>
+        <p class="lead">
+            Ceremonies, Śrāddha, Homa and the sixteen Saṃskāras — matched to a verified
+            Purohita or Ṛtvik team, in India and across the United States.
+        </p>
+
+        <div class="btn-row">
+            <a class="btn" href="/request">Start a Service Request</a>
+            <a class="btn ghost" href="/network/professionals">Find a Professional</a>
+            <a class="btn ghost" href="/network/temples">Find a Temple</a>
+        </div>
+
+        <!-- TerritorySelector. Country > State/Province > Region, persisted for
+             the rest of the visit (spec section 6 and 10). -->
+        <form class="home-picker" id="homeTerritory" autocomplete="off">
+            <div class="field">
+                <label for="tCountry">Country</label>
+                <select id="tCountry"><option value="">Any country</option></select>
+            </div>
+            <div class="field">
+                <label for="tState">State / Province</label>
+                <select id="tState" disabled><option value="">Any state</option></select>
+            </div>
+            <div class="field">
+                <label for="tCity">Region / City</label>
+                <select id="tCity" disabled><option value="">Any city</option></select>
+            </div>
+            <button class="btn" type="submit">Browse this territory</button>
+        </form>
+
+        <div class="stats">
+            <div class="stat"><b>16</b><span>Saṃskāras covered</span></div>
+            <div class="stat"><b>17+</b><span>Trained Ṛtviks</span></div>
+            <div class="stat"><b>7&nbsp;days</b><span>Knowledge Hub response</span></div>
+            <div class="stat"><b>USA · India</b><span>Transatlantic paramparā</span></div>
+        </div>
+    </div>
+</header>
+
+<div class="home-body">
+
+    <!-- FeaturedRail — professionals, daily rotation (spec section 7). -->
+    <section class="sw-sec">
+        <div class="sw-sec-head">
+            <h2>Featured professionals</h2>
+            <a class="more" href="/network/professionals">All professionals →</a>
+        </div>
+        <div id="featPros"></div>
+    </section>
+
+    <!-- FeaturedRail — temples and organisations, weekly rotation. -->
+    <section class="sw-sec">
+        <div class="sw-sec-head">
+            <h2>Featured temples &amp; organisations</h2>
+            <a class="more" href="/network/temples">All organisations →</a>
+        </div>
+        <div id="featOrgs"></div>
+    </section>
+
+    <!-- ServiceGrid — compact. The catalogue itself lives at /services. -->
+    <section class="sw-sec">
+        <div class="sw-sec-head">
+            <h2>What we arrange</h2>
+            <a class="more" href="/services">Full catalogue →</a>
+        </div>
+        <div class="grid tight" id="homeServices"></div>
+    </section>
+
+    <section class="sw-sec">
+        <div class="sw-sec-head"><h2>How it works</h2>
+            <a class="more" href="/how-it-works">In detail →</a>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <span class="n">1</span>
+                <h4>Tell us what is needed</h4>
+                <p>The ceremony, where it is, and when. Three minutes, no account required.</p>
+            </div>
+            <div class="step">
+                <span class="n">2</span>
+                <h4>We match and confirm</h4>
+                <p>A Purohita or Ṛtvik team verified for that specific ceremony, in your territory.
+                   You see who is coming, and what it costs, before anything is paid.</p>
+            </div>
+            <div class="step">
+                <span class="n">3</span>
+                <h4>The rite is performed</h4>
+                <p>Materials arrive event-ready. You can follow arrival on the day, and the
+                   engagement stays on record for the next observance.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="sw-sec">
+        <div class="cta-band">
+            <div>
+                <h2>For temples, trusts and organisations</h2>
+                <p>Your own branded ceremony-booking portal at swadharma.yourdomain, connected to
+                   the Ṛtvik network, with payments settling to your own account.</p>
+            </div>
+            <a class="btn" href="/organisations">See the institutional offering</a>
+        </div>
+    </section>
+
+</div>

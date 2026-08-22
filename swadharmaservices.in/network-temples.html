@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Temples &amp; Organisations · The Swadharma Network</title>
+<meta name="description" content="Empanelled Kṣetrams, temples and trusts on Swadharma — each with its own service catalogue and booking portal, browsable by territory." />
+<link rel="canonical" href="https://swadharmaservices.in/network/temples" />
+<meta property="og:title" content="Temples &amp; Organisations · The Swadharma Network" />
+<meta property="og:description" content="Empanelled Kṣetrams, temples and trusts on Swadharma — each with its own service catalogue and booking portal, browsable by territory." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://swadharmaservices.in/network/temples" />
+<link rel="icon" href="https://dharmaposhanam.in/favicon.ico" />
+<link rel="stylesheet" href="/app.css" />
+</head>
+<body class="">
+
+<a class="sw-skip" href="#main">Skip to content</a>
+<div class="band" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<!-- TopNav — global destinations only. Context lives in the SideNav; the two
+     never repeat each other (spec section 10). -->
+<nav class="sw-top" aria-label="Primary">
+    <a class="brand" href="/">
+        <span class="glyph">॥</span>
+        <span class="wm"><b>Swadharma Services</b><small>Dharma Satram · धर्म सत्रम्</small></span>
+    </a>
+    <div class="sw-top-links">
+        <a href="/services">Services</a>
+        <a href="/network">Network</a>
+        <a href="/territories">Territories</a>
+        <a href="/organisations">Organisations</a>
+        <a href="/how-it-works">How it Works</a>
+        <a href="/about">About</a>
+    </div>
+    <div class="sw-top-act">
+        <a class="sw-signin" href="/signin">Sign In</a>
+        <a class="sw-cta" href="/request">Start a Service Request</a>
+        <button class="sw-burger" id="swBurger" type="button" aria-label="Open menu" aria-controls="swDrawer"><i></i></button>
+    </div>
+</nav>
+
+<div class="sw-drawer" id="swDrawer" hidden>
+    <div class="sw-drawer-panel" role="dialog" aria-label="Menu" aria-modal="true">
+        <div class="sw-drawer-head">
+            <b>Swadharma</b>
+            <button class="sw-drawer-close" type="button" aria-label="Close menu">&times;</button>
+        </div>
+        <a href="/services">Services</a>
+        <a href="/network">Network</a>
+        <a href="/territories">Territories</a>
+        <a href="/organisations">Organisations</a>
+        <a href="/how-it-works">How it Works</a>
+        <a href="/about">About</a>
+        <div class="sw-drawer-sep">Your account</div>
+        <a href="/signin">Sign in</a>
+        <a href="/enrol">Enrol as a professional</a>
+        <a href="/signup">Subscribe an organisation</a>
+        <div class="sw-drawer-sep">Reference</div>
+        <a href="/manual">Service Manual</a>
+        <a href="/classes">Sanskrit Classes</a>
+        <a href="/privacy">Privacy</a>
+        <a class="sw-cta" href="/request">Start a Service Request</a>
+    </div>
+</div>
+
+<div class="sw-shell">
+<aside class="sw-side">
+    <div class="sw-side-group">
+        <h2>The Network</h2>
+        <div class="sw-side-inner">
+            <a href="/network">Overview</a>
+            <a href="/network/professionals">Professionals</a>
+            <a href="/network/temples">Temples & Organisations</a>
+            <a href="/territories">Browse by territory</a>
+        </div>
+        <p class="sw-side-note">Territory stays selected while you move between these pages.</p>
+    </div>
+</aside>
+<main class="sw-main" id="main">
+<nav class="sw-crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span class="sep">/</span>
+    <a href="/network">Network</a>
+    <span class="sep">/</span>
+    <span aria-current="page">Temples &amp; Organisations</span>
+</nav>
+<div class="sw-page-head">
+    <span class="mark">Directory</span>
+    <h1 class="sw-h1">Temples &amp; organisations</h1>
+    <p class="sub">
+        Institutions empanelled with Swadharma. Each runs its own Swadharma address, publishes
+        its own service catalogue and takes its own bookings — <em>collections settle to the
+        institution, not to the platform</em>.
+    </p>
+</div>
+
+<div class="terr-bar" id="orgTerr"></div>
+
+<form class="filters" id="orgFilters" role="search" autocomplete="off">
+    <div class="field">
+        <label for="gName">Name</label>
+        <input type="search" id="gName" placeholder="Temple or trust" maxlength="80" />
+    </div>
+    <div class="field">
+        <label for="gPin">PIN / ZIP</label>
+        <input type="search" id="gPin" placeholder="533107" maxlength="12" inputmode="numeric" />
+    </div>
+    <div class="field">
+        <label for="gState">State</label>
+        <input type="search" id="gState" placeholder="Andhra Pradesh" maxlength="60" />
+    </div>
+    <div class="field">
+        <label for="gCountry">Country</label>
+        <select id="gCountry">
+            <option value="">Any country</option>
+            <option value="IN">India</option>
+            <option value="US">United States</option>
+        </select>
+    </div>
+    <button type="button" class="btn-clear" id="gClear">Clear</button>
+</form>
+
+<section class="sw-sec">
+    <div class="sw-sec-head">
+        <h2>Organisations</h2>
+        <span class="sw-count" id="orgCount"></span>
+    </div>
+    <div class="dir-grid" id="orgGrid"></div>
+    <div class="dir-state" id="orgState" aria-live="polite">Loading organisations…</div>
+    <button type="button" class="dir-more" id="orgMore" hidden>Show more</button>
+</section>
+
+<section class="sw-sec">
+    <div class="sw-sec-head"><h2>Operational nodes</h2></div>
+    <p class="sub">Kṣetrams Swadharma works with directly, whether or not they run their own portal.</p>
+    <div class="dir-grid" id="orgNodes"></div>
+</section>
+
+<section class="sw-sec">
+    <div class="cta-band">
+        <div>
+            <h2>Empanel your temple or trust</h2>
+            <p>Your own branded portal at swadharma.yourdomain, wired to the Ṛtvik network,
+               with payments settling to your own account.</p>
+        </div>
+        <a class="btn" href="/organisations">See the offering</a>
+    </div>
+</section>
+</main>
+</div>
+
+<footer class="sw-foot">
+    <p class="fshloka">॥ स्वधर्म ॥</p>
+    <p>Swadharma Services · Dharma Satram — under <a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">Dharma Poshanam Inc</a></p>
+    <div class="flinks">
+        <a href="/services">Services</a>
+        <a href="/network">Network</a>
+        <a href="/territories">Territories</a>
+        <a href="/organisations">Organisations</a>
+        <a href="/how-it-works">How it works</a>
+        <a href="/manual">Service Manual</a>
+        <a href="/classes">Sanskrit Classes</a>
+        <a href="/enrol">Enrol as a professional</a>
+        <a href="/signin">Sign in</a>
+        <a href="/about">About</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/policies">Policies</a>
+    </div>
+
+    <div class="foffices">
+        <div><b>McKinney · Texas</b>800 Stacy Rd, McKinney, TX 75070, USA</div>
+        <div><b>Frisco · Texas</b>14600 Marigold Dr, Frisco, TX 75035, USA</div>
+        <div><b>Omaha · Nebraska</b>5703 S 159th Street, Omaha, NE 68135, USA</div>
+        <div><b>Mysore · India</b><a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">dharmaposhanam.in</a></div>
+    </div>
+
+    <p class="fnodes">
+        <b>Operational nodes</b><br>
+        Datta Mukti Kshetram, Rajahmundry · Vaivasvatam, Rajahmundry ·
+        Jaya Durga Teertham, Vijayawada · Sripadavallabha Anagha Datta Kshetram, Pithapuram
+    </p>
+    <p class="fine">EIN 85-3784241 · 501(c)(3) tax-exempt since 2020</p>
+    <p class="fine">Connect · Engage · Empower · स्वधर्म</p>
+</footer>
+
+<script src="/catalogue.js"></script>
+<script src="/app.js"></script>
+<script src="/page-temples.js"></script>
+</body>
+</html>

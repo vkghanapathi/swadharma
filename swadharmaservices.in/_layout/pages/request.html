@@ -1,0 +1,208 @@
+title: Start a Service Request · Swadharma Services
+description: Tell us the ceremony, the place and the date. Swadharma matches a verified Purohita or Ṛtvik team and confirms before anything is paid.
+route: /request
+context: none
+body_class: page-request
+scripts: page-request.js
+---
+<div class="home-body">
+    <nav class="sw-crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+        <span aria-current="page">Service Request</span>
+    </nav>
+
+    <div class="sw-page-head">
+        <span class="mark">The primary path</span>
+        <h1 class="sw-h1">Start a <em>service request</em></h1>
+        <p class="sub">
+            Five short steps. No account, no payment, no obligation — you will see who is assigned
+            and what it costs before anything is confirmed.
+        </p>
+    </div>
+
+    <div class="wiz">
+        <ol class="wiz-steps" id="wizSteps">
+            <li data-step="1"><span class="n">1</span> Need</li>
+            <li data-step="2"><span class="n">2</span> Location</li>
+            <li data-step="3"><span class="n">3</span> Date</li>
+            <li data-step="4"><span class="n">4</span> Requirements</li>
+            <li data-step="5"><span class="n">5</span> Review</li>
+        </ol>
+
+        <form id="wizForm" autocomplete="on">
+
+            <!-- 1 — Need -->
+            <section class="wiz-panel" data-panel="1">
+                <h2>What do you need arranged?</h2>
+                <p class="sub">Pick the closest category. You can describe the exact rite in the next steps.</p>
+                <div class="wiz-pick" id="wizServices"></div>
+                <div class="field" style="margin-top:16px">
+                    <label for="wNeed">Name the ceremony, if you know it</label>
+                    <input type="text" id="wNeed" name="need" maxlength="120"
+                           placeholder="e.g. Mahālaya Śrāddha for my father" />
+                    <span class="hint">Optional. If you are not sure, leave it — we will ask.</span>
+                </div>
+                <div class="wiz-nav">
+                    <span></span>
+                    <button type="button" class="btn" data-go="2">Continue</button>
+                </div>
+            </section>
+
+            <!-- 2 — Location -->
+            <section class="wiz-panel" data-panel="2" hidden>
+                <h2>Where will it be performed?</h2>
+                <p class="sub">Territory decides who can be assigned, so this is the one field we cannot skip.</p>
+                <div class="wiz-grid">
+                    <div class="field">
+                        <label for="wCountry">Country</label>
+                        <select id="wCountry" name="country" required>
+                            <option value="">Select…</option>
+                            <option value="IN">India</option>
+                            <option value="US">United States</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="wState">State / Province</label>
+                        <input type="text" id="wState" name="state" maxlength="60" placeholder="Karnataka" />
+                    </div>
+                    <div class="field">
+                        <label for="wCity">City</label>
+                        <input type="text" id="wCity" name="city" maxlength="60" placeholder="Mysuru" />
+                    </div>
+                    <div class="field">
+                        <label for="wPin">PIN / ZIP</label>
+                        <input type="text" id="wPin" name="postalCode" maxlength="12" placeholder="570023" inputmode="numeric" />
+                    </div>
+                    <div class="field field-wide">
+                        <label for="wVenue">Venue</label>
+                        <select id="wVenue" name="venue">
+                            <option value="Home">At home</option>
+                            <option value="Temple">At a temple or Kṣetram</option>
+                            <option value="Hall">Community hall or rented venue</option>
+                            <option value="Riverbank">Riverbank / tīrtha</option>
+                            <option value="Online">Performed on our behalf (we cannot attend)</option>
+                            <option value="Undecided">Not decided yet</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="wiz-nav">
+                    <button type="button" class="btn ghost" data-go="1">Back</button>
+                    <button type="button" class="btn" data-go="3">Continue</button>
+                </div>
+            </section>
+
+            <!-- 3 — Date -->
+            <section class="wiz-panel" data-panel="3" hidden>
+                <h2>When?</h2>
+                <p class="sub">If the date depends on a tithi or a muhūrta, say so — we will work it out with you.</p>
+                <div class="wiz-grid">
+                    <div class="field">
+                        <label for="wDate">Preferred date</label>
+                        <input type="date" id="wDate" name="date" />
+                    </div>
+                    <div class="field">
+                        <label for="wTime">Time of day</label>
+                        <select id="wTime" name="time">
+                            <option value="">No preference</option>
+                            <option>Early morning</option>
+                            <option>Morning</option>
+                            <option>Midday</option>
+                            <option>Afternoon</option>
+                            <option>Evening</option>
+                        </select>
+                    </div>
+                    <div class="field field-wide">
+                        <label for="wFlex">How fixed is the date?</label>
+                        <select id="wFlex" name="flexibility">
+                            <option value="Fixed">Fixed — this date only</option>
+                            <option value="Flexible">Flexible by a few days</option>
+                            <option value="Tithi">Depends on the tithi — please advise</option>
+                            <option value="Urgent">Urgent — within the next few days</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="wiz-nav">
+                    <button type="button" class="btn ghost" data-go="2">Back</button>
+                    <button type="button" class="btn" data-go="4">Continue</button>
+                </div>
+            </section>
+
+            <!-- 4 — Requirements -->
+            <section class="wiz-panel" data-panel="4" hidden>
+                <h2>Anything we should know?</h2>
+                <p class="sub">The more of this you fill in, the closer the first match will be.</p>
+                <div class="wiz-grid">
+                    <div class="field">
+                        <label for="wLang">Preferred language</label>
+                        <input type="text" id="wLang" name="language" maxlength="60" placeholder="Telugu, Kannada, Sanskrit…" />
+                    </div>
+                    <div class="field">
+                        <label for="wSampradaya">Sampradāya / Veda / Śākhā</label>
+                        <input type="text" id="wSampradaya" name="sampradaya" maxlength="80" placeholder="If it matters for this rite" />
+                    </div>
+                    <div class="field">
+                        <label for="wPeople">People attending</label>
+                        <input type="number" id="wPeople" name="people" min="1" max="5000" placeholder="12" />
+                    </div>
+                    <div class="field">
+                        <label for="wMaterials">Materials</label>
+                        <select id="wMaterials" name="materials">
+                            <option value="Need">We need the samagri supplied</option>
+                            <option value="Have">We will arrange our own</option>
+                            <option value="Unsure">Not sure — please advise</option>
+                        </select>
+                        <span class="hint">Materials are supplied and invoiced by Dravya, not by Swadharma.</span>
+                    </div>
+                    <div class="field field-wide">
+                        <label for="wNotes">Anything else</label>
+                        <textarea id="wNotes" name="notes" maxlength="1200"
+                                  placeholder="Food for guests, accommodation for the Purohita, a hall to be booked, a departed family member's details…"></textarea>
+                    </div>
+                </div>
+                <div class="wiz-nav">
+                    <button type="button" class="btn ghost" data-go="3">Back</button>
+                    <button type="button" class="btn" data-go="5">Continue</button>
+                </div>
+            </section>
+
+            <!-- 5 — Review and send -->
+            <section class="wiz-panel" data-panel="5" hidden>
+                <h2>Review and send</h2>
+                <p class="sub">Check this over, then tell us how to reach you.</p>
+
+                <dl class="wiz-review" id="wizReview"></dl>
+
+                <div class="wiz-grid" style="margin-top:20px">
+                    <div class="field">
+                        <label for="wName">Your name</label>
+                        <input type="text" id="wName" name="name" maxlength="80" required />
+                    </div>
+                    <div class="field">
+                        <label for="wEmail">Email</label>
+                        <input type="email" id="wEmail" name="email" maxlength="120" required />
+                        <span class="hint">We reply by email. Phone is confirmed on the verification call.</span>
+                    </div>
+                    <div class="field field-wide">
+                        <label for="wPhone">Phone (optional)</label>
+                        <input type="tel" id="wPhone" name="phone" maxlength="30" />
+                    </div>
+                </div>
+
+                <div class="notice plain" style="margin-top:18px" id="wizHandoff"></div>
+
+                <div class="wiz-nav">
+                    <button type="button" class="btn ghost" data-go="4">Back</button>
+                    <button type="submit" class="btn">Send this request</button>
+                </div>
+            </section>
+
+            <!-- Sent -->
+            <section class="wiz-panel" data-panel="6" hidden>
+                <h2>Your request is ready to send</h2>
+                <div id="wizDone"></div>
+            </section>
+
+        </form>
+    </div>
+</div>

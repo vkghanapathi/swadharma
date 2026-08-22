@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Territories · Swadharma Services</title>
+<meta name="description" content="Browse the Swadharma network geographically — Country to State or Province to Region to City and PIN/ZIP. India and the United States." />
+<link rel="canonical" href="https://swadharmaservices.in/territories" />
+<meta property="og:title" content="Territories · Swadharma Services" />
+<meta property="og:description" content="Browse the Swadharma network geographically — Country to State or Province to Region to City and PIN/ZIP. India and the United States." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://swadharmaservices.in/territories" />
+<link rel="icon" href="https://dharmaposhanam.in/favicon.ico" />
+<link rel="stylesheet" href="/app.css" />
+</head>
+<body class="">
+
+<a class="sw-skip" href="#main">Skip to content</a>
+<div class="band" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<!-- TopNav — global destinations only. Context lives in the SideNav; the two
+     never repeat each other (spec section 10). -->
+<nav class="sw-top" aria-label="Primary">
+    <a class="brand" href="/">
+        <span class="glyph">॥</span>
+        <span class="wm"><b>Swadharma Services</b><small>Dharma Satram · धर्म सत्रम्</small></span>
+    </a>
+    <div class="sw-top-links">
+        <a href="/services">Services</a>
+        <a href="/network">Network</a>
+        <a href="/territories">Territories</a>
+        <a href="/organisations">Organisations</a>
+        <a href="/how-it-works">How it Works</a>
+        <a href="/about">About</a>
+    </div>
+    <div class="sw-top-act">
+        <a class="sw-signin" href="/signin">Sign In</a>
+        <a class="sw-cta" href="/request">Start a Service Request</a>
+        <button class="sw-burger" id="swBurger" type="button" aria-label="Open menu" aria-controls="swDrawer"><i></i></button>
+    </div>
+</nav>
+
+<div class="sw-drawer" id="swDrawer" hidden>
+    <div class="sw-drawer-panel" role="dialog" aria-label="Menu" aria-modal="true">
+        <div class="sw-drawer-head">
+            <b>Swadharma</b>
+            <button class="sw-drawer-close" type="button" aria-label="Close menu">&times;</button>
+        </div>
+        <a href="/services">Services</a>
+        <a href="/network">Network</a>
+        <a href="/territories">Territories</a>
+        <a href="/organisations">Organisations</a>
+        <a href="/how-it-works">How it Works</a>
+        <a href="/about">About</a>
+        <div class="sw-drawer-sep">Your account</div>
+        <a href="/signin">Sign in</a>
+        <a href="/enrol">Enrol as a professional</a>
+        <a href="/signup">Subscribe an organisation</a>
+        <div class="sw-drawer-sep">Reference</div>
+        <a href="/manual">Service Manual</a>
+        <a href="/classes">Sanskrit Classes</a>
+        <a href="/privacy">Privacy</a>
+        <a class="sw-cta" href="/request">Start a Service Request</a>
+    </div>
+</div>
+
+<div class="sw-shell">
+<aside class="sw-side">
+    <div class="sw-side-group">
+        <h2>The Network</h2>
+        <div class="sw-side-inner">
+            <a href="/network">Overview</a>
+            <a href="/network/professionals">Professionals</a>
+            <a href="/network/temples">Temples & Organisations</a>
+            <a href="/territories">Browse by territory</a>
+        </div>
+        <p class="sw-side-note">Territory stays selected while you move between these pages.</p>
+    </div>
+</aside>
+<main class="sw-main" id="main">
+<nav class="sw-crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span class="sep">/</span>
+    <span aria-current="page">Territories</span>
+</nav>
+<div class="sw-page-head">
+    <span class="mark">Geographic discovery</span>
+    <h1 class="sw-h1">Browse by <em>territory</em></h1>
+    <p class="sub">
+        Country → State or Province → Region → City → PIN&nbsp;/&nbsp;ZIP. Pick a territory and it
+        stays selected while you move through the network, the services and a service request.
+    </p>
+</div>
+
+<div class="terr-bar" id="terrBar"></div>
+
+<section class="sw-sec">
+    <div class="terr-cols" id="terrCols">
+        <div class="terr-col"><h3>Country</h3><p class="empty">Loading…</p></div>
+    </div>
+    <p class="rail-note">
+        Counts are live listings — professionals plus organisations. A territory with a zero count
+        is one Swadharma operates in but has not yet published listings for; a service request
+        there still reaches the network.
+    </p>
+</section>
+
+<section class="sw-sec" id="terrResults" hidden>
+    <div class="sw-sec-head">
+        <h2 id="terrResultsTitle">In this territory</h2>
+        <a class="more" href="/network">Whole network →</a>
+    </div>
+
+    <h3 style="font-size:15px;color:var(--sw-navy);margin:0 0 10px">Professionals</h3>
+    <div class="dir-grid" id="terrPros"></div>
+    <div class="dir-state" id="terrProsState" aria-live="polite">Loading…</div>
+
+    <h3 style="font-size:15px;color:var(--sw-navy);margin:26px 0 10px">Temples &amp; organisations</h3>
+    <div class="dir-grid" id="terrOrgs"></div>
+    <div class="dir-state" id="terrOrgsState" aria-live="polite">Loading…</div>
+
+    <div class="btn-row" style="margin-top:24px">
+        <a class="btn" href="/request" id="terrRequest">Start a Service Request here</a>
+        <a class="btn ghost" href="/network/professionals" id="terrAllPros">All professionals here</a>
+    </div>
+</section>
+
+<section class="sw-sec">
+    <div class="sw-sec-head"><h2>Where Swadharma operates</h2></div>
+    <div class="tbl-wrap">
+        <table class="tbl">
+            <thead><tr><th>Country</th><th>State / Province</th><th>Region</th><th>Cities</th></tr></thead>
+            <tbody id="terrSeed"></tbody>
+        </table>
+    </div>
+</section>
+</main>
+</div>
+
+<footer class="sw-foot">
+    <p class="fshloka">॥ स्वधर्म ॥</p>
+    <p>Swadharma Services · Dharma Satram — under <a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">Dharma Poshanam Inc</a></p>
+    <div class="flinks">
+        <a href="/services">Services</a>
+        <a href="/network">Network</a>
+        <a href="/territories">Territories</a>
+        <a href="/organisations">Organisations</a>
+        <a href="/how-it-works">How it works</a>
+        <a href="/manual">Service Manual</a>
+        <a href="/classes">Sanskrit Classes</a>
+        <a href="/enrol">Enrol as a professional</a>
+        <a href="/signin">Sign in</a>
+        <a href="/about">About</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/policies">Policies</a>
+    </div>
+
+    <div class="foffices">
+        <div><b>McKinney · Texas</b>800 Stacy Rd, McKinney, TX 75070, USA</div>
+        <div><b>Frisco · Texas</b>14600 Marigold Dr, Frisco, TX 75035, USA</div>
+        <div><b>Omaha · Nebraska</b>5703 S 159th Street, Omaha, NE 68135, USA</div>
+        <div><b>Mysore · India</b><a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">dharmaposhanam.in</a></div>
+    </div>
+
+    <p class="fnodes">
+        <b>Operational nodes</b><br>
+        Datta Mukti Kshetram, Rajahmundry · Vaivasvatam, Rajahmundry ·
+        Jaya Durga Teertham, Vijayawada · Sripadavallabha Anagha Datta Kshetram, Pithapuram
+    </p>
+    <p class="fine">EIN 85-3784241 · 501(c)(3) tax-exempt since 2020</p>
+    <p class="fine">Connect · Engage · Empower · स्वधर्म</p>
+</footer>
+
+<script src="/catalogue.js"></script>
+<script src="/app.js"></script>
+<script src="/page-territories.js"></script>
+</body>
+</html>

@@ -16,10 +16,11 @@
 # the source zip Cloud Run had kept in GCS. Now the command above works from a
 # clean checkout.
 #
-# Only *.html and *.css are copied. The same folder holds DEPLOY_RUNBOOK.md,
-# ONBOARDING_API.md and PROFESSIONAL_ENROLMENT_API.md — internal notes and API
-# contracts that would otherwise be served to anyone who guessed the filename.
-# Adding a broad `COPY . .` here would publish them.
+# Only *.html, *.css and *.js are copied. The same folder holds
+# DEPLOY_RUNBOOK.md, ONBOARDING_API.md and PROFESSIONAL_ENROLMENT_API.md —
+# internal notes and API contracts that would otherwise be served to anyone who
+# guessed the filename. Adding a broad `COPY . .` here would publish them, and
+# would also publish _layout/ (the page sources) and build_pages.py.
 FROM nginx:1.27-alpine
 
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -31,5 +32,10 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # manual and privacy, and a site with no HTML is not a state worth shipping.
 COPY *.html /usr/share/nginx/html/
 COPY *.css /usr/share/nginx/html/
+# app.js, catalogue.js and the per-page scripts. The whole shell — TopNav
+# active state, the mobile drawer, the territory selection, every directory
+# panel — lives in these, so a build that skipped them would serve pages that
+# render but do not work.
+COPY *.js /usr/share/nginx/html/
 
 EXPOSE 8080
