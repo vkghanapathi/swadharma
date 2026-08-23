@@ -384,6 +384,20 @@ def check_upload_covers_image() -> None:
 
 def check_nginx_matches_tests() -> None:
     conf = (ROOT / "nginx.conf").read_text(encoding="utf-8")
+
+    # gzip without gzip_proxied is inert behind Cloud Run: it forwards with a
+    # Via header, and nginx's default skips compression for proxied requests.
+    # panchanga.json is 146 KB, so this is not a rounding error.
+    if "gzip  " in conf or "gzip " in conf:
+        if "gzip_proxied" not in conf:
+            failures.append(
+                "nginx.conf: gzip is on but gzip_proxied is not set — Cloud Run "
+                "forwards with a Via header, so nothing would actually be compressed"
+            )
+        for kind in ("application/json", "application/javascript", "text/css"):
+            if kind not in conf:
+                failures.append(f"nginx.conf: gzip_types does not cover {kind}")
+
     for route, target in EXACT_ROUTES.items():
         if f"location = {route}" not in conf or target not in conf:
             failures.append(f"nginx.conf: no rule serving {route} from {target}")
