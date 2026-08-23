@@ -30,7 +30,15 @@ const { JSDOM, VirtualConsole, requestInterceptor } = await import(jsdomSpecifie
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 
-const TYPES = { ".js": "text/javascript", ".css": "text/css", ".html": "text/html" };
+const TYPES = {
+    ".js": "text/javascript", ".css": "text/css",
+    ".html": "text/html", ".json": "application/json"
+};
+
+// The real pañcāṅga, read once. The fetch stub below serves it verbatim: the
+// calendar must be tested against the data that actually ships, not a fixture,
+// because the thing most likely to break is the data itself.
+const PANCHANGA = JSON.parse(readFileSync(join(ROOT, "panchanga.json"), "utf8"));
 
 /**
  * Serves /app.js and friends off disk. Anything off-site gets an explicit 502,
@@ -144,6 +152,19 @@ async function run(route, world, assertions) {
                 observe() {} unobserve() {} disconnect() {}
             };
             window.fetch = (url) => {
+                const u0 = new URL(url, "https://swadharmaservices.in");
+
+                // panchanga.json is a static asset, not the directory API. It
+                // is served even in the "down" world, which models the API
+                // being unreachable — the two failures are independent, and a
+                // calendar that broke whenever the directory did would be a bug.
+                if (u0.pathname === "/panchanga.json") {
+                    if (w.noPanchanga) return Promise.reject(new Error("no panchanga"));
+                    return Promise.resolve({
+                        ok: true, json: () => Promise.resolve(PANCHANGA)
+                    });
+                }
+
                 if (w.fail) return Promise.reject(new Error("network down"));
                 const u = new URL(url);
                 const limit = parseInt(u.searchParams.get("limit") || "12", 10);
@@ -371,6 +392,37 @@ const PAGES = [
         check(`${label} step 2 -> 3 once country is set`,
             !doc.querySelector('[data-panel="3"]').hidden);
 
+        // ── Step 3: both calendars over one pañcāṅga ──────────────────
+        check(`${label} date step offers both calendars`,
+            !!doc.getElementById("wCalG") && !!doc.getElementById("wCalC"));
+        check(`${label} Chandramāna tab is enabled`, !doc.getElementById("wCalC").disabled);
+
+        // Gregorian in -> tithi out.
+        const gDate = doc.getElementById("wDate");
+        gDate.value = "2026-08-28";                       // Śrāvaṇa Śukla Pūrṇimā
+        gDate.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+        const shown = doc.getElementById("wResolved").textContent;
+        check(`${label} Gregorian date resolves to a tithi`,
+            /Śrāvaṇa/.test(shown) && /Pūrṇimā/.test(shown), shown.slice(0, 90));
+        check(`${label} resolved day warns about rāhukāla`,
+            /Rāhukāla/.test(shown), shown.slice(0, 120));
+
+        // Chandramāna in -> Gregorian out.
+        doc.getElementById("wCalC").click();
+        check(`${label} switching shows the lunar controls`,
+            !doc.getElementById("wChandra").hidden && doc.getElementById("wGregorian").hidden);
+        const masaSel = doc.getElementById("wMasa");
+        check(`${label} māsa list includes the adhika month`,
+            [...masaSel.options].some(o => /Adhika/.test(o.textContent)),
+            [...masaSel.options].map(o => o.textContent).join(","));
+        masaSel.value = [...masaSel.options].find(o => o.textContent === "Śrāvaṇa").value;
+        doc.getElementById("wPaksha").value = "Kṛṣṇa";
+        doc.getElementById("wTithi").value = "30";        // Amāvāsyā
+        doc.getElementById("wTithi").dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+        const back = doc.getElementById("wResolved").textContent;
+        check(`${label} tithi resolves to a Gregorian date`,
+            /\b2026\b/.test(back) && /Amāvāsyā/.test(back), back.slice(0, 110));
+
         doc.querySelector('[data-panel="3"] button[data-go="4"]').click();
         doc.querySelector('[data-panel="4"] button[data-go="5"]').click();
         check(`${label} reaches review`, !doc.querySelector('[data-panel="5"]').hidden);
@@ -378,8 +430,67 @@ const PAGES = [
         const review = doc.getElementById("wizReview").textContent;
         check(`${label} review carries the chosen service`, /Homa/.test(review), review.slice(0, 120));
         check(`${label} review carries the territory`, /Mysuru/.test(review) && /Karnataka/.test(review));
+        check(`${label} review carries BOTH calendars`,
+            /Amāvāsyā/.test(review) && /2026/.test(review), review.slice(0, 200));
         check(`${label} handoff says where it goes`,
             /swadharma@dharmaposhanam\.in/.test(doc.getElementById("wizHandoff").textContent));
+    }],
+
+    ["/calendar", ({ doc, dom, label, check }) => {
+        const cells = doc.querySelectorAll(".cal-cell[data-date]");
+        check(`${label} month grid rendered`, cells.length >= 28, `${cells.length} days`);
+        check(`${label} days carry a tithi`,
+            [...cells].every(c => c.querySelector(".t").textContent.trim().length > 0));
+        check(`${label} some days carry an observance`,
+            doc.querySelectorAll(".cal-cell.has-ob").length >= 3,
+            `${doc.querySelectorAll(".cal-cell.has-ob").length} days`);
+        check(`${label} filter lists observance types`,
+            doc.getElementById("calFilter").options.length >= 8,
+            `${doc.getElementById("calFilter").options.length} options`);
+        check(`${label} source is stated`,
+            /Pañcāṅgam|Panchangam/i.test(doc.getElementById("calSource").textContent));
+        check(`${label} says which times are verbatim`,
+            /exactly as the pañcāṅga prints them/i.test(doc.getElementById("calSource").textContent));
+
+        // Opening a day must show both reckonings and the cautions.
+        const ob = doc.querySelector(".cal-cell.has-ob");
+        ob.click();
+        const detail = doc.getElementById("calDetail");
+        check(`${label} day detail opens`, !detail.hidden);
+        check(`${label} detail names the lunar day`,
+            /Śukla|Kṛṣṇa/.test(detail.querySelector(".cal-lunar").textContent),
+            detail.querySelector(".cal-lunar").textContent.trim());
+        check(`${label} detail lists rāhukāla`, /Rāhukāla/.test(detail.textContent));
+        check(`${label} observance links into the wizard with the date`,
+            !!detail.querySelector('a[href*="/request?"][href*="date="]'));
+
+        // Chandramāna -> Gregorian lookup.
+        doc.getElementById("luMasa").value = doc.getElementById("luMasa").options[0].value;
+        doc.getElementById("luPaksha").value = "Kṛṣṇa";
+        doc.getElementById("luTithi").value = "30";
+        doc.getElementById("lunarLookup").dispatchEvent(new dom.window.Event("submit", { cancelable: true, bubbles: true }));
+        const hits = doc.querySelectorAll("#lunarResult .cal-hit");
+        check(`${label} lunar lookup resolves Amāvāsyā to a date`, hits.length >= 1,
+            hits.length ? hits[0].textContent.slice(0, 70) : doc.getElementById("lunarResult").textContent.slice(0, 90));
+
+        // An impossible combination must explain itself, not fail silently.
+        doc.getElementById("luPaksha").value = "Śukla";
+        doc.getElementById("lunarLookup").dispatchEvent(new dom.window.Event("submit", { cancelable: true, bubbles: true }));
+        check(`${label} impossible tithi/pakṣa is explained`,
+            /last day of the Kṛṣṇa pakṣa/.test(doc.getElementById("lunarResult").textContent),
+            doc.getElementById("lunarResult").textContent.slice(0, 80));
+    }],
+
+    ["/services/shraaddha?panchanga=1", ({ doc, label, check }) => {
+        // Dates, not prose — the whole point of this change.
+        const section = doc.getElementById("svcDates");
+        check(`${label} next dates shown`, section && !section.hidden);
+        const dates = doc.querySelectorAll("#svcDatesBody .next-date");
+        check(`${label} six upcoming dates`, dates.length === 6, `${dates.length}`);
+        check(`${label} each date gives both reckonings`,
+            [...dates].every(d => /\d{4}/.test(d.textContent) && /(Śukla|Kṛṣṇa)/.test(d.textContent)));
+        check(`${label} each links into the wizard`,
+            [...dates].every(d => d.querySelector('a[href*="service=shraaddha"][href*="date="]')));
     }],
 
     ["/organisations", ({ doc, label, check }) => {

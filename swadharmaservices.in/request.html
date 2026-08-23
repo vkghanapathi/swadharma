@@ -27,6 +27,7 @@
     </a>
     <div class="sw-top-links">
         <a href="/services">Services</a>
+        <a href="/calendar">Calendar</a>
         <a href="/network">Network</a>
         <a href="/territories">Territories</a>
         <a href="/organisations">Organisations</a>
@@ -47,6 +48,7 @@
             <button class="sw-drawer-close" type="button" aria-label="Close menu">&times;</button>
         </div>
         <a href="/services">Services</a>
+        <a href="/calendar">Calendar</a>
         <a href="/network">Network</a>
         <a href="/territories">Territories</a>
         <a href="/organisations">Organisations</a>
@@ -152,26 +154,65 @@
                 </div>
             </section>
 
-            <!-- 3 — Date -->
+            <!-- 3 — Date. Either calendar; the pañcāṅga reconciles them. -->
             <section class="wiz-panel" data-panel="3" hidden>
                 <h2>When?</h2>
-                <p class="sub">If the date depends on a tithi or a muhūrta, say so — we will work it out with you.</p>
-                <div class="wiz-grid">
-                    <div class="field">
-                        <label for="wDate">Preferred date</label>
-                        <input type="date" id="wDate" name="date" />
+                <p class="sub">
+                    Give the date in whichever calendar you hold it in. Many rites are owed on a
+                    tithi rather than a date — a Māsika Śrāddha, an Ābdika — and the pañcāṅga
+                    below will work out the other one for you.
+                </p>
+
+                <div class="wiz-cal" role="tablist" aria-label="Calendar">
+                    <button type="button" role="tab" id="wCalG" aria-selected="true">Gregorian date</button>
+                    <button type="button" role="tab" id="wCalC" aria-selected="false">Chandramāna tithi</button>
+                </div>
+
+                <div id="wGregorian">
+                    <div class="wiz-grid">
+                        <div class="field">
+                            <label for="wDate">Preferred date</label>
+                            <input type="date" id="wDate" name="date" />
+                        </div>
+                        <div class="field">
+                            <label for="wTime">Time of day</label>
+                            <select id="wTime" name="time">
+                                <option value="">No preference</option>
+                                <option>Early morning</option>
+                                <option>Morning</option>
+                                <option>Midday</option>
+                                <option>Afternoon</option>
+                                <option>Evening</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="field">
-                        <label for="wTime">Time of day</label>
-                        <select id="wTime" name="time">
-                            <option value="">No preference</option>
-                            <option>Early morning</option>
-                            <option>Morning</option>
-                            <option>Midday</option>
-                            <option>Afternoon</option>
-                            <option>Evening</option>
-                        </select>
+                </div>
+
+                <div id="wChandra" hidden>
+                    <div class="wiz-grid">
+                        <div class="field">
+                            <label for="wMasa">Māsa</label>
+                            <select id="wMasa"></select>
+                        </div>
+                        <div class="field">
+                            <label for="wPaksha">Pakṣa</label>
+                            <select id="wPaksha">
+                                <option value="Śukla">Śukla — waxing</option>
+                                <option value="Kṛṣṇa">Kṛṣṇa — waning</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="wTithi">Tithi</label>
+                            <select id="wTithi"></select>
+                        </div>
                     </div>
+                </div>
+
+                <!-- Whichever way round it was entered, the other reckoning and
+                     the day's muhūrta cautions are shown here before continuing. -->
+                <div id="wResolved"></div>
+
+                <div class="wiz-grid" style="margin-top:14px">
                     <div class="field field-wide">
                         <label for="wFlex">How fixed is the date?</label>
                         <select id="wFlex" name="flexibility">
@@ -182,6 +223,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="wiz-nav">
                     <button type="button" class="btn ghost" data-go="2">Back</button>
                     <button type="button" class="btn" data-go="4">Continue</button>
@@ -273,6 +315,7 @@
     <p>Swadharma Services · Dharma Satram — under <a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">Dharma Poshanam Inc</a></p>
     <div class="flinks">
         <a href="/services">Services</a>
+        <a href="/calendar">Calendar</a>
         <a href="/network">Network</a>
         <a href="/territories">Territories</a>
         <a href="/organisations">Organisations</a>
@@ -304,6 +347,7 @@
 
 <script src="/catalogue.js"></script>
 <script src="/app.js"></script>
+<script src="/panchanga.js"></script>
 <script src="/page-request.js"></script>
 </body>
 </html>

@@ -101,6 +101,16 @@
               "<em>for this specific category</em>.</p>") +
         "</section>" +
 
+        // Dates, not prose. Only rendered for services the pañcāṅga actually
+        // carries observances for; a service with no recurring lunar date says
+        // nothing here rather than showing an empty heading.
+        '<section class="sw-sec" id="svcDates" hidden>' +
+        '<div class="sw-sec-head"><h2>Next dates</h2>' +
+        '<a class="more" href="/calendar">Full calendar →</a></div>' +
+        '<div class="next-dates" id="svcDatesBody"></div>' +
+        '<p class="rail-note" id="svcDatesNote"></p>' +
+        "</section>" +
+
         '<section class="sw-sec">' +
         '<div class="sw-sec-head"><h2>Available in your territory</h2>' +
         '<a class="more" href="/territories">Browse territories →</a></div>' +
@@ -118,6 +128,37 @@
 
     SW.territory.adoptFromUrl();
     SW.renderTerritoryBar(SW.el("svcTerr"));
+
+    /* ── Next dates, from the pañcāṅga ──────────────────────────────── */
+    if (window.SW.panchanga) {
+        SW.panchanga.load().then(function () {
+            var P = SW.panchanga;
+            var next = P.upcoming({ service: svc.slug, count: 6 });
+            if (!next.length) return;
+
+            SW.el("svcDatesBody").innerHTML = next.map(function (d) {
+                var ob = d.ob[0];
+                var q = new URLSearchParams({ service: svc.slug, date: d.date });
+                return '<div class="next-date">' +
+                    "<b>" + SW.esc(P.gregorianLabel(d.date)) + "</b>" +
+                    "<span>" + SW.esc(P.lunarLabel(d)) + "</span>" +
+                    "<span>" + SW.esc(ob.name) +
+                    (ob.late ? " — begins " + SW.esc(ob.lateFrom || "late in the day") : "") +
+                    " · " + SW.esc(ob.kala) + "</span>" +
+                    (d.rk ? '<span class="cal-avoid">Rāhukāla ' + SW.esc(d.rk) + "</span>" : "") +
+                    '<a class="dir-link" href="/request?' + q.toString() + '">Request this date →</a>' +
+                    "</div>";
+            }).join("");
+
+            SW.el("svcDatesNote").textContent =
+                "Derived from the " + P.meta().samvatsara + " pañcāṅga, not a fixed list. " +
+                "A rite owed on a family tithi is not here — look it up on the calendar, " +
+                "or name the tithi in a request.";
+            SW.el("svcDates").hidden = false;
+        }).catch(function () {
+            // The page is complete without dates; leave the section hidden.
+        });
+    }
 
     new SW.Directory({
         kind: "professionals",

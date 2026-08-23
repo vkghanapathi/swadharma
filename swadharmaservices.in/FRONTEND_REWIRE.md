@@ -13,9 +13,10 @@ nothing ships without `test_site.py` and `test_browser.mjs` passing.**
 ```bash
 cd swadharmaservices.in
 
-python build_pages.py            # regenerate the pages from _layout/
-python test_site.py              # links, routes, assets, markup   (no deps)
-node   test_browser.mjs          # every page in a real DOM        (needs jsdom)
+python _layout/build_panchanga.py   # regenerate panchanga.json from Viyat
+python build_pages.py               # regenerate the pages from _layout/
+python test_site.py                 # links, routes, assets, calendar data
+node   test_browser.mjs             # every page in a real DOM   (needs jsdom)
 
 gcloud run deploy swadharmaservices --source swadharmaservices.in \
   --project swadharma-service-management --region asia-south1 \
@@ -156,6 +157,70 @@ and a failing API are both covered before either happens.
   served page.
 
 ---
+
+## The pañcāṅga calendar
+
+`/calendar` shows the monthly programmes as dates rather than prose, and the
+Request Wizard takes a date in **either** calendar. Both read one static asset.
+
+**Source.** `viyat/panchangam_data/panchangam_en.json` — 385 days,
+2026-03-19 to 2027-04-07, Parābhava saṃvatsara, with māsa, pakṣa, tithi,
+nakṣatra, yoga, karaṇa, sunrise, sunset, rāhukāla, varjya, durmuhūrta and the
+printed festival line per day.
+
+**Why a build step, not the Viyat API.** Viyat exposes `/api/v1/festivals` and
+`/api/v1/muhurta/search`, but every one of them answers **403 Not
+authenticated**. A public page cannot hold a credential. So
+`_layout/build_panchanga.py` compiles the tables into `panchanga.json` at build
+time: same-origin, no auth, no CSP change, and the calendar does not go down
+when another service does.
+
+**The monthly programmes are derived, not listed.** Amāvāsyā, Pūrṇimā, Ekādaśī,
+Pradoṣa, Māsa Śivarātri, Saṅkaṣṭī, Vināyaka Caturthī, Ṣaṣṭhī, Kālāṣṭamī and the
+Mahālaya fortnight are rules over `(pakṣa, tithi)` in `MONTHLY`, so they stay
+right for any year the tables cover. Each names a `service` slug from
+`catalogue.js`, which is how a day in the calendar links to the rite that serves
+it — `test_site.py` fails if a slug stops existing.
+
+**Three data problems the build handles, and why it matters**
+
+1. *Kṣaya tithi.* Māgha Pūrṇimā 2027 never holds at sunrise — Caturdaśī all day,
+   Pūrṇimā from te 5.30, Kṛṣṇa Pratipat by the next dawn. A rule looking only at
+   the day's first tithi drops that month's Satyanārāyaṇa Vratam **silently**.
+   Observances are therefore derived from the second tithi too and flagged
+   `late`. Disabling that handling costs three monthly programmes a month each
+   (Pūrṇimā, Māsa Śivarātri, Ṣaṣṭhī); `test_site.py` asserts 13 of each.
+2. *Truncated times.* 55 sunrise/sunset cells lost a trailing zero upstream
+   (`6.10` → `6.1`, `18.50` → `18.5`, `6.00` → `6`). They are recovered, but each
+   recovery is **checked**: both readings of an ambiguous value are measured
+   against the nearest well-formed day, and the winner must be close to it and
+   clearly closer than the alternative. Failures are dropped, not guessed.
+3. *A shifted row.* 2027-02-20 has a rāśi name in `sunrise` and `7.41` in
+   `sunset` — well formed, and wrong by ten hours. A plausibility window
+   (05:00–07:30, 17:00–19:30, against a real year of 5:57–6:49 and 17:54–18:52)
+   drops both, and also stops that row being used as the anchor for a
+   neighbouring repair.
+
+Every repair and refusal is printed by the build. They are upstream faults —
+fixing them in `panchangam_en.json` would let the repair step go away.
+
+**Times are printed verbatim.** Tithi and nakṣatra end times and varjya carry
+markers (`M`, `N`, `E`, `te`) that neither this repository nor Viyat documents.
+They are reproduced exactly as published rather than re-derived: guessing
+whether `N` means night or noon would put a wrong muhūrta in front of someone
+arranging a funeral rite. Rāhukāla and durmuhūrta are unambiguous clock ranges
+and are the only ones the UI reasons about. The calendar page says all of this
+on itself.
+
+**Booking in both calendars.** The wizard's date step resolves whichever way it
+is given — Gregorian date → tithi, or māsa/pakṣa/tithi → date — and shows the
+other reckoning with the day's cautions before you continue. **Both travel with
+the request.** The lunar date is the obligation ("Śrāvaṇa Kṛṣṇa Saptamī" is what
+a family owes every year); the Gregorian date is only where it lands this once,
+and a request carrying only that loses the thing that has to be repeated.
+
+Adhika māsa is kept distinct rather than flattened: the year has both an Adhika
+and a Nija Jyeṣṭha, and a rite owed in one is not owed in the other.
 
 ## Two CI interactions to know about
 

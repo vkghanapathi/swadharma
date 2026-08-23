@@ -48,6 +48,7 @@ PAGES = LAYOUT / "pages"
 
 TOP_NAV = [
     ("Services", "/services"),
+    ("Calendar", "/calendar"),
     ("Network", "/network"),
     ("Territories", "/territories"),
     ("Organisations", "/organisations"),
@@ -57,6 +58,7 @@ TOP_NAV = [
 
 FOOTER_LINKS = [
     ("Services", "/services"),
+    ("Calendar", "/calendar"),
     ("Network", "/network"),
     ("Territories", "/territories"),
     ("Organisations", "/organisations"),
@@ -128,7 +130,7 @@ def build_side_nav(context: str) -> str:
 
     if context == "services":
         head = SERVICES_NAV_HEAD
-        items = [("All services", "/services")] + [
+        items = [("All services", "/services"), ("Calendar", "/calendar")] + [
             (name, "/services/" + slug) for slug, name in catalogue_services()
         ]
         note = SERVICES_NAV_NOTE

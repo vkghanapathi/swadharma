@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Professionals · The Swadharma Network</title>
-<meta name="description" content="Search verified Purohitas, Archakas, Ṛtviks and Veda Pundits by territory, specialty, language and Veda." />
-<link rel="canonical" href="https://swadharmaservices.in/network/professionals" />
-<meta property="og:title" content="Professionals · The Swadharma Network" />
-<meta property="og:description" content="Search verified Purohitas, Archakas, Ṛtviks and Veda Pundits by territory, specialty, language and Veda." />
+<title>Calendar · Swadharma Services</title>
+<meta name="description" content="The monthly programmes as dates, not prose — Amāvāsyā, Ekādaśī, Pradoṣa, Saṅkaṣṭī, Māsa Śivarātri and Mahālaya, with tithi, nakṣatra and the muhūrta windows to avoid. Browse by Gregorian month or by Chandramāna māsa, and book from any day." />
+<link rel="canonical" href="https://swadharmaservices.in/calendar" />
+<meta property="og:title" content="Calendar · Swadharma Services" />
+<meta property="og:description" content="The monthly programmes as dates, not prose — Amāvāsyā, Ekādaśī, Pradoṣa, Saṅkaṣṭī, Māsa Śivarātri and Mahālaya, with tithi, nakṣatra and the muhūrta windows to avoid. Browse by Gregorian month or by Chandramāna māsa, and book from any day." />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://swadharmaservices.in/network/professionals" />
+<meta property="og:url" content="https://swadharmaservices.in/calendar" />
 <link rel="icon" href="https://dharmaposhanam.in/favicon.ico" />
 <link rel="stylesheet" href="/app.css" />
 </head>
@@ -69,102 +69,106 @@
 <div class="sw-shell">
 <aside class="sw-side">
     <div class="sw-side-group">
-        <h2>The Network</h2>
+        <h2>Services</h2>
         <div class="sw-side-inner">
-            <a href="/network">Overview</a>
-            <a href="/network/professionals">Professionals</a>
-            <a href="/network/temples">Temples & Organisations</a>
-            <a href="/territories">Browse by territory</a>
+            <a href="/services">All services</a>
+            <a href="/calendar">Calendar</a>
+            <a href="/services/ceremonies">Ceremonies & Daivikam</a>
+            <a href="/services/shraaddha">Śrāddha & Apara Karma</a>
+            <a href="/services/homa">Homa & Yajña</a>
+            <a href="/services/samskaras">The Sixteen Saṃskāras</a>
+            <a href="/services/vedic-events">Vedic Events & Ṛtvik Support</a>
+            <a href="/services/classes">Classes, Sanskrit & Training</a>
+            <a href="/services/dravya">Dravya — Materials & Door Delivery</a>
+            <a href="/services/pilgrim-support">Pilgrim Support & Remote Seva</a>
+            <a href="/services/knowledge-hub">Swadharma Knowledge Hub</a>
         </div>
-        <p class="sw-side-note">Territory stays selected while you move between these pages.</p>
+        <p class="sw-side-note">Every service page carries a Start a Service Request action.</p>
     </div>
 </aside>
 <main class="sw-main" id="main">
 <nav class="sw-crumbs" aria-label="Breadcrumb">
     <a href="/">Home</a>
     <span class="sep">/</span>
-    <a href="/network">Network</a>
-    <span class="sep">/</span>
-    <span aria-current="page">Professionals</span>
+    <span aria-current="page">Calendar</span>
 </nav>
 <div class="sw-page-head">
-    <span class="mark">Directory</span>
-    <h1 class="sw-h1">Freelance service professionals</h1>
+    <span class="mark">Pañcāṅga</span>
+    <h1 class="sw-h1">The monthly programmes, <em>as dates</em></h1>
     <p class="sub">
-        Purohitas, Archakas, Ṛtviks, Veda Pundits, cooks, decorators, helpers and event
-        coordinators. Each card shows the categories that professional is <em>verified for</em> —
-        verification is per ceremony, never a blanket badge.
+        Every recurring observance is derived from the lunar day rather than kept as a list,
+        so the dates are right for the whole year. Each day shows its tithi and nakṣatra, the
+        muhūrta windows to avoid, and a way to book the rite that belongs to it.
     </p>
 </div>
 
-<div class="terr-bar" id="proTerr"></div>
-
-<form class="filters" id="proFilters" role="search" autocomplete="off">
-    <div class="field">
-        <label for="fName">Name</label>
-        <input type="search" id="fName" placeholder="Purohita name" maxlength="80" />
-    </div>
-    <div class="field">
-        <label for="fPin">PIN / ZIP</label>
-        <input type="search" id="fPin" placeholder="570023" maxlength="12" inputmode="numeric" />
-    </div>
-    <div class="field">
-        <label for="fState">State</label>
-        <input type="search" id="fState" placeholder="Karnataka" maxlength="60" />
-    </div>
-    <div class="field">
-        <label for="fCountry">Country</label>
-        <select id="fCountry">
-            <option value="">Any country</option>
-            <option value="IN">India</option>
-            <option value="US">United States</option>
-        </select>
-    </div>
-    <button type="button" class="btn-clear" id="fClear">Clear</button>
-</form>
-
-<!-- Specialty, language and Veda refine the rows already loaded. The directory
-     API filters on name and territory only, so these controls appear only when
-     there is something to refine and say plainly what they act on. -->
-<div id="proRefine" hidden>
-    <div class="filters" style="margin-top:-8px">
-        <div class="field">
-            <label for="rSpecialty">Verified for</label>
-            <select id="rSpecialty"><option value="">Any ceremony</option></select>
-        </div>
-        <div class="field">
-            <label for="rLanguage">Language</label>
-            <select id="rLanguage"><option value="">Any language</option></select>
-        </div>
-        <div class="field">
-            <label for="rVeda">Veda</label>
-            <select id="rVeda"><option value="">Any Veda</option></select>
-        </div>
-        <div class="field">
-            <span class="hint">Refines the professionals loaded below.</span>
-        </div>
-    </div>
+<!-- Calendar switch. The whole point of the amalgamated table is that neither
+     reckoning is the primary one. -->
+<div class="cal-switch" role="tablist" aria-label="Calendar">
+    <button type="button" role="tab" id="calTabG" aria-selected="true">Gregorian month</button>
+    <button type="button" role="tab" id="calTabC" aria-selected="false">Chandramāna māsa</button>
 </div>
 
-<section class="sw-sec">
-    <div class="sw-sec-head">
-        <h2>Professionals</h2>
-        <span class="sw-count" id="proCount"></span>
+<div class="cal-bar">
+    <button type="button" class="cal-nav" id="calPrev" aria-label="Previous">&#8592;</button>
+    <div class="cal-pick">
+        <span id="calGregorian">
+            <select id="calMonth" aria-label="Month"></select>
+            <select id="calYear" aria-label="Year"></select>
+        </span>
+        <span id="calChandra" hidden>
+            <select id="calMasa" aria-label="Māsa"></select>
+        </span>
     </div>
-    <div class="dir-grid" id="proGrid"></div>
-    <div class="dir-state" id="proState" aria-live="polite">Loading professionals…</div>
-    <button type="button" class="dir-more" id="proMore" hidden>Show more</button>
+    <button type="button" class="cal-nav" id="calNext" aria-label="Next">&#8594;</button>
+    <select id="calFilter" aria-label="Show only">
+        <option value="">All observances</option>
+    </select>
+    <button type="button" class="btn-clear" id="calToday">Today</button>
+</div>
+
+<p class="cal-caption" id="calCaption"></p>
+
+<div id="calBody">
+    <div class="dir-state">Loading the pañcāṅga…</div>
+</div>
+
+<!-- Day detail, opened from a cell. -->
+<div class="cal-detail" id="calDetail" hidden></div>
+
+<section class="sw-sec" style="margin-top:36px">
+    <div class="sw-sec-head"><h2>Book by Chandramāna date</h2></div>
+    <p class="sub">
+        If you know the rite by its lunar date — a Māsika Śrāddha on the tithi of a death, say —
+        name it here and we will show you when it falls.
+    </p>
+    <form class="filters" id="lunarLookup" autocomplete="off">
+        <div class="field">
+            <label for="luMasa">Māsa</label>
+            <select id="luMasa"></select>
+        </div>
+        <div class="field">
+            <label for="luPaksha">Pakṣa</label>
+            <select id="luPaksha">
+                <option value="Śukla">Śukla — waxing</option>
+                <option value="Kṛṣṇa">Kṛṣṇa — waning</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="luTithi">Tithi</label>
+            <select id="luTithi"></select>
+        </div>
+        <div class="field">
+            <label for="luService">For which service</label>
+            <select id="luService"><option value="">Not sure yet</option></select>
+        </div>
+        <button type="submit" class="btn sm">Find the date</button>
+    </form>
+    <div id="lunarResult"></div>
 </section>
 
 <section class="sw-sec">
-    <div class="cta-band">
-        <div>
-            <h2>Need someone for a specific date?</h2>
-            <p>A service request reaches the whole network at once, including professionals who
-               have not yet published a profile.</p>
-        </div>
-        <a class="btn" href="/request">Start a Service Request</a>
-    </div>
+    <div class="notice plain" id="calSource"></div>
 </section>
 </main>
 </div>
@@ -206,6 +210,7 @@
 
 <script src="/catalogue.js"></script>
 <script src="/app.js"></script>
-<script src="/page-professionals.js"></script>
+<script src="/panchanga.js"></script>
+<script src="/page-calendar.js"></script>
 </body>
 </html>

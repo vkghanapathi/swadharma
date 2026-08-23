@@ -1,0 +1,85 @@
+title: Calendar · Swadharma Services
+description: The monthly programmes as dates, not prose — Amāvāsyā, Ekādaśī, Pradoṣa, Saṅkaṣṭī, Māsa Śivarātri and Mahālaya, with tithi, nakṣatra and the muhūrta windows to avoid. Browse by Gregorian month or by Chandramāna māsa, and book from any day.
+route: /calendar
+context: services
+crumbs: Calendar
+scripts: panchanga.js page-calendar.js
+---
+<div class="sw-page-head">
+    <span class="mark">Pañcāṅga</span>
+    <h1 class="sw-h1">The monthly programmes, <em>as dates</em></h1>
+    <p class="sub">
+        Every recurring observance is derived from the lunar day rather than kept as a list,
+        so the dates are right for the whole year. Each day shows its tithi and nakṣatra, the
+        muhūrta windows to avoid, and a way to book the rite that belongs to it.
+    </p>
+</div>
+
+<!-- Calendar switch. The whole point of the amalgamated table is that neither
+     reckoning is the primary one. -->
+<div class="cal-switch" role="tablist" aria-label="Calendar">
+    <button type="button" role="tab" id="calTabG" aria-selected="true">Gregorian month</button>
+    <button type="button" role="tab" id="calTabC" aria-selected="false">Chandramāna māsa</button>
+</div>
+
+<div class="cal-bar">
+    <button type="button" class="cal-nav" id="calPrev" aria-label="Previous">&#8592;</button>
+    <div class="cal-pick">
+        <span id="calGregorian">
+            <select id="calMonth" aria-label="Month"></select>
+            <select id="calYear" aria-label="Year"></select>
+        </span>
+        <span id="calChandra" hidden>
+            <select id="calMasa" aria-label="Māsa"></select>
+        </span>
+    </div>
+    <button type="button" class="cal-nav" id="calNext" aria-label="Next">&#8594;</button>
+    <select id="calFilter" aria-label="Show only">
+        <option value="">All observances</option>
+    </select>
+    <button type="button" class="btn-clear" id="calToday">Today</button>
+</div>
+
+<p class="cal-caption" id="calCaption"></p>
+
+<div id="calBody">
+    <div class="dir-state">Loading the pañcāṅga…</div>
+</div>
+
+<!-- Day detail, opened from a cell. -->
+<div class="cal-detail" id="calDetail" hidden></div>
+
+<section class="sw-sec" style="margin-top:36px">
+    <div class="sw-sec-head"><h2>Book by Chandramāna date</h2></div>
+    <p class="sub">
+        If you know the rite by its lunar date — a Māsika Śrāddha on the tithi of a death, say —
+        name it here and we will show you when it falls.
+    </p>
+    <form class="filters" id="lunarLookup" autocomplete="off">
+        <div class="field">
+            <label for="luMasa">Māsa</label>
+            <select id="luMasa"></select>
+        </div>
+        <div class="field">
+            <label for="luPaksha">Pakṣa</label>
+            <select id="luPaksha">
+                <option value="Śukla">Śukla — waxing</option>
+                <option value="Kṛṣṇa">Kṛṣṇa — waning</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="luTithi">Tithi</label>
+            <select id="luTithi"></select>
+        </div>
+        <div class="field">
+            <label for="luService">For which service</label>
+            <select id="luService"><option value="">Not sure yet</option></select>
+        </div>
+        <button type="submit" class="btn sm">Find the date</button>
+    </form>
+    <div id="lunarResult"></div>
+</section>
+
+<section class="sw-sec">
+    <div class="notice plain" id="calSource"></div>
+</section>

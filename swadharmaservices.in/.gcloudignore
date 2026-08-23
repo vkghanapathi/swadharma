@@ -25,3 +25,9 @@
 !*.html
 !*.css
 !*.js
+
+# panchanga.json by name, deliberately NOT !*.json. It is the only JSON the site
+# serves, and this workspace has Firebase service-account keys sitting in
+# neighbouring folders — a blanket !*.json would let one reach a build context
+# the moment somebody copied it in. Named files cannot do that.
+!panchanga.json

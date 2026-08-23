@@ -254,9 +254,84 @@ def check_build_fresh() -> None:
         failures.append("build: " + result.stdout.strip())
 
 
+def check_panchanga() -> None:
+    """The calendar data must exist, be shipped, and be internally consistent."""
+    path = ROOT / "panchanga.json"
+    if not path.is_file():
+        failures.append("panchanga.json missing — run python _layout/build_panchanga.py")
+        return
+
+    import json
+
+    data = json.loads(path.read_text(encoding="utf-8"))
+    days = data.get("days", {})
+    if len(days) < 300:
+        failures.append(f"panchanga.json holds only {len(days)} days; expected a full year")
+
+    # 13 lunar months in this year, so each monthly observance should occur 13
+    # times. Twelve means a kṣaya tithi silently dropped a month's programme —
+    # the exact bug the second-tithi handling exists to prevent.
+    counts: dict[str, int] = {}
+    for day in days.values():
+        for ob in day.get("ob", []):
+            counts[ob["short"]] = counts.get(ob["short"], 0) + 1
+
+    monthly = ["Amāvāsyā", "Pūrṇimā", "Saṅkaṣṭī", "Māsa Śivarātri",
+               "Vināyaka Caturthī", "Ṣaṣṭhī", "Aṣṭamī"]
+    for name in monthly:
+        n = counts.get(name, 0)
+        if n < 13:
+            failures.append(
+                f"panchanga.json: {name} occurs {n} times, expected 13 — a lunar month "
+                "has lost its observance (check the kṣaya-tithi handling)"
+            )
+
+    # Every observance must point at a service that exists, or the calendar
+    # links to a 404.
+    catalogue = (ROOT / "catalogue.js").read_text(encoding="utf-8")
+    block = catalogue[catalogue.index("SW.CATALOGUE"):catalogue.index("SW.ROLES")]
+    slugs = set(re.findall(r'slug:\s*"([^"]+)"', block))
+    for day in days.values():
+        for ob in day.get("ob", []):
+            if ob["service"] not in slugs:
+                failures.append(
+                    f"panchanga.json: observance {ob['short']!r} points at service "
+                    f"{ob['service']!r}, which is not in the catalogue"
+                )
+                break
+
+    # No published sunrise or sunset may be malformed or absurd. The source has
+    # truncated cells and one row whose columns are shifted, so the build both
+    # repairs and refuses; this is the check that it never publishes the result
+    # of a bad repair. Windows are wide: the year's real values are 5:57-6:49
+    # and 17:54-18:52.
+    time_re = re.compile(r"^\d{1,2}\.\d{2}$")
+    windows = {"sr": (5 * 60, 7 * 60 + 30), "ss": (17 * 60, 19 * 60 + 30)}
+    for date, day in days.items():
+        for field, (low, high) in windows.items():
+            value = day.get(field)
+            if value is None:
+                continue
+            if not time_re.match(value):
+                failures.append(f"panchanga.json {date}: {field} {value!r} is malformed")
+                continue
+            hour, minute = value.split(".")
+            got = int(hour) * 60 + int(minute)
+            if not low <= got <= high:
+                failures.append(
+                    f"panchanga.json {date}: {field} {value!r} is not a plausible "
+                    "time of day — a damaged source cell has been published"
+                )
+
+    notes.append(
+        f"{len(days)} pañcāṅga days, {sum(counts.values())} observances, "
+        f"{path.stat().st_size // 1024} KB"
+    )
+
+
 def check_dockerfile() -> None:
     docker = (ROOT / "Dockerfile").read_text(encoding="utf-8")
-    for pattern in ("*.html", "*.css", "*.js"):
+    for pattern in ("*.html", "*.css", "*.js", "*.json"):
         if f"COPY {pattern}" not in docker:
             failures.append(f"Dockerfile: does not COPY {pattern}")
     # Only actual COPY instructions count — the file warns about `COPY . .` in a
@@ -264,6 +339,47 @@ def check_dockerfile() -> None:
     for line in docker.splitlines():
         if line.strip().startswith("COPY") and re.match(r"COPY\s+\.\s+\.", line.strip()):
             failures.append("Dockerfile: a broad COPY would publish _layout/ and build_pages.py")
+
+
+def check_upload_covers_image() -> None:
+    """Every file the Dockerfile copies must survive .gcloudignore.
+
+    These two are read by different tools at different moments and nothing
+    connects them. Adding `COPY *.json` without adding the file to the
+    allowlist means the upload omits it and `docker build` fails on a glob that
+    matches nothing — after the source has already gone up. That happened once;
+    this is why it will not happen twice.
+    """
+    import fnmatch
+
+    docker = (ROOT / "Dockerfile").read_text(encoding="utf-8")
+    ignore = ROOT / ".gcloudignore"
+    if not ignore.is_file():
+        failures.append(".gcloudignore missing — the build context would include Edu/ and _layout/")
+        return
+
+    allowed = [
+        line.strip()[1:]
+        for line in ignore.read_text(encoding="utf-8").splitlines()
+        if line.strip().startswith("!")
+    ]
+
+    copied = re.findall(r"^COPY\s+(\S+)\s+\S+", docker, re.M)
+    for glob in copied:
+        matches = sorted(p.name for p in ROOT.glob(glob) if p.is_file())
+        if not matches:
+            failures.append(
+                f"Dockerfile: COPY {glob} matches no file — docker build fails on this"
+            )
+            continue
+        for name in matches:
+            if not any(fnmatch.fnmatch(name, rule) for rule in allowed):
+                failures.append(
+                    f".gcloudignore: {name} is copied by `COPY {glob}` but is not in the "
+                    "allowlist, so it never reaches the build context"
+                )
+
+    notes.append(f"{len(copied)} Dockerfile COPY patterns, all reachable in the upload")
 
 
 def check_nginx_matches_tests() -> None:
@@ -306,8 +422,10 @@ def main() -> int:
     check_fragments()
     check_script_ids()
     check_dockerfile()
+    check_upload_covers_image()
     check_nginx_matches_tests()
     check_catalogue_reachable()
+    check_panchanga()
     check_no_retired_vendor()
 
     for note in notes:

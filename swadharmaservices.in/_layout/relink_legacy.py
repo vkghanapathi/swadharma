@@ -53,6 +53,7 @@ REWRITES = [
 LEGACY_NAV = """        <nav>
             <a href="/">Home</a>
             <a href="/services">Services</a>
+            <a href="/calendar">Calendar</a>
             <a href="/network">Network</a>
             <a href="/organisations">Organisations</a>
             <a href="/manual">Manual</a>
