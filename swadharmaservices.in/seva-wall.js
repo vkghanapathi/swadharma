@@ -51,6 +51,7 @@
        "sevaName":     "Abhiṣeka",
        "sevaCode":     "ABHISHEKA",         // keys the deity image
        "name":         "…" | null,          // null = not opted in. Not "".
+       "place":        "Mysuru, Karnataka" | null,   // town and state only
        "photo":        "https://…" | null,  // null = not opted in, or none held
        "deityImage":   "https://…" | null,  // per seva, from the tenant
        "gotram":       "…" | null,
@@ -156,7 +157,8 @@
             ".swv-body{min-width:0;display:flex;flex-direction:column;gap:2px}",
             ".swv-name{font-size:16.5px;color:#1F3569;font-weight:650;line-height:1.3}",
             ".swv-name.is-withheld{color:#51606E;font-weight:550;font-style:italic}",
-            ".swv-seva{font-size:13.5px;color:#0B5A54;font-weight:600}",
+            ".swv-place{font-size:12.5px;color:#51606E}",
+            ".swv-seva{font-size:13.5px;color:#0B5A54;font-weight:600;margin-top:3px}",
             ".swv-meta{font-size:12.5px;color:#51606E;line-height:1.5}",
             ".swv-meta span{margin-right:10px}",
             ".swv-meta b{color:#1F2A37;font-weight:600}",
@@ -175,6 +177,7 @@
             "animation:swvIn .7s ease-out}",
             ".swv[data-layout=wall] .swv-pic{width:150px;height:150px}",
             ".swv[data-layout=wall] .swv-name{font-size:27px}",
+            ".swv[data-layout=wall] .swv-place{font-size:15px}",
             ".swv[data-layout=wall] .swv-seva{font-size:16px}",
             ".swv[data-layout=wall] .swv-meta{font-size:14px}",
             "@keyframes swvIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}",
@@ -186,6 +189,7 @@
             ".swv[data-theme=dark] .swv-when{color:rgba(255,255,255,.7)}",
             ".swv[data-theme=dark] .swv-card{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18)}",
             ".swv[data-theme=dark] .swv-name{color:#fff}",
+            ".swv[data-theme=dark] .swv-place{color:rgba(255,255,255,.65)}",
             ".swv[data-theme=dark] .swv-seva{color:#C89939}",
             ".swv[data-theme=dark] .swv-meta,.swv[data-theme=dark] .swv-meta b{color:rgba(255,255,255,.75)}",
             ".swv[data-theme=dark] .swv-empty{background:rgba(255,255,255,.06);color:rgba(255,255,255,.75)}",
@@ -215,6 +219,12 @@
             ? '<div class="swv-name">' + esc(seva.name) + "</div>"
             : '<div class="swv-name is-withheld">Nāma gupta — offered without name</div>';
 
+        // Town and state, never a street. A seva karta's home address has no
+        // business on a wall, and the contract has nowhere to put one.
+        var place = (seva.name && seva.place)
+            ? '<div class="swv-place">' + esc(seva.place) + "</div>"
+            : "";
+
         var meta = [];
         if (seva.gotram) meta.push("<span><b>Gotra</b> " + esc(seva.gotram) + "</span>");
         if (seva.nakshatram) meta.push("<span><b>Nakṣatra</b> " + esc(seva.nakshatram) + "</span>");
@@ -231,7 +241,7 @@
         return '<article class="swv-card ' + (corpus ? "is-corpus" : "is-booking") + '">' +
             '<div class="swv-pic">' + pic + "</div>" +
             '<div class="swv-body">' +
-            name +
+            name + place +
             (seva.sevaName ? '<div class="swv-seva">' + esc(seva.sevaName) + "</div>" : "") +
             (meta.length ? '<div class="swv-meta">' + meta.join("") + "</div>" : "") +
             inName + services +

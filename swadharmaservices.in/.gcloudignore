@@ -26,6 +26,14 @@
 !*.css
 !*.js
 
+# Deity images for the Seva Karta wall. Re-including a file inside an excluded
+# directory needs the directory re-included FIRST — `!images/*.jpg` on its own
+# uploads nothing, because `*` above already excluded the folder it lives in.
+# Verified against gcloud, not assumed: without the `!images/` line the manifest
+# contains zero of these files while looking perfectly reasonable.
+!images/
+!images/*.jpg
+
 # There is deliberately no !*.json. The site serves no JSON — the pañcāṅga ships
 # as panchanga.data.js, covered by the rule above — and this workspace has
 # Firebase service-account keys sitting in neighbouring folders. A blanket

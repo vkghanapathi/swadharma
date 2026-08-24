@@ -370,16 +370,42 @@ def check_upload_covers_image() -> None:
 
     copied = re.findall(r"^COPY\s+(\S+)\s+\S+", docker, re.M)
     for glob in copied:
-        matches = sorted(p.name for p in ROOT.glob(glob) if p.is_file())
+        matches = sorted(
+            p.relative_to(ROOT).as_posix() for p in ROOT.glob(glob) if p.is_file()
+        )
         if not matches:
             failures.append(
                 f"Dockerfile: COPY {glob} matches no file — docker build fails on this"
             )
             continue
-        for name in matches:
-            if not any(fnmatch.fnmatch(name, rule) for rule in allowed):
+        for rel in matches:
+            # A file in a subdirectory has to clear both the directory rule and
+            # its own — gitignore semantics cannot re-include a file inside an
+            # excluded folder. Match on the relative path AND the bare name, so
+            # `!*.js` still covers a root-level script.
+            name = rel.rsplit("/", 1)[-1]
+            ok = any(
+                fnmatch.fnmatch(rel, rule) or fnmatch.fnmatch(name, rule)
+                for rule in allowed
+            )
+            if ok and "/" in rel:
+                folder = rel.split("/", 1)[0]
+                if not any(r.rstrip("/") == folder for r in allowed):
+                    ok = False
+                    failures.append(
+                        f".gcloudignore: {rel} is allowed by a file rule but its folder "
+                        f"'{folder}/' is not re-included, so gcloud still skips it"
+                    )
+            if not ok and "/" not in rel:
                 failures.append(
-                    f".gcloudignore: {name} is copied by `COPY {glob}` but is not in the "
+                    f".gcloudignore: {rel} is copied by `COPY {glob}` but is not in the "
+                    "allowlist, so it never reaches the build context"
+                )
+            elif not ok and "/" in rel and not any(
+                fnmatch.fnmatch(rel, rule) for rule in allowed
+            ):
+                failures.append(
+                    f".gcloudignore: {rel} is copied by `COPY {glob}` but is not in the "
                     "allowlist, so it never reaches the build context"
                 )
 

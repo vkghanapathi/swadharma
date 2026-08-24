@@ -19,10 +19,17 @@
     var params = new URLSearchParams(window.location.search);
     var layout = params.get("layout") === "wall" ? "wall" : "grid";
 
-    /* An illustrative payload covering every case the wall must handle:
-       a corpus donor who opted in, a corpus donor who did not, a booking with a
-       deity image configured, and a booking with neither photo nor deity image
-       so the drawn emblem shows. */
+    /* An illustrative payload. The names and places are invented; the deity
+       images are the platform's own, the same files a tenant portal serves for
+       these services.
+
+       No card carries a donor photograph, and that is deliberate rather than an
+       omission. Putting a stranger's face on a public page to demonstrate a
+       feature is not something to do casually, and the case the demo needs to
+       show is the one that governs most cards on a real wall anyway: no
+       photograph, so the deity image for the seva stands in its place. The
+       opted-in path is exercised in test_browser.mjs, where no real face is
+       needed to prove an <img> renders. */
     function sample(tithi, locality, dateIso) {
         return {
             date: dateIso,
@@ -32,32 +39,35 @@
                 {
                     id: "eg-1", kind: "corpus",
                     sevaName: "Nitya Abhiṣeka", sevaCode: "ABHISHEKA",
-                    name: "(example) A named corpus donor",
-                    photo: null, deityImage: null,
+                    name: "Śrīnivāsa Rao and family",
+                    place: "Rajahmundry, Andhra Pradesh",
+                    photo: null, deityImage: "/images/deity-abhisheka.jpg",
                     gotram: "Bhāradvāja", nakshatram: "Rohiṇī",
-                    occasion: null, inTheNameOf: "their late father",
+                    occasion: null, inTheNameOf: "Late Sri Venkata Ramana Rao",
                     servicesList: "Abhiṣeka, Alaṅkāra and Naivedya, offered every year on this day.",
-                    organisation: "Example Kṣetram", since: 2014
+                    organisation: "Demonstration Kṣetram", since: 2014
                 },
                 {
                     id: "eg-2", kind: "corpus",
                     sevaName: "Sahasranāma Arcana", sevaCode: "ARCANA",
                     name: null,                       // withheld by the donor
-                    photo: null, deityImage: null,
+                    place: null,
+                    photo: null, deityImage: "/images/deity-archana.jpg",
                     gotram: null, nakshatram: null,
                     occasion: null, inTheNameOf: null,
                     servicesList: null,
-                    organisation: "Example Kṣetram", since: 2019
+                    organisation: "Demonstration Kṣetram", since: 2019
                 },
                 {
                     id: "eg-3", kind: "booking",
                     sevaName: "Pārvaṇa Śrāddha", sevaCode: "SHRAADDHA",
-                    name: "(example) A family booking today",
-                    photo: null, deityImage: null,
+                    name: "Lakṣmī Devi and family",
+                    place: "Mysuru, Karnataka",
+                    photo: null, deityImage: "/images/deity-shraaddha.jpg",
                     gotram: "Kāśyapa", nakshatram: "Maghā",
                     occasion: "Ābdika", inTheNameOf: null,
                     servicesList: null,
-                    organisation: "Example Kṣetram", since: null
+                    organisation: "Demonstration Kṣetram", since: null
                 }
             ]
         };

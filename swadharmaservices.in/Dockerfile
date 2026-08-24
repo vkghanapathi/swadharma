@@ -38,6 +38,14 @@ COPY *.css /usr/share/nginx/html/
 # render but do not work.
 COPY *.js /usr/share/nginx/html/
 
+# Deity images for the Seva Karta wall. These stand in where a donor has not
+# opted to show a photograph, which on a real wall is most cards. They are the
+# platform's own service imagery, re-cropped square and optimised — the
+# originals in swadharma-service-management run to 6 MB apiece and have no
+# business on a page. A glob, not a directory COPY, so `test_site.py` can check
+# each file against .gcloudignore.
+COPY images/*.jpg /usr/share/nginx/html/images/
+
 # The compiled pañcāṅga behind /calendar and the wizard's Chandramāna date step
 # rides along in that *.js glob, as panchanga.data.js. It is data, not code, but
 # it is emitted as JavaScript on purpose: Firebase Hosting fronts this domain

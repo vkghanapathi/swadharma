@@ -556,12 +556,23 @@ const PAGES = [
             /Mūla Nidhi/.test(doc.querySelector(".swv-tag.corpus").textContent) &&
             /Seva today/.test(doc.querySelector(".swv-tag.booking").textContent));
 
-        // The image ladder: photo -> deity image -> drawn emblem. None of the
-        // sample entries carries a photo or a deity image, so all three fall
-        // through to the emblem — and none may render a bare initial.
-        check(`${label} falls back to an emblem, not an initial`,
-            doc.querySelectorAll("#sevaWallDemo .swv-emblem").length === 3 &&
-            doc.querySelectorAll("#sevaWallDemo .swv-pic img").length === 0);
+        // The image ladder: photo -> deity image -> drawn emblem. No sample
+        // entry carries a donor photograph, so every card must show the deity
+        // image for its seva — and none may render a bare initial.
+        const imgs = doc.querySelectorAll("#sevaWallDemo .swv-pic img");
+        check(`${label} every card shows the deity image`, imgs.length === 3,
+            `${imgs.length} images, ${doc.querySelectorAll("#sevaWallDemo .swv-emblem").length} emblems`);
+        check(`${label} deity images are real files`,
+            [...imgs].every((i) => existsSync(join(ROOT, i.getAttribute("src").slice(1)))),
+            [...imgs].map((i) => i.getAttribute("src")).join(" "));
+        check(`${label} no initial-in-a-circle anywhere`,
+            !/swv-initial/.test(doc.getElementById("sevaWallDemo").innerHTML));
+
+        // Dummy names and places, as asked for.
+        check(`${label} named cards carry a name and a place`,
+            doc.querySelectorAll("#sevaWallDemo .swv-name:not(.is-withheld)").length === 2 &&
+            doc.querySelectorAll("#sevaWallDemo .swv-place").length === 2,
+            `${doc.querySelectorAll("#sevaWallDemo .swv-place").length} places`);
 
         // A withheld name is stated as a choice, never left blank.
         const withheld = doc.querySelector("#sevaWallDemo .swv-name.is-withheld");
@@ -588,11 +599,11 @@ const PAGES = [
         check(`${label} embed snippet shown`,
             /data-swadharma-seva-wall/.test(doc.body.textContent) &&
             /seva-wall\.js/.test(doc.body.textContent));
-        check(`${label} states the missing endpoint honestly`,
-            /has no public seva-wall route today/.test(
+        check(`${label} states where the data comes from`,
+            /renders its own seva list server-side/.test(
                 doc.getElementById("wallStatus").textContent));
-        check(`${label} sample is labelled illustrative`,
-            /illustrative/.test(doc.body.textContent));
+        check(`${label} sample is labelled invented`,
+            /names and places are invented/.test(doc.body.textContent));
     }],
 
     ["/how-it-works", ({ doc, label, check }) => {
@@ -704,6 +715,92 @@ await runWidget("tenant locality + link",
             !!node.querySelector('a[href="/panchanga"]'));
         check(`${label} dark theme applied`, node.getAttribute("data-theme") === "dark");
     });
+
+/* ── The seva wall on a tenant origin, and the photo path ─────────────────
+   /seva-wall deliberately shows no donor photograph, so the first rung of the
+   image ladder is proved here instead — where a fabricated URL is enough and no
+   real person's face is involved. Also runs on a third-party origin, which is
+   where the module actually lives. */
+
+await (async function sevaWallEmbed() {
+    const errors = [];
+    const vc = new VirtualConsole();
+    vc.on("jsdomError", (e) => errors.push(e.message));
+
+    const payload = {
+        date: "2026-08-24",
+        tithi: "Śrāvaṇa Śukla Dvādaśī",
+        locality: "Mysore",
+        sevas: [
+            {
+                id: "a", kind: "booking", sevaName: "Abhiṣeka", sevaCode: "ABHISHEKA",
+                name: "Opted-in Donor", place: "Mysuru, Karnataka",
+                photo: "https://swadharmaservices.in/images/deity-default.jpg",
+                deityImage: "https://swadharmaservices.in/images/deity-abhisheka.jpg"
+            },
+            {
+                id: "b", kind: "corpus", sevaName: "Arcana", sevaCode: "ARCANA",
+                name: "Deity-Image Donor", place: "Rajahmundry, Andhra Pradesh",
+                photo: null, deityImage: null, since: 2011
+            },
+            {
+                id: "c", kind: "booking", sevaName: "Homa", sevaCode: "HOMA",
+                name: null, place: "Frisco, Texas", photo: null, deityImage: null
+            }
+        ]
+    };
+
+    const dom = new JSDOM(
+        `<!doctype html><html><body>
+           <div data-swadharma-seva-wall data-layout="grid" data-title="Today"
+                data-deities='{"ARCANA":"https://swadharmaservices.in/images/deity-archana.jpg"}'
+                data-payload='${JSON.stringify(payload).replace(/'/g, "&#39;")}'></div>
+           <script src="https://swadharmaservices.in/seva-wall.js"></script>
+         </body></html>`,
+        {
+            url: "https://swadharma.example-temple.org/",
+            runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: vc,
+            resources: { interceptors: [localFiles()] }
+        }
+    );
+
+    await new Promise((r) => setTimeout(r, 120));
+    await new Promise((r) => setTimeout(r, 120));
+
+    const doc = dom.window.document;
+    const L = "seva wall [embed]";
+    const cards = doc.querySelectorAll(".swv-card");
+
+    check(`${L} no script errors`, errors.length === 0, errors.join(" | "));
+    check(`${L} renders on a third-party origin`, cards.length === 3, `${cards.length}`);
+
+    // Rung 1: opted in, photograph wins over the deity image.
+    const first = [...cards].find((c) => /Opted-in Donor/.test(c.textContent));
+    check(`${L} photo wins when the donor opted in`,
+        /deity-default\.jpg/.test(first.querySelector("img").getAttribute("src")),
+        first.querySelector("img")?.getAttribute("src"));
+
+    // Rung 2: no photo, deity image from data-deities by seva code.
+    const second = [...cards].find((c) => /Deity-Image Donor/.test(c.textContent));
+    check(`${L} data-deities supplies the image by seva code`,
+        /deity-archana\.jpg/.test(second.querySelector("img").getAttribute("src")),
+        second.querySelector("img")?.getAttribute("src"));
+
+    // Rung 3: neither — the drawn emblem, never an initial.
+    const third = [...cards].find((c) => /Nāma gupta/.test(c.textContent));
+    check(`${L} emblem when there is neither`,
+        !!third.querySelector(".swv-emblem") && !third.querySelector("img"));
+    check(`${L} withheld card shows no place either`,
+        !third.querySelector(".swv-place"), third.textContent.slice(0, 80));
+
+    check(`${L} corpus sorts ahead of bookings`,
+        cards[0].classList.contains("is-corpus"));
+    check(`${L} header carries tithi and locality`,
+        /Śrāvaṇa Śukla Dvādaśī/.test(doc.querySelector(".swv-when").textContent) &&
+        /Mysore/.test(doc.querySelector(".swv-when").textContent));
+
+    dom.window.close();
+})();
 
 const failed = results.filter((r) => !r.ok);
 for (const r of failed) {

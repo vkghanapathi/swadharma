@@ -39,9 +39,9 @@ scripts: panchanga.js seva-wall.js page-seva-wall.js
         <a class="more" href="/seva-wall?layout=wall">Full-screen wall mode →</a>
     </div>
     <p class="sub">
-        Rendered by the same module a portal would embed. The entries below are illustrative,
-        so that the behaviour is visible before an installation is wired up — a real wall reads
-        from the institution's own bookings.
+        Rendered by the same module a portal would embed, against today's real pañcāṅga. The
+        names and places are invented for the demonstration; the deity images are the
+        platform's own. A real wall reads from the institution's own bookings.
     </p>
     <div id="sevaWallDemo"></div>
 </section>
@@ -54,7 +54,10 @@ scripts: panchanga.js seva-wall.js page-seva-wall.js
             the person, so the same devotee may appear for one offering and not another.
         </p>
         <ol>
-            <li><strong>Opted in, photograph held</strong> — their photograph is shown.</li>
+            <li><strong>Opted in, photograph held</strong> — their photograph is shown.
+                No card below uses one: putting a stranger's face on a public page to
+                demonstrate a feature is not a thing to do casually, and the case that governs
+                most cards on a real wall is the next one anyway.</li>
             <li><strong>Not opted in, or no photograph</strong> — the <strong>deity image for
                 that seva</strong> is shown in its place. Your images, configured per seva
                 category.</li>
@@ -79,15 +82,28 @@ scripts: panchanga.js seva-wall.js page-seva-wall.js
 
 <section class="sw-sec">
     <div class="sw-sec-head"><h2>Put it on your own screen</h2></div>
-    <p class="sub">One element and one script, the same as the pañcāṅga line:</p>
+    <p class="sub">
+        One element and one script, the same as the pañcāṅga line. Your portal renders the
+        seva list server-side into <code>data-payload</code> — it already holds the bookings
+        and already knows who has opted in:
+    </p>
     <div class="tbl-wrap">
         <pre class="code-block">&lt;div data-swadharma-seva-wall
-     data-endpoint="/api/v1/public/seva-wall"
      data-title="Today's Seva Kartas"
      data-layout="wall"
-     data-rotate="9"&gt;&lt;/div&gt;
+     data-rotate="9"
+     data-payload='{"date":"2026-08-24","tithi":"Śrāvaṇa Śukla Dvādaśī",
+       "locality":"Mysore","sevas":[
+         {"id":"1","kind":"corpus","sevaName":"Nitya Abhiṣeka","sevaCode":"ABHISHEKA",
+          "name":"…","place":"Rajahmundry, Andhra Pradesh","photo":null,
+          "deityImage":"/images/abhisheka.jpg","since":2014}]}'&gt;&lt;/div&gt;
 &lt;script src="https://swadharmaservices.in/seva-wall.js" async&gt;&lt;/script&gt;</pre>
     </div>
+    <p class="rail-note">
+        Prefer to fetch? Use <code>data-endpoint="/your/route"</code> instead and the wall will
+        request it, adding <code>?date=</code> for the installation's today. The response takes
+        the same shape.
+    </p>
     <p class="rail-note">
         <code>data-layout="grid"</code> shows every seva karta at once — better for a page panel;
         <code>"wall"</code> rotates one large card at a time, for a screen in the hall.
@@ -98,14 +114,20 @@ scripts: panchanga.js seva-wall.js page-seva-wall.js
 </section>
 
 <section class="sw-sec">
-    <div class="sw-sec-head"><h2>What is still needed</h2></div>
-    <div class="notice gold" id="wallStatus">
-        <b>The display module is built; the endpoint that feeds it is not.</b>
-        swadharma-api has no public seva-wall route today — <code>/api/v1/bookings</code> exists
-        and is authenticated, correctly, because bookings are personal data. Publishing a
-        privacy-projected subset to a wall is a deliberate decision about donors' names and
-        photographs, not a technical detail, so it is being put to Dharma Poshanam rather than
-        assumed. The contract the module expects is documented at the top of
-        <code>seva-wall.js</code>.
+    <div class="sw-sec-head"><h2>Where the data comes from</h2></div>
+    <div class="notice" id="wallStatus">
+        <b>Each installation renders its own seva list server-side and passes it to the wall.</b>
+        There is no shared public endpoint, and that is the decision (VKG, 2026-08-24): a
+        portal already holds its own bookings and already knows which of its donors have opted
+        in, so the privacy projection stays inside the institution that owes it rather than
+        being centralised on a platform route. Put the payload in
+        <code>data-payload</code> and the wall renders it with no second request.
     </div>
+    <p class="sub" style="margin-top:18px">
+        A portal that would rather fetch than inline can point <code>data-endpoint</code> at its
+        own route instead. Either way the shape is the same, and it is documented at the top of
+        <code>seva-wall.js</code> — the important line being that the <em>server</em> sends
+        <code>null</code> for anything a donor has not consented to publish, so nothing on this
+        side is trusted to hide it.
+    </p>
 </section>
