@@ -256,17 +256,21 @@ def check_build_fresh() -> None:
 
 def check_panchanga() -> None:
     """The calendar data must exist, be shipped, and be internally consistent."""
-    path = ROOT / "panchanga.json"
+    path = ROOT / "panchanga.data.js"
     if not path.is_file():
-        failures.append("panchanga.json missing — run python _layout/build_panchanga.py")
+        failures.append("panchanga.data.js missing — run python _layout/build_panchanga.py")
         return
 
     import json
 
-    data = json.loads(path.read_text(encoding="utf-8"))
+    # The file is `window.SW_PANCHANGA_DATA={...};` — strip the wrapper and
+    # parse the payload, so this test reads exactly what the browser will.
+    raw = path.read_text(encoding="utf-8")
+    start = raw.index("{", raw.index("SW_PANCHANGA_DATA"))
+    data = json.loads(raw[start:raw.rindex("}") + 1])
     days = data.get("days", {})
     if len(days) < 300:
-        failures.append(f"panchanga.json holds only {len(days)} days; expected a full year")
+        failures.append(f"panchanga.data.js holds only {len(days)} days; expected a full year")
 
     # 13 lunar months in this year, so each monthly observance should occur 13
     # times. Twelve means a kṣaya tithi silently dropped a month's programme —
@@ -282,7 +286,7 @@ def check_panchanga() -> None:
         n = counts.get(name, 0)
         if n < 13:
             failures.append(
-                f"panchanga.json: {name} occurs {n} times, expected 13 — a lunar month "
+                f"panchanga.data.js: {name} occurs {n} times, expected 13 — a lunar month "
                 "has lost its observance (check the kṣaya-tithi handling)"
             )
 
@@ -295,7 +299,7 @@ def check_panchanga() -> None:
         for ob in day.get("ob", []):
             if ob["service"] not in slugs:
                 failures.append(
-                    f"panchanga.json: observance {ob['short']!r} points at service "
+                    f"panchanga.data.js: observance {ob['short']!r} points at service "
                     f"{ob['service']!r}, which is not in the catalogue"
                 )
                 break
@@ -313,13 +317,13 @@ def check_panchanga() -> None:
             if value is None:
                 continue
             if not time_re.match(value):
-                failures.append(f"panchanga.json {date}: {field} {value!r} is malformed")
+                failures.append(f"panchanga.data.js {date}: {field} {value!r} is malformed")
                 continue
             hour, minute = value.split(".")
             got = int(hour) * 60 + int(minute)
             if not low <= got <= high:
                 failures.append(
-                    f"panchanga.json {date}: {field} {value!r} is not a plausible "
+                    f"panchanga.data.js {date}: {field} {value!r} is not a plausible "
                     "time of day — a damaged source cell has been published"
                 )
 
@@ -331,7 +335,7 @@ def check_panchanga() -> None:
 
 def check_dockerfile() -> None:
     docker = (ROOT / "Dockerfile").read_text(encoding="utf-8")
-    for pattern in ("*.html", "*.css", "*.js", "*.json"):
+    for pattern in ("*.html", "*.css", "*.js"):
         if f"COPY {pattern}" not in docker:
             failures.append(f"Dockerfile: does not COPY {pattern}")
     # Only actual COPY instructions count — the file warns about `COPY . .` in a

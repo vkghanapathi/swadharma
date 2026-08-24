@@ -22,7 +22,16 @@ window.SW = window.SW || {};
 (function () {
     "use strict";
 
-    var URL_PATH = "/panchanga.json";
+    /* The table is a JS module, not a JSON fetch, and that is a transfer-size
+       decision rather than a stylistic one. swadharmaservices.in sits behind
+       Firebase Hosting, which re-serves an origin application/json response
+       UNCOMPRESSED: the Cloud Run origin gzips this file to 21 KB and the
+       browser was still receiving 146 KB. Firebase does compress
+       application/javascript. Same bytes, same parse, one seventh the transfer.
+
+       Loaded by injecting a <script> on demand, so the pages that never touch
+       the calendar never pay for it. */
+    var URL_PATH = "/panchanga.data.js";
     var cache = null;
     var pending = null;
 
@@ -62,24 +71,38 @@ window.SW = window.SW || {};
         iso: iso,
         parseIso: parseIso,
 
-        /** Resolves to the whole table. Fetched once per visit. */
+        /** Resolves to the whole table. Loaded once per visit. */
         load: function () {
             if (cache) return Promise.resolve(cache);
             if (pending) return pending;
-            pending = fetch(URL_PATH, { headers: { Accept: "application/json" } })
-                .then(function (r) {
-                    if (!r.ok) throw new Error("HTTP " + r.status);
-                    return r.json();
-                })
-                .then(function (data) {
-                    cache = data;
-                    pending = null;
-                    return data;
-                })
-                .catch(function (e) {
-                    pending = null;
-                    throw e;
-                });
+
+            pending = new Promise(function (resolve, reject) {
+                // Already on the page (a second caller, or a page that chose to
+                // include the data eagerly).
+                if (window.SW_PANCHANGA_DATA) {
+                    return resolve(window.SW_PANCHANGA_DATA);
+                }
+
+                var script = document.createElement("script");
+                script.src = URL_PATH;
+                script.async = true;
+                script.onload = function () {
+                    if (window.SW_PANCHANGA_DATA) resolve(window.SW_PANCHANGA_DATA);
+                    else reject(new Error("panchanga data script loaded but set nothing"));
+                };
+                script.onerror = function () {
+                    reject(new Error("could not load " + URL_PATH));
+                };
+                document.head.appendChild(script);
+            }).then(function (data) {
+                cache = data;
+                pending = null;
+                return data;
+            }).catch(function (e) {
+                pending = null;
+                throw e;
+            });
+
             return pending;
         },
 

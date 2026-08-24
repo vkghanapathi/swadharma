@@ -161,7 +161,15 @@ and a failing API are both covered before either happens.
 ## The pañcāṅga calendar
 
 `/calendar` shows the monthly programmes as dates rather than prose, and the
-Request Wizard takes a date in **either** calendar. Both read one static asset.
+Request Wizard takes a date in **either** calendar. Both read one static asset, `panchanga.data.js`.
+
+It is emitted as **JavaScript rather than JSON** for a measured reason:
+swadharmaservices.in is fronted by Firebase Hosting, which re-serves an origin
+`application/json` response **uncompressed** — 146 KB reached the browser where
+nginx had already gzipped it to 21 KB — while it does compress
+`application/javascript`. Same bytes, same parse, one seventh the transfer. It
+is loaded by injecting a `<script>` on demand, so pages that never open the
+calendar never pay for it.
 
 **Source.** `viyat/panchangam_data/panchangam_en.json` — 385 days,
 2026-03-19 to 2027-04-07, Parābhava saṃvatsara, with māsa, pakṣa, tithi,

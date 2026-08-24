@@ -35,10 +35,10 @@ const TYPES = {
     ".html": "text/html", ".json": "application/json"
 };
 
-// The real pañcāṅga, read once. The fetch stub below serves it verbatim: the
-// calendar must be tested against the data that actually ships, not a fixture,
-// because the thing most likely to break is the data itself.
-const PANCHANGA = JSON.parse(readFileSync(join(ROOT, "panchanga.json"), "utf8"));
+// The pañcāṅga now ships as a script (panchanga.data.js), so the resource
+// interceptor serves it like any other asset and no fetch stub is involved.
+// The calendar is therefore tested against the data that actually ships, not a
+// fixture — the thing most likely to break here is the data itself.
 
 /**
  * Serves /app.js and friends off disk. Anything off-site gets an explicit 502,
@@ -152,19 +152,6 @@ async function run(route, world, assertions) {
                 observe() {} unobserve() {} disconnect() {}
             };
             window.fetch = (url) => {
-                const u0 = new URL(url, "https://swadharmaservices.in");
-
-                // panchanga.json is a static asset, not the directory API. It
-                // is served even in the "down" world, which models the API
-                // being unreachable — the two failures are independent, and a
-                // calendar that broke whenever the directory did would be a bug.
-                if (u0.pathname === "/panchanga.json") {
-                    if (w.noPanchanga) return Promise.reject(new Error("no panchanga"));
-                    return Promise.resolve({
-                        ok: true, json: () => Promise.resolve(PANCHANGA)
-                    });
-                }
-
                 if (w.fail) return Promise.reject(new Error("network down"));
                 const u = new URL(url);
                 const limit = parseInt(u.searchParams.get("limit") || "12", 10);
