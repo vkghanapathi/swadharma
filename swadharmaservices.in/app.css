@@ -481,6 +481,35 @@ a.card:hover .go { text-decoration: underline; }
 .wiz-pick button[aria-pressed="true"] { border-color: var(--sw-navy); background: var(--sw-navy-light); }
 .wiz-pick b { display: block; color: var(--sw-navy); font-size: 15px; margin-bottom: 2px; }
 .wiz-pick span { display: block; color: var(--sw-muted); font-size: 12.5px; line-height: 1.45; }
+/* The tithi, given the weight it actually carries in the booking. */
+.wiz-tithi {
+    display: flex; flex-direction: column; gap: 3px;
+    padding: 16px 18px; margin: 0 0 18px;
+    background: linear-gradient(180deg, var(--sw-saffron-light) 0%, #fff 75%);
+    border: 1px solid var(--sw-saffron); border-left: 4px solid var(--sw-saffron);
+    border-radius: var(--sw-radius-lg);
+}
+.wiz-tithi:empty { display: none; }
+.wiz-tithi-k {
+    font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--sw-saffron-dark); font-weight: 700;
+}
+.wiz-tithi b {
+    font-family: var(--sw-serif); font-size: 22px; color: var(--sw-navy);
+    letter-spacing: -0.2px; line-height: 1.2;
+}
+.wiz-tithi-g { font-size: 14.5px; color: var(--sw-text); }
+.wiz-tithi-note { font-size: 12.5px; color: var(--sw-gold-dark); font-weight: 600; }
+.wiz-tithi-loc { font-size: 11.5px; color: var(--sw-muted); margin-top: 3px; }
+
+/* Embed snippet on the organisations page. */
+.code-block {
+    margin: 0; padding: 14px 16px; overflow-x: auto;
+    background: var(--sw-navy-dark); color: #E8EFEB;
+    border-radius: var(--sw-radius); font-size: 12.5px; line-height: 1.6;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
 .wiz-review { margin: 0; font-size: 14.5px; }
 .wiz-review > div { display: flex; gap: 10px; padding: 8px 0; border-top: 1px solid var(--sw-border-soft); }
 .wiz-review > div:first-child { border-top: 0; }
@@ -637,6 +666,41 @@ a.hub:hover { transform: translateY(-2px); box-shadow: var(--sw-shadow-md); bord
 .hub span { display: block; color: var(--sw-muted); font-size: 13.5px; line-height: 1.5; }
 .hub.soon { background: rgba(255,255,255,0.55); border-style: dashed; cursor: default; }
 .hub.soon b { color: var(--sw-muted); }
+
+/* ── Today's tithi — the welcome line ────────────────────────────────── */
+.sw-today-wrap { display: flex; justify-content: center; margin: 0 0 16px; }
+.sw-today {
+    display: inline-flex; flex-wrap: wrap; align-items: center;
+    justify-content: center; gap: 9px;
+    padding: 7px 15px; border-radius: var(--sw-radius-pill);
+    background: #fff; border: 1px solid var(--sw-border);
+    box-shadow: var(--sw-shadow-xs);
+    font-size: 13.5px; color: var(--sw-muted);
+}
+.sw-today b { color: var(--sw-navy); font-weight: 650; }
+.sw-today a { color: inherit; }
+.sw-today a:hover b { text-decoration: underline; }
+.sw-today-t { font-variant-numeric: tabular-nums; }
+.sw-today-sep { color: var(--sw-border-strong); }
+.sw-today-n { margin-left: 6px; color: var(--sw-saffron-dark); font-family: var(--sw-serif); }
+.sw-today-ob {
+    padding: 1px 9px; border-radius: var(--sw-radius-pill);
+    font-size: 11.5px; font-weight: 600;
+    background: var(--sw-saffron-light); color: var(--sw-saffron-dark);
+    border: 1px solid var(--sw-saffron);
+}
+/* Whose tithi it is. Never hidden — the same figures read from Texas are still
+   Mysore's reckoning, and a line that omits that is quietly wrong. */
+.sw-today-loc {
+    padding: 1px 9px; border-radius: var(--sw-radius-pill);
+    font-size: 11px; font-weight: 600; cursor: help;
+    background: var(--sw-cream); color: var(--sw-muted);
+    border: 1px solid var(--sw-border);
+}
+@media (max-width: 560px) {
+    .sw-today { font-size: 12.5px; gap: 6px; padding: 7px 12px; }
+    .sw-today-sep { display: none; }
+}
 
 /* ── Pañcāṅga calendar ───────────────────────────────────────────────── */
 

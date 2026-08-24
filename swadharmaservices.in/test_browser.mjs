@@ -219,6 +219,26 @@ async function run(route, world, assertions) {
 
 const PAGES = [
     ["/", ({ doc, label, world, check }) => {
+        // The welcome line: date, time, tithi — and whose tithi it is.
+        const strip = doc.querySelector("#todayStrip .sw-today");
+        check(`${label} today strip rendered`, !!strip,
+            doc.getElementById("todayStrip").textContent.slice(0, 60));
+        if (strip) {
+            check(`${label} strip carries a Gregorian date`,
+                /\b(20\d\d)\b/.test(strip.querySelector(".sw-today-g").textContent),
+                strip.querySelector(".sw-today-g").textContent);
+            check(`${label} strip carries a clock in the locality`,
+                /\d\d:\d\d\s+IST/.test(strip.querySelector(".sw-today-t").textContent),
+                strip.querySelector(".sw-today-t").textContent);
+            check(`${label} strip carries the tithi`,
+                /(Śukla|Kṛṣṇa)/.test(strip.querySelector(".sw-today-l").textContent),
+                strip.querySelector(".sw-today-l").textContent);
+            // Non-negotiable: the same figures read from Texas are Mysore's.
+            check(`${label} strip names the locality`,
+                /Mysore/.test(strip.querySelector(".sw-today-loc").textContent),
+                strip.querySelector(".sw-today-loc").textContent);
+        }
+
         const grid = doc.getElementById("homeServices");
         check(`${label} service grid rendered`, grid && grid.children.length >= 9,
             grid ? `${grid.children.length} cards` : "missing");
@@ -417,8 +437,22 @@ const PAGES = [
         const review = doc.getElementById("wizReview").textContent;
         check(`${label} review carries the chosen service`, /Homa/.test(review), review.slice(0, 120));
         check(`${label} review carries the territory`, /Mysuru/.test(review) && /Karnataka/.test(review));
-        check(`${label} review carries BOTH calendars`,
-            /Amāvāsyā/.test(review) && /2026/.test(review), review.slice(0, 200));
+
+        // The tithi leads the booking display; the date sits under it.
+        const head = doc.getElementById("wizTithiHead");
+        check(`${label} tithi block present`, head.textContent.trim().length > 0);
+        check(`${label} tithi is the headline`,
+            /Amāvāsyā/.test(head.querySelector("b").textContent),
+            head.querySelector("b").textContent);
+        check(`${label} date is shown under the tithi`,
+            /\b2026\b/.test(head.querySelector(".wiz-tithi-g").textContent),
+            head.querySelector(".wiz-tithi-g").textContent);
+        check(`${label} tithi block names the locality`,
+            /Mysore/.test(head.querySelector(".wiz-tithi-loc").textContent),
+            head.querySelector(".wiz-tithi-loc").textContent);
+        check(`${label} date step explains the locality rule`,
+            /fixed per account when it is\s+created/i.test(doc.getElementById("wLocality").textContent),
+            doc.getElementById("wLocality").textContent.slice(0, 90));
         check(`${label} handoff says where it goes`,
             /swadharma@dharmaposhanam\.in/.test(doc.getElementById("wizHandoff").textContent));
     }],
@@ -436,6 +470,13 @@ const PAGES = [
             `${doc.getElementById("calFilter").options.length} options`);
         check(`${label} source is stated`,
             /Pañcāṅgam|Panchangam/i.test(doc.getElementById("calSource").textContent));
+        // The recorded distinction: a tithi belongs to a locality, and the
+        // reckoning is fixed per account at creation.
+        check(`${label} locality stated above the fold`,
+            /reckoned for Mysore/i.test(doc.getElementById("calLocality").textContent),
+            doc.getElementById("calLocality").textContent.slice(0, 70));
+        check(`${label} says the reckoning is per account`,
+            /account is set to its own locality when/i.test(doc.getElementById("calSource").textContent));
         check(`${label} says which times are verbatim`,
             /exactly as the pañcāṅga prints them/i.test(doc.getElementById("calSource").textContent));
 
@@ -486,6 +527,21 @@ const PAGES = [
             /Stripe/.test(doc.body.textContent) && /Razorpay/.test(doc.body.textContent));
         check(`${label} does not name the retired gateway`, !/vitta/i.test(doc.body.textContent));
         check(`${label} subscription CTA present`, !!doc.querySelector('a[href="/signup"]'));
+
+        // The account-level pañcāṅga rule, and the embeddable welcome line.
+        const pan = doc.getElementById("panchanga");
+        check(`${label} pañcāṅga section present`, !!pan);
+        check(`${label} says the reckoning is decided at account creation`,
+            /decided when the account is created/i.test(pan.textContent));
+        check(`${label} names the demo locality`, /Mysore, India/.test(pan.textContent));
+        check(`${label} onboarding has a set-your-pañcāṅga step`,
+            /Set your pañcāṅga/.test(doc.getElementById("onboarding").textContent));
+        check(`${label} embed snippet shown`,
+            /data-swadharma-panchanga/.test(pan.textContent) &&
+            /panchanga-widget\.js/.test(pan.textContent));
+        check(`${label} widget demo renders live`,
+            !!doc.querySelector("#widgetDemoInner .sw-today"),
+            doc.getElementById("widgetDemo").textContent.slice(0, 60));
     }],
 
     ["/how-it-works", ({ doc, label, check }) => {
@@ -526,6 +582,77 @@ for (const world of ["live", "full", "down"]) {
         }
     }
 }
+
+/* ── The embeddable widget, on somebody else's domain ─────────────────────
+   This is the case the widget exists for and the one the page tests cannot
+   cover: a tenant portal on its own origin, pulling the script and the tables
+   from swadharmaservices.in. It must render, must name the locality, and must
+   mark a borrowed reckoning as indicative rather than presenting another
+   place's tithi as that account's own. */
+
+async function runWidget(name, attrs, assertions) {
+    const errors = [];
+    const vc = new VirtualConsole();
+    vc.on("jsdomError", (e) => errors.push(e.message));
+
+    const dom = new JSDOM(
+        `<!doctype html><html><body>
+           <header><div data-swadharma-panchanga ${attrs}></div></header>
+           <script src="https://swadharmaservices.in/panchanga-widget.js"></script>
+         </body></html>`,
+        {
+            url: "https://swadharma.example-temple.org/",
+            runScripts: "dangerously",
+            pretendToBeVisual: true,
+            virtualConsole: vc,
+            resources: { interceptors: [localFiles()] }
+        }
+    );
+
+    await new Promise((r) => setTimeout(r, 120));
+    await new Promise((r) => setTimeout(r, 120));
+
+    const doc = dom.window.document;
+    const node = doc.querySelector("[data-swadharma-panchanga]");
+    check(`widget [${name}] no script errors`, errors.length === 0, errors.join(" | "));
+    assertions({ doc, node, check, label: `widget [${name}]` });
+    dom.window.close();
+}
+
+await runWidget("default", "", ({ node, check, label }) => {
+    check(`${label} rendered on a third-party origin`,
+        node.classList.contains("swp") && node.textContent.trim().length > 10,
+        node.textContent.trim().slice(0, 80));
+    // Read the elements, not the concatenated textContent: flex gaps mean
+    // "2026" and "07:04" sit adjacent in the string with no separator.
+    check(`${label} shows a Gregorian date`,
+        /\b20\d\d$/.test(node.querySelector(".swp-g").textContent.trim()),
+        node.querySelector(".swp-g").textContent);
+    check(`${label} shows the locality clock`,
+        /^\d\d:\d\d\s+IST$/.test(node.querySelector(".swp-t").textContent.trim()),
+        node.querySelector(".swp-t").textContent);
+    check(`${label} shows the tithi`, /(Śukla|Kṛṣṇa)/.test(node.textContent));
+    check(`${label} names Mysore`, /Mysore/.test(node.textContent));
+    check(`${label} not marked indicative`, !/indicative/.test(node.textContent));
+    check(`${label} tithi is not a link by default`, !node.querySelector("a"));
+});
+
+await runWidget("tenant locality + link",
+    'data-locality="Rajahmundry, Andhra Pradesh" data-href="/panchanga" data-theme="dark"',
+    ({ node, check, label }) => {
+        check(`${label} labels the account's own locality`,
+            /Rajahmundry/.test(node.textContent), node.textContent.slice(-70));
+        // Borrowed figures must say so — this is the honesty the whole
+        // locality distinction turns on.
+        check(`${label} marks borrowed figures indicative`,
+            /indicative/.test(node.textContent), node.textContent.slice(-70));
+        check(`${label} explains why in the tooltip`,
+            /confirm the tithi with your Purohita/i.test(
+                node.querySelector(".swp-loc").getAttribute("title") || ""));
+        check(`${label} tithi links where asked`,
+            !!node.querySelector('a[href="/panchanga"]'));
+        check(`${label} dark theme applied`, node.getAttribute("data-theme") === "dark");
+    });
 
 const failed = results.filter((r) => !r.ok);
 for (const r of failed) {

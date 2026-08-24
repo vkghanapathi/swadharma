@@ -13,7 +13,7 @@ nothing ships without `test_site.py` and `test_browser.mjs` passing.**
 ```bash
 cd swadharmaservices.in
 
-python _layout/build_panchanga.py   # regenerate panchanga.json from Viyat
+python _layout/build_panchanga.py   # regenerate panchanga.data.js from Viyat
 python build_pages.py               # regenerate the pages from _layout/
 python test_site.py                 # links, routes, assets, calendar data
 node   test_browser.mjs             # every page in a real DOM   (needs jsdom)
@@ -229,6 +229,75 @@ and a request carrying only that loses the thing that has to be repeated.
 
 Adhika māsa is kept distinct rather than flattened: the year has both an Adhika
 and a Nija Jyeṣṭha, and a rite owed in one is not owed in the other.
+
+## Locality — a recorded distinction
+
+**VKG, 2026-08-24.** A tithi is not a global fact. It begins and ends at a
+moment in time, so which tithi stands *at sunrise* — the reckoning most rites
+use — depends on where you are standing. Sunrise, sunset, rāhukāla, varjya and
+durmuhūrta are local outright. Two families can owe the same Ābdika on different
+Gregorian days because they live in different places.
+
+So the reckoning is **an account property, decided when the account is created**.
+Not a platform-wide setting, and not something that drifts afterwards: a family
+that has kept its Śrāddha by one locality's pañcāṅga for forty years is not
+moved onto another because a server changed.
+
+**The demo account, and this public site, are set to Mysore, India.** That is
+what the published tables are — confirmed twice: the publisher says so in its own
+front matter (*"Though the time is set to IST, Sunrise and Sunset indicate
+Mysore time"*), and the data agrees, with a longest day of 12h51m and a shortest
+of 11h24m, which is latitude 12.3°N.
+
+`SW.LOCALITY` in `catalogue.js` is the fallback the public site and the demo use;
+`meta.locality` in the built tables is the authority. The frontend never chooses
+a locality — it displays the one the account was given.
+
+**Every surface that prints a tithi prints whose tithi it is.** The welcome
+strip, `/calendar`, the wizard's date step and the booking review all carry the
+locality. A family in Frisco reading "Rāhukāla 7.30 – 9.00" without that label is
+reading Mysore's rāhukāla and does not know it. `SW.panchanga.todayIso()`
+likewise computes "today" in the locality's timezone, not the viewer's — someone
+opening the site at 22:00 in Texas is already on the next day in Mysore, and it
+is Mysore's tithi their rite is scheduled against.
+
+### Tithi leads the booking
+
+Once a tithi is chosen the ecosystem schedules on the corresponding Gregorian
+date — that is what a Purohita's diary runs on — but **the display names the
+tithi first**. It is the headline of the wizard review (`.wiz-tithi`), the first
+line of the request that goes out, and the subject line carries it in
+parentheses. A booking showing only the date has hidden the thing the devotee
+came to arrange.
+
+### The welcome line, and embedding it
+
+`/` opens with today's date, the clock in the locality, and the tithi.
+`SW.panchanga.renderToday()` draws it, and it re-renders each minute so a tab
+left open rolls over at the locality's midnight rather than going stale.
+
+`panchanga-widget.js` is the same line for an account holder's own domain:
+
+```html
+<div data-swadharma-panchanga data-locality="Rajahmundry, Andhra Pradesh"></div>
+<script src="https://swadharmaservices.in/panchanga-widget.js" async></script>
+```
+
+It finds its own origin from its script tag, pulls the tables from there, scopes
+its styles under `.swp-`, and inherits the host's font. No CORS to configure —
+the data is a script, which is a second reason it is shipped that way. Options:
+`data-href` makes the tithi a link, `data-theme="dark"` for a dark header, and
+`data-locality` labels the line with the account's own reckoning.
+
+**`data-locality` labels, it does not convert.** The figures stay the published
+tables', and the widget marks them *indicative* with a tooltip saying to confirm
+with the Purohita. An account that needs its own reckoning needs its own tables —
+pretending otherwise would put one place's tithi under another place's name,
+which is precisely the error this whole section exists to prevent.
+
+`test_browser.mjs` runs the widget on a genuinely different origin
+(`swadharma.example-temple.org`) and asserts both cases, including that a
+borrowed reckoning is marked indicative.
 
 ## Two CI interactions to know about
 

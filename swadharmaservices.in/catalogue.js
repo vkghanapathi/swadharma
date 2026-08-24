@@ -251,6 +251,39 @@ SW.CATALOGUE = [
     }
 ];
 
+/* ── Pañcāṅga reckoning — an account property, decided at onboarding ─────
+   RECORDED DECISION (VKG, 2026-08-24).
+
+   A tithi is not a global fact. It starts and ends at a moment in time, and
+   which tithi stands AT SUNRISE — the reckoning most rites use — depends on
+   where you are. Two families observing the same Ābdika can owe it on
+   different Gregorian days because they live in different places. Rāhukāla,
+   varjya, durmuhūrta, sunrise and sunset are local in the same way.
+
+   So the reckoning is not a platform-wide setting. It is fixed **per account,
+   when the account is created**, and it does not drift afterwards: a family
+   that has kept its Śrāddha by one locality's pañcāṅga for forty years is not
+   moved onto another because a server changed.
+
+   The demo installation is set to **Mysore, India**, and the tables published
+   on swadharmaservices.in are Mysore's. An account holder's own swadharma.*
+   portal shows its own locality — which is why every surface that prints a
+   tithi also prints whose tithi it is.
+
+   The frontend does not choose this; it displays what the account was given.
+   SW.LOCALITY is the fallback used by the public site and the demo. */
+SW.LOCALITY = {
+    name: "Mysore",
+    region: "Karnataka, India",
+    timezone: "Asia/Kolkata",
+    tzLabel: "IST",
+    scope: "demo",
+    label: "Mysore, India",
+    /** Shown wherever a tithi or a muhūrta window is displayed. */
+    note: "Reckoned for Mysore, India (IST). Your own installation is set to " +
+          "the locality chosen when your account was created."
+};
+
 /* ── Roles a professional can be empanelled in ──────────────────────────── */
 SW.ROLES = [
     "Purohita", "Archaka", "Ṛtvik", "Veda Pundit", "Ācārya",

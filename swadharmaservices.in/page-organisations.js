@@ -5,6 +5,20 @@
 (function () {
     "use strict";
 
+    /* A live render of the embed snippet directly beneath it, so an account
+       holder can see the thing before pasting the tag. */
+    var demo = SW.el("widgetDemo");
+    if (demo && window.SW.panchanga) {
+        SW.panchanga.load().then(function () {
+            demo.innerHTML = '<div class="sw-today-wrap" style="justify-content:flex-start">' +
+                '<div id="widgetDemoInner"></div></div>' +
+                '<p class="rail-note">Live, rendering right now from the same tables.</p>';
+            SW.panchanga.renderToday(SW.el("widgetDemoInner"), { href: "/calendar" });
+        }).catch(function () {
+            demo.hidden = true;
+        });
+    }
+
     var links = document.querySelectorAll('.sw-side a[href^="/organisations#"]');
     if (!links.length || !("IntersectionObserver" in window)) return;
 

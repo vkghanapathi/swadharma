@@ -188,6 +188,14 @@
     P.load().then(function () {
         panchangaReady = true;
 
+        // Whose tithi. Said once here rather than repeated on every control.
+        var loc = P.locality();
+        SW.el("wLocality").textContent =
+            "Tithi and muhūrta windows are reckoned for " + (loc.label || loc.name) +
+            ". If your family keeps its rites by another locality's pañcāṅga, say so in " +
+            "the notes on the next step — the reckoning is fixed per account when it is " +
+            "created, and we will confirm yours on the verification call.";
+
         fill(SW.el("wMasa"), P.lunarMonths().map(function (m) {
             return { value: m.id, label: (m.adhika ? "Adhika " : "") + m.masa };
         }));
@@ -370,13 +378,27 @@
             ? (P.covers(p.date) ? P.gregorianLabel(p.date) : p.date) + (p.time ? " · " + p.time : "")
             : "Not fixed";
 
+        // The tithi leads. The ecosystem schedules on the Gregorian date — that
+        // is the operative datum for a Purohita's diary — but what the devotee
+        // is arranging is the tithi, and a booking that shows only the date has
+        // hidden the thing they came for. So it is stated first, in full, with
+        // the locality it is reckoned by, and the date sits under it.
+        var loc = P.locality();
+        SW.el("wizTithiHead").innerHTML = p.lunarDate
+            ? '<span class="wiz-tithi-k">Tithi</span>' +
+              '<b>' + SW.esc(p.lunarDate) + "</b>" +
+              '<span class="wiz-tithi-g">' + SW.esc(gregorian) + "</span>" +
+              (p.dateNote ? '<span class="wiz-tithi-note">' + SW.esc(p.dateNote) + "</span>" : "") +
+              '<span class="wiz-tithi-loc">Reckoned for ' + SW.esc(loc.label || loc.name) + "</span>"
+            : '<span class="wiz-tithi-k">Date</span>' +
+              "<b>" + SW.esc(gregorian) + "</b>" +
+              '<span class="wiz-tithi-note">No tithi recorded — we will confirm it with you.</span>';
+
         var lines = [
             ["Service", p.serviceName],
             ["Ceremony", p.need || "—"],
             ["Where", where || "—"],
             ["Venue", p.venue],
-            ["Date", gregorian],
-            ["Tithi", p.lunarDate || "—"],
             ["Date is", p.flexibility],
             ["Language", p.language || "—"],
             ["Tradition", p.sampradaya || "—"],
@@ -398,8 +420,14 @@
     /* ── Submit ─────────────────────────────────────────────────────── */
     function asText(p) {
         var names = { IN: "India", US: "United States" };
+        var loc = P.locality();
         return [
             "SWADHARMA SERVICE REQUEST",
+            "",
+            // Tithi first, for the same reason it leads on screen.
+            "TITHI          : " + (p.lunarDate || "not given"),
+            "  reckoned for : " + (loc.label || loc.name),
+            "  falls on     : " + (p.date || "not fixed"),
             "",
             "Service        : " + p.serviceName,
             "Ceremony       : " + (p.need || "-"),
@@ -410,8 +438,6 @@
             "PIN / ZIP      : " + (p.territory.postalCode || "-"),
             "Venue          : " + p.venue,
             "",
-            "Date           : " + (p.date || "not fixed"),
-            "Tithi          : " + (p.lunarDate || "-"),
             "Entered as     : " + (p.enteredAs === "chandra" ? "Chandramana tithi" : "Gregorian date"),
             "Date note      : " + (p.dateNote || "-"),
             "Time           : " + (p.time || "no preference"),

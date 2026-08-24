@@ -3,7 +3,7 @@ description: Your temple, trust or organisation gets its own branded ceremony-bo
 route: /organisations
 context: organisations
 crumbs: Organisations
-scripts: page-organisations.js
+scripts: panchanga.js page-organisations.js
 ---
 <div class="sw-page-head">
     <span class="mark">For temples, trusts &amp; organisations</span>
@@ -72,21 +72,69 @@ scripts: page-organisations.js
         </div>
         <div class="step">
             <span class="n">2</span>
+            <h4>Set your pañcāṅga</h4>
+            <p>You name the locality your rites are reckoned by. It is fixed here, once, and
+               everything your portal schedules follows it.</p>
+        </div>
+        <div class="step">
+            <span class="n">3</span>
             <h4>We provision</h4>
             <p>Your branded portal goes live at swadharma.yourdomain, wired to the Ṛtvik network.</p>
         </div>
         <div class="step">
-            <span class="n">3</span>
+            <span class="n">4</span>
             <h4>Connect payments</h4>
             <p>Your own Stripe or Razorpay account is linked. Collections settle to your bank,
                receipted in your name.</p>
         </div>
         <div class="step">
-            <span class="n">4</span>
+            <span class="n">5</span>
             <h4>Go live</h4>
             <p>Devotees book online. You appear in the public directory and territory browser.</p>
         </div>
     </div>
+</section>
+
+<section class="sw-sec" id="panchanga">
+    <div class="sw-sec-head"><h2>Your pañcāṅga, and the welcome line</h2></div>
+    <p class="sub">
+        A tithi is not a global fact. It begins and ends at a moment in time, so which tithi
+        stands at sunrise depends on where you are — and sunrise, rāhukāla, varjya and
+        durmuhūrta are local outright. Two families can owe the same Ābdika on different
+        Gregorian days because they live in different places.
+    </p>
+
+    <div class="notice gold">
+        <b>The reckoning is an account property, decided when the account is created — not a
+        platform-wide setting, and not something that drifts afterwards.</b>
+        A family that has kept its Śrāddha by one locality's pañcāṅga for forty years is not
+        moved onto another because a server changed. The demo installation is set to
+        <b>Mysore, India</b>, and this public calendar uses Mysore's tables.
+    </div>
+
+    <p class="sub" style="margin-top:20px">
+        Once the tithi is chosen, everything downstream schedules on the corresponding date —
+        that is what a Purohita's diary runs on — but every booking your devotees see names the
+        <em>tithi</em> first, because that is what they came to arrange.
+    </p>
+
+    <h3 style="font-size:16px;color:var(--sw-navy);margin:26px 0 8px">The welcome line on your own domain</h3>
+    <p class="sub">
+        The same date, time and tithi strip that greets people here can sit in your portal's
+        header. One tag and one script, no build step:
+    </p>
+    <div class="tbl-wrap">
+        <pre class="code-block">&lt;div data-swadharma-panchanga data-locality="Rajahmundry, Andhra Pradesh"&gt;&lt;/div&gt;
+&lt;script src="https://swadharmaservices.in/panchanga-widget.js" async&gt;&lt;/script&gt;</pre>
+    </div>
+    <p class="rail-note">
+        <code>data-locality</code> labels the line with your own reckoning. It does not recompute
+        anything — the figures remain the published tables', shown as indicative — so an account
+        that needs its own reckoning needs its own tables. <code>data-href</code> makes the tithi
+        a link; <code>data-theme="dark"</code> suits a dark header. If your portal sets a Content
+        Security Policy, allow <code>swadharmaservices.in</code> in <code>script-src</code>.
+    </p>
+    <div id="widgetDemo" style="margin-top:16px"></div>
 </section>
 
 <section class="sw-sec" id="pricing">

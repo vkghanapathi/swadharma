@@ -389,7 +389,15 @@
             openDay(q.get("date"));
         }
 
+        var loc = P.locality();
         SW.el("calSource").innerHTML =
+            "<b>Reckoned for " + SW.esc(loc.name) + ", " + SW.esc(loc.region) + ".</b> " +
+            "A tithi is not a global fact — it begins and ends at a moment, and which one " +
+            "stands at sunrise depends on where you are. Sunrise, sunset, rāhukāla, varjya " +
+            "and durmuhūrta below are all local to " + SW.esc(loc.name) + " (" +
+            SW.esc(loc.tzLabel) + "). Each Swadharma account is set to its own locality when " +
+            "the account is created; this public calendar and the demo installation use " +
+            SW.esc(loc.name) + ".<br><br>" +
             "<b>Source.</b> " + SW.esc(meta.source) + " — " + meta.days + " days, " +
             SW.esc(P.gregorianLabel(meta.from)) + " to " + SW.esc(P.gregorianLabel(meta.to)) +
             ", " + SW.esc(meta.samvatsara) + " saṃvatsara. " +

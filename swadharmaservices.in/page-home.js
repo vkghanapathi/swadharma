@@ -19,6 +19,22 @@
         }).join("");
     }
 
+    /* ── Today's tithi, as a welcome ────────────────────────────────── */
+    var strip = SW.el("todayStrip");
+    if (strip && window.SW.panchanga) {
+        SW.panchanga.load().then(function () {
+            SW.panchanga.renderToday(strip, { href: "/calendar" });
+            // Re-render on the minute so the clock is not stale on a tab left
+            // open, and so the tithi rolls over at the locality's midnight.
+            window.setInterval(function () {
+                SW.panchanga.renderToday(strip, { href: "/calendar" });
+            }, 60000);
+        }).catch(function () {
+            // The hero reads perfectly well without it.
+            strip.hidden = true;
+        });
+    }
+
     /* ── FeaturedRails ──────────────────────────────────────────────── */
     SW.territory.adoptFromUrl();
     SW.featured.render(SW.el("featPros"), "professionals", "day", 4);

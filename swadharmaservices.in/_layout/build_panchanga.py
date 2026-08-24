@@ -480,6 +480,30 @@ def build() -> dict:
     dates = list(days)
     return {
         "meta": {
+            # ── Locality is not decoration ────────────────────────────────
+            # A tithi is not a global fact. It begins and ends at a moment in
+            # time, and which tithi is current AT SUNRISE — the reckoning most
+            # rites use — depends on where you are standing. Rāhukāla, varjya,
+            # durmuhūrta and the sunrise and sunset themselves are all local.
+            #
+            # These tables are computed for Mysore. Two independent
+            # confirmations: the publisher says so in its own front matter
+            # ("Though the time is set to IST, Sunrise and Sunset indicate
+            # Mysore time"), and the data agrees — the longest day in the year
+            # is 12h51m and the shortest 11h24m, which is latitude 12.3 N.
+            #
+            # Every surface that shows a tithi must therefore say whose tithi it
+            # is. A family in Frisco reading "Rāhukāla 7.30 - 9.00" without that
+            # label is reading Mysore's rāhukāla and does not know it.
+            "locality": {
+                "name": "Mysore",
+                "region": "Karnataka, India",
+                "timezone": "Asia/Kolkata",
+                "tzLabel": "IST",
+                "note": "Sunrise, sunset and every muhūrta window below are "
+                        "reckoned for Mysore. Tithi is given as it stands at "
+                        "Mysore sunrise.",
+            },
             "samvatsara": "Parābhava",
             "from": dates[0],
             "to": dates[-1],

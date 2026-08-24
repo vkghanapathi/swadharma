@@ -2,10 +2,15 @@ title: Swadharma Services · Ceremonies, Purohita, Ṛtviks &amp; Pilgrim Care
 description: Arrange any Dharmic ceremony — Śrāddha, the sixteen Saṃskāras, Homa, temple Pratiṣṭhā, classes, materials and pilgrim care. Find a verified Purohita or temple by territory, or start a service request.
 route: /
 context: none
-scripts: page-home.js
+scripts: panchanga.js page-home.js
 ---
 <header class="home-hero">
     <div class="home-hero-in">
+        <!-- The welcome line: today's date, the time where the pañcāṅga is
+             reckoned, and the tithi. The locality is named on it, because the
+             same line read from Texas is still Mysore's reckoning. -->
+        <div id="todayStrip" class="sw-today-wrap"></div>
+
         <span class="eyebrow">Swadharma · Module No.7 · Dharma Satram</span>
         <p class="shloka">स्वधर्मे निधनं श्रेयः परधर्मो भयावहः</p>
         <p class="shloka-en">“Better is one's own Dharma, though imperfectly performed.” — Bhagavad Gītā 3.35</p>

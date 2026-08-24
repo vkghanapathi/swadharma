@@ -211,6 +211,7 @@
                 <!-- Whichever way round it was entered, the other reckoning and
                      the day's muhūrta cautions are shown here before continuing. -->
                 <div id="wResolved"></div>
+                <p class="hint" id="wLocality" style="margin-top:10px"></p>
 
                 <div class="wiz-grid" style="margin-top:14px">
                     <div class="field field-wide">
@@ -272,6 +273,10 @@
             <section class="wiz-panel" data-panel="5" hidden>
                 <h2>Review and send</h2>
                 <p class="sub">Check this over, then tell us how to reach you.</p>
+
+                <!-- The tithi leads. The date is what the diary runs on; the
+                     tithi is what is being arranged. -->
+                <div class="wiz-tithi" id="wizTithiHead"></div>
 
                 <dl class="wiz-review" id="wizReview"></dl>
 

@@ -90,8 +90,9 @@ SIDE_NAV = {
         [
             ("Overview", "/organisations"),
             ("What you get", "/organisations#features"),
-            ("Pricing", "/organisations#pricing"),
             ("Onboarding", "/organisations#onboarding"),
+            ("Your pañcāṅga", "/organisations#panchanga"),
+            ("Pricing", "/organisations#pricing"),
             ("Portal demo", "https://swadharma.dharmaposhanam.in"),
             ("Start subscription", "/signup"),
         ],

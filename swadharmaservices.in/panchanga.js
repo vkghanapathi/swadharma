@@ -64,12 +64,74 @@ window.SW = window.SW || {};
         return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
     }
 
+    /* ── Locality ────────────────────────────────────────────────────────
+       The tables are computed for one place, and which tithi stands at sunrise
+       depends on that place. So "today" here means today WHERE THE PAÑCĀṄGA IS
+       RECKONED, not on the visitor's clock. A devotee opening this at 22:00 in
+       Texas is already on the next day in Mysore, and must be shown Mysore's
+       tithi — that is the one their rite is being scheduled against. */
+
+    function locality() {
+        return (cache && cache.meta && cache.meta.locality) || SW.LOCALITY || {
+            name: "Mysore", region: "Karnataka, India",
+            timezone: "Asia/Kolkata", tzLabel: "IST"
+        };
+    }
+
+    /** Parts of `when` rendered in the locality's timezone. */
+    function localParts(when) {
+        var tz = locality().timezone;
+        try {
+            var fmt = new Intl.DateTimeFormat("en-CA", {
+                timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit",
+                hour: "2-digit", minute: "2-digit", hour12: false
+            });
+            var out = {};
+            fmt.formatToParts(when || new Date()).forEach(function (p) {
+                out[p.type] = p.value;
+            });
+            return out;
+        } catch (e) {
+            // A browser without that timezone falls back to its own clock. The
+            // date shown may then be a day out near midnight; the label still
+            // says which locality is meant, so it is wrong-but-honest rather
+            // than wrong-and-silent.
+            var d = when || new Date();
+            return {
+                year: String(d.getFullYear()),
+                month: String(d.getMonth() + 1).padStart(2, "0"),
+                day: String(d.getDate()).padStart(2, "0"),
+                hour: String(d.getHours()).padStart(2, "0"),
+                minute: String(d.getMinutes()).padStart(2, "0"),
+                approximate: true
+            };
+        }
+    }
+
     SW.panchanga = {
         MASA_ORDER: MASA_ORDER,
         TITHI_ORDER: TITHI_ORDER,
         GREGORIAN_MONTHS: GREGORIAN_MONTHS,
         iso: iso,
         parseIso: parseIso,
+        locality: locality,
+
+        /** Today's date in the locality — the only "today" that means anything here. */
+        todayIso: function (when) {
+            var p = localParts(when);
+            return p.year + "-" + p.month + "-" + p.day;
+        },
+
+        /** "09:14 IST" in the locality's timezone. */
+        localityTime: function (when) {
+            var p = localParts(when);
+            return p.hour + ":" + p.minute + " " + locality().tzLabel;
+        },
+
+        /** The record for the locality's current day, or null if uncovered. */
+        today: function (when) {
+            return SW.panchanga.day(SW.panchanga.todayIso(when));
+        },
 
         /** Resolves to the whole table. Loaded once per visit. */
         load: function () {
@@ -207,7 +269,7 @@ window.SW = window.SW || {};
         upcoming: function (opts) {
             if (!cache) return [];
             var o = opts || {};
-            var from = o.from || iso(new Date());
+            var from = o.from || SW.panchanga.todayIso();
             var out = [];
             var keys = Object.keys(cache.days).sort();
 
@@ -259,6 +321,82 @@ window.SW = window.SW || {};
         shortLabel: function (dateIso) {
             var dt = parseIso(dateIso);
             return dt.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+        },
+
+        /**
+         * Today, in one object: the Gregorian date, the clock in the locality,
+         * and the tithi. Shared by the landing page and the embeddable widget
+         * so an account holder's portal and this site never disagree about what
+         * day it is.
+         */
+        todayLine: function (when) {
+            var dateIso = SW.panchanga.todayIso(when);
+            var loc = locality();
+            var day = SW.panchanga.day(dateIso);
+
+            return {
+                date: dateIso,
+                gregorian: SW.panchanga.gregorianLabel(dateIso),
+                time: SW.panchanga.localityTime(when),
+                locality: loc,
+                covered: !!day,
+                day: day,
+                lunar: day ? SW.panchanga.lunarLabel(day) : "",
+                nakshatra: day ? day.nk : "",
+                observances: day ? (day.ob || []) : [],
+                printed: day ? day.vs : ""
+            };
+        },
+
+        /**
+         * Renders the welcome strip. `opts.href` makes the tithi a link (the
+         * public site points it at /calendar; a tenant portal may not want to
+         * send people off its own domain, so it is optional).
+         */
+        renderToday: function (node, opts) {
+            if (!node) return;
+            var o = opts || {};
+            var t = SW.panchanga.todayLine();
+            var esc = (window.SW && SW.esc) || function (v) {
+                return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) {
+                    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+                });
+            };
+
+            if (!t.covered) {
+                // Outside the published year. Say the date and stop, rather
+                // than print a tithi we do not have.
+                node.innerHTML =
+                    '<div class="sw-today is-bare">' +
+                    '<span class="sw-today-g">' + esc(t.gregorian) + "</span>" +
+                    '<span class="sw-today-t">' + esc(t.time) + "</span>" +
+                    "</div>";
+                return t;
+            }
+
+            var chips = t.observances.map(function (ob) {
+                return '<span class="sw-today-ob">' + esc(ob.short) + "</span>";
+            }).join("");
+
+            var lunar = '<b>' + esc(t.lunar) + "</b>" +
+                (t.nakshatra ? '<span class="sw-today-n">' + esc(t.nakshatra) + "</span>" : "");
+
+            node.innerHTML =
+                '<div class="sw-today">' +
+                '<span class="sw-today-g">' + esc(t.gregorian) + "</span>" +
+                '<span class="sw-today-t">' + esc(t.time) + "</span>" +
+                '<span class="sw-today-sep" aria-hidden="true">·</span>' +
+                (o.href
+                    ? '<a class="sw-today-l" href="' + esc(o.href) + '">' + lunar + "</a>"
+                    : '<span class="sw-today-l">' + lunar + "</span>") +
+                chips +
+                // Whose tithi this is. Never omitted: the same calendar read
+                // from Texas is still Mysore's reckoning.
+                '<span class="sw-today-loc" title="' + esc(t.locality.note || "") + '">' +
+                esc(t.locality.name) + "</span>" +
+                "</div>";
+
+            return t;
         },
 
         /**
