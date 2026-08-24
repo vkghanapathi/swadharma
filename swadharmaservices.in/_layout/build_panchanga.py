@@ -56,6 +56,14 @@ SOURCE = Path(
 )
 TARGET = ROOT / "panchanga.data.js"
 
+# The tenant portals need the same table. It is written to both places by this
+# one script rather than copied by hand, because two copies of a year of tithis
+# drifting apart is the sort of thing nobody notices until a Śrāddha is booked
+# on the wrong day. Skipped silently if the SSM checkout is not beside this one.
+PORTAL_TARGET = (
+    ROOT.parent / "swadharma-service-management" / "frontend" / "public" / "panchanga.data.js"
+)
+
 # ── Vocabulary ───────────────────────────────────────────────────────────
 # Every value the source can hold, mapped to (display name, number). The
 # numbers are what booking by Chandramāna date matches on; Amāvāsyā is 30 so
@@ -546,18 +554,37 @@ def main() -> int:
     current = TARGET.read_text(encoding="utf-8") if TARGET.is_file() else None
 
     if check:
+        stale = []
         if current != text:
-            print("Stale: run python _layout/build_panchanga.py")
+            stale.append("panchanga.data.js")
+        if PORTAL_TARGET.parent.is_dir() and (
+            not PORTAL_TARGET.is_file()
+            or PORTAL_TARGET.read_text(encoding="utf-8") != text
+        ):
+            stale.append(str(PORTAL_TARGET.relative_to(ROOT.parent)))
+        if stale:
+            print("Stale (run python _layout/build_panchanga.py): " + ", ".join(stale))
             return 1
         print("panchanga.data.js up to date.")
         return 0
 
-    if current == text:
+    portal_current = (
+        PORTAL_TARGET.read_text(encoding="utf-8") if PORTAL_TARGET.is_file() else None
+    )
+    portal_stale = PORTAL_TARGET.parent.is_dir() and portal_current != text
+
+    if current == text and not portal_stale:
         print("panchanga.data.js unchanged.")
         return 0
 
-    with open(TARGET, "w", encoding="utf-8", newline="") as fh:
-        fh.write(text)
+    if current != text:
+        with open(TARGET, "w", encoding="utf-8", newline="") as fh:
+            fh.write(text)
+
+    if portal_stale:
+        with open(PORTAL_TARGET, "w", encoding="utf-8", newline="") as fh:
+            fh.write(text)
+        print(f"Also wrote {PORTAL_TARGET.relative_to(ROOT.parent)}")
 
     meta = data["meta"]
     print(
