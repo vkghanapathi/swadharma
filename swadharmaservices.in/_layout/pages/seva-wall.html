@@ -1,0 +1,111 @@
+title: Seva Karta Wall · Swadharma Services
+description: Today's Seva Kartas — one-time bookings and permanent Mūla Nidhi corpus donors — displayed on a wall in the hall or in your own portal. Donor photo where they have opted in, the deity image for the seva where they have not.
+route: /seva-wall
+context: organisations
+crumbs: Organisations>/organisations | Seva Karta Wall
+scripts: panchanga.js seva-wall.js page-seva-wall.js
+---
+<div class="sw-page-head">
+    <span class="mark">For temples, trusts &amp; organisations</span>
+    <h1 class="sw-h1">Today's <em>Seva Kartas</em>, on the wall</h1>
+    <p class="sub">
+        A display for the screen in your hall, or a panel in your own portal. It names the
+        people whose seva is being performed today — both those who booked it and those whose
+        <em>Mūla Nidhi</em> endowment brings it round on this day every year.
+    </p>
+</div>
+
+<section class="sw-sec">
+    <div class="sw-sec-head"><h2>Both kinds of seva karta</h2></div>
+    <div class="split">
+        <div class="card">
+            <div class="icn">🪔</div>
+            <h3>Permanent — Mūla Nidhi</h3>
+            <p>A corpus donor endows a seva once. It recurs on the same day every year,
+               for as long as the institution stands. The wall carries them first: they
+               endowed the day.</p>
+        </div>
+        <div class="card">
+            <div class="icn">📅</div>
+            <h3>One-time booking</h3>
+            <p>A seva booked for today — a Śrāddha, an Abhiṣeka, a Saṃskāra. It appears on
+               the wall on the day it is performed, and then makes way.</p>
+        </div>
+    </div>
+</section>
+
+<section class="sw-sec">
+    <div class="sw-sec-head"><h2>Live example</h2>
+        <a class="more" href="/seva-wall?layout=wall">Full-screen wall mode →</a>
+    </div>
+    <p class="sub">
+        Rendered by the same module a portal would embed. The entries below are illustrative,
+        so that the behaviour is visible before an installation is wired up — a real wall reads
+        from the institution's own bookings.
+    </p>
+    <div id="sevaWallDemo"></div>
+</section>
+
+<section class="sw-sec">
+    <div class="sw-sec-head"><h2>Whose face appears, and whose does not</h2></div>
+    <div class="prose">
+        <p>
+            A seva karta chooses. The choice is recorded against the <strong>seva</strong>, not
+            the person, so the same devotee may appear for one offering and not another.
+        </p>
+        <ol>
+            <li><strong>Opted in, photograph held</strong> — their photograph is shown.</li>
+            <li><strong>Not opted in, or no photograph</strong> — the <strong>deity image for
+                that seva</strong> is shown in its place. Your images, configured per seva
+                category.</li>
+            <li><strong>No deity image configured</strong> — a drawn emblem, a lamp within a
+                lotus. Never a letter in a circle: nobody is missing from this wall, and the
+                image should not look like a gap where a person ought to be.</li>
+        </ol>
+        <p>
+            A withheld <em>name</em> is treated the same way — the card reads
+            <em>Nāma gupta — offered without name</em>, and a line at the foot says how many
+            sevas were offered that way, so the count is honest without the names being.
+        </p>
+        <div class="notice">
+            <b>The server withholds; the display does not.</b>
+            A donor who has not opted in must have <code>null</code> sent for that field, not a
+            value the page is trusted to hide. No endpoint feeding this wall should carry a
+            phone number, an email address, a postal address or an amount — the contract has no
+            place to put them.
+        </div>
+    </div>
+</section>
+
+<section class="sw-sec">
+    <div class="sw-sec-head"><h2>Put it on your own screen</h2></div>
+    <p class="sub">One element and one script, the same as the pañcāṅga line:</p>
+    <div class="tbl-wrap">
+        <pre class="code-block">&lt;div data-swadharma-seva-wall
+     data-endpoint="/api/v1/public/seva-wall"
+     data-title="Today's Seva Kartas"
+     data-layout="wall"
+     data-rotate="9"&gt;&lt;/div&gt;
+&lt;script src="https://swadharmaservices.in/seva-wall.js" async&gt;&lt;/script&gt;</pre>
+    </div>
+    <p class="rail-note">
+        <code>data-layout="grid"</code> shows every seva karta at once — better for a page panel;
+        <code>"wall"</code> rotates one large card at a time, for a screen in the hall.
+        <code>data-deities</code> takes JSON mapping a seva code to an image URL.
+        <code>data-theme="dark"</code> suits a dark hall display. The wall refreshes itself every
+        five minutes, and turns over at your installation's midnight rather than the viewer's.
+    </p>
+</section>
+
+<section class="sw-sec">
+    <div class="sw-sec-head"><h2>What is still needed</h2></div>
+    <div class="notice gold" id="wallStatus">
+        <b>The display module is built; the endpoint that feeds it is not.</b>
+        swadharma-api has no public seva-wall route today — <code>/api/v1/bookings</code> exists
+        and is authenticated, correctly, because bookings are personal data. Publishing a
+        privacy-projected subset to a wall is a deliberate decision about donors' names and
+        photographs, not a technical detail, so it is being put to Dharma Poshanam rather than
+        assumed. The contract the module expects is documented at the top of
+        <code>seva-wall.js</code>.
+    </div>
+</section>

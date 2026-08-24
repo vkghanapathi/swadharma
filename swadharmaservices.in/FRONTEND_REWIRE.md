@@ -299,6 +299,54 @@ which is precisely the error this whole section exists to prevent.
 (`swadharma.example-temple.org`) and asserts both cases, including that a
 borrowed reckoning is marked indicative.
 
+## The Seva Karta wall
+
+`/seva-wall` and `seva-wall.js` — today's seva kartas, for a screen in the hall
+or a panel in a tenant portal. Modelled on the donor wall running at
+**disa.sgsdatta.in** (`src/disa/routers/donor_wall.py` and
+`templates/donor_wall/display.html`), which is the proven implementation.
+
+**Both kinds of seva karta, together.** A one-time booking for today, and a
+permanent **Mūla Nidhi** corpus donor whose seva recurs on this day every year —
+DISA models the second as `sevaDay` in MMDD. Corpus donors sort first: they
+endowed the day. A wall showing only fresh bookings would leave the shashwata
+donors off the wall they paid for.
+
+**Privacy is per seva, not per person**, exactly as DISA has it (`hide_name`,
+`hide_photo`). The contract requires the SERVER to send `null` — not `""`, so
+"withheld" stays distinguishable from "not recorded" — and the endpoint carries
+no phone, email, address or amount at all. A donor cannot be exposed by a
+rendering bug on this side because the data never arrives.
+
+**The image ladder** (VKG, 2026-08-24) is the one thing not copied from DISA,
+which falls back to a coloured circle with the donor's initial:
+
+1. the donor's photograph, where they opted in;
+2. otherwise the **deity image for that seva** — the tenant's own, keyed by seva
+   code via `data-deities` or per-seva `deityImage`;
+3. otherwise a drawn emblem, a lamp within a lotus.
+
+Never an initial. Nobody is missing from this wall — the donor chose not to
+appear — and the image should not look like a gap where a person ought to be.
+A withheld name reads *Nāma gupta — offered without name*, with a footer count
+so the number is honest without the names being.
+
+`data-layout="wall"` rotates one large card for a hall screen; `"grid"` shows
+all at once for a page panel. It refreshes every five minutes and turns over at
+the installation's midnight, via `SW.panchanga.todayIso()`, not the viewer's.
+
+### The endpoint does not exist yet
+
+swadharma-api has `/api/v1/bookings`, authenticated — correctly, because
+bookings are personal data. There is no public, privacy-projected seva-wall
+route, and adding one is a decision about publishing donors' names and
+photographs rather than a technical detail, so it is VKG's to make. The module
+is built against the contract documented at the top of `seva-wall.js` and says
+plainly on `/seva-wall` that the feed is missing. `data-payload` renders an
+inline payload for a host that already has the data server-side — which is also
+how the demonstration on `/seva-wall` runs, so the demo exercises the shipping
+renderer rather than a copy of it.
+
 ## Two CI interactions to know about
 
 **`.github/workflows/add-og-tags.yml`** rewrites any `*.html` in the repo that

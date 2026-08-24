@@ -544,6 +544,57 @@ const PAGES = [
             doc.getElementById("widgetDemo").textContent.slice(0, 60));
     }],
 
+    ["/seva-wall", ({ doc, label, check }) => {
+        const cards = doc.querySelectorAll("#sevaWallDemo .swv-card");
+        check(`${label} wall renders`, cards.length === 3, `${cards.length} cards`);
+
+        // Corpus donors lead — they endowed the day.
+        check(`${label} corpus donors sort first`,
+            cards[0].classList.contains("is-corpus") &&
+            cards[cards.length - 1].classList.contains("is-booking"));
+        check(`${label} both kinds are labelled`,
+            /Mūla Nidhi/.test(doc.querySelector(".swv-tag.corpus").textContent) &&
+            /Seva today/.test(doc.querySelector(".swv-tag.booking").textContent));
+
+        // The image ladder: photo -> deity image -> drawn emblem. None of the
+        // sample entries carries a photo or a deity image, so all three fall
+        // through to the emblem — and none may render a bare initial.
+        check(`${label} falls back to an emblem, not an initial`,
+            doc.querySelectorAll("#sevaWallDemo .swv-emblem").length === 3 &&
+            doc.querySelectorAll("#sevaWallDemo .swv-pic img").length === 0);
+
+        // A withheld name is stated as a choice, never left blank.
+        const withheld = doc.querySelector("#sevaWallDemo .swv-name.is-withheld");
+        check(`${label} withheld name is named as withheld`,
+            !!withheld && /Nāma gupta/.test(withheld.textContent),
+            withheld ? withheld.textContent : "absent");
+        check(`${label} withheld count reported`,
+            /1 seva is\s+offered without a name/.test(
+                doc.querySelector("#sevaWallDemo .swv-foot").textContent),
+            doc.querySelector("#sevaWallDemo .swv-foot")?.textContent);
+
+        // A withheld donor must leak nothing else either.
+        const anonCard = withheld.closest(".swv-card");
+        check(`${label} withheld card carries no gotra or nakṣatra`,
+            !/Gotra|Nakṣatra/.test(anonCard.textContent), anonCard.textContent.slice(0, 90));
+
+        // The header ties to the pañcāṅga.
+        check(`${label} header carries today's tithi`,
+            /(Śukla|Kṛṣṇa)/.test(doc.querySelector("#sevaWallDemo .swv-when").textContent),
+            doc.querySelector("#sevaWallDemo .swv-when").textContent);
+        check(`${label} header names the locality`,
+            /Mysore/.test(doc.querySelector("#sevaWallDemo .swv-when").textContent));
+
+        check(`${label} embed snippet shown`,
+            /data-swadharma-seva-wall/.test(doc.body.textContent) &&
+            /seva-wall\.js/.test(doc.body.textContent));
+        check(`${label} states the missing endpoint honestly`,
+            /has no public seva-wall route today/.test(
+                doc.getElementById("wallStatus").textContent));
+        check(`${label} sample is labelled illustrative`,
+            /illustrative/.test(doc.body.textContent));
+    }],
+
     ["/how-it-works", ({ doc, label, check }) => {
         check(`${label} payment routes table present`,
             doc.querySelectorAll("table.tbl tbody tr").length === 3);

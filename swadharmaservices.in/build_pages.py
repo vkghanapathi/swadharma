@@ -92,6 +92,7 @@ SIDE_NAV = {
             ("What you get", "/organisations#features"),
             ("Onboarding", "/organisations#onboarding"),
             ("Your pañcāṅga", "/organisations#panchanga"),
+            ("Seva Karta wall", "/seva-wall"),
             ("Pricing", "/organisations#pricing"),
             ("Portal demo", "https://swadharma.dharmaposhanam.in"),
             ("Start subscription", "/signup"),
