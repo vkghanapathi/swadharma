@@ -48,6 +48,7 @@ PAGES = LAYOUT / "pages"
 
 TOP_NAV = [
     ("Services", "/services"),
+    ("The Suite", "/suite"),
     ("Calendar", "/calendar"),
     ("Network", "/network"),
     ("Territories", "/territories"),
@@ -58,6 +59,7 @@ TOP_NAV = [
 
 FOOTER_LINKS = [
     ("Services", "/services"),
+    ("The Suite", "/suite"),
     ("Calendar", "/calendar"),
     ("Network", "/network"),
     ("Territories", "/territories"),

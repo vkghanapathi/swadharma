@@ -326,19 +326,19 @@ SW.NODES = [
 ];
 
 /* ── The Swadharma suite — dharmaposhanam.in/apps ───────────────────────── */
+/* SW.SUITE is GENERATED FROM site_rebuild/data/ecosystem.json BY render_apps.py -- DO NOT EDIT BY HAND */
 SW.SUITE = [
-    { no: "01", name: "Shabda",        sanskrit: "शब्द",         what: "Sanskrit teaching, beginner to advanced", status: "live", href: "https://edu.swadharmaservices.in" },
-    { no: "02", name: "Vitta Fin",     sanskrit: "वित्त",        what: "Accounting for temples and Dharmik organisations", status: "live", href: "https://vitta-7f675.web.app/" },
-    { no: "03", name: "MANI",          sanskrit: "मणि",          what: "Recipe, inventory and nutrition planning", status: "live", href: "https://mani.vkg.works/" },
-    { no: "04", name: "Viyat",         sanskrit: "वियत्",        what: "Astrology assistant for traditional practitioners", status: "live", href: "https://viyat-3fcf1.web.app/#/home" },
-    { no: "05", name: "Samudwaaha",    sanskrit: "समुद्वाह",     what: "Marriage portal and counselling", status: "live", href: "https://samudwaaha-portal.web.app/" },
-    { no: "06", name: "Samudyoga",     sanskrit: "समुद्योग",     what: "Professional services and job portal", status: "live", href: "https://samudyoga.web.app/" },
-    { no: "07", name: "Dharma Satram", sanskrit: "धर्म सत्रम्",  what: "Rituals, food and accommodation for pilgrims", status: "live", href: "/", self: true },
-    { no: "08", name: "Namadheya",     sanskrit: "नामधेय",       what: "Traditional Sanskrit naming guidance", status: "soon" },
-    { no: "09", name: "Sumvid Ghanam", sanskrit: "संविद् घनम्",  what: "Knowledge hub and consultancy", status: "soon" },
-    { no: "10", name: "CBS",           sanskrit: "",             what: "Clinical Buddy Services — bedside medical reference", status: "live", href: "https://vkg.works/apps/cbs/" },
-    { no: "11", name: "Dravya",        sanskrit: "द्रव्य",       what: "Home, pūjā and event supplies", status: "live", href: "https://dravya-web-328586595579.asia-southeast1.run.app/" },
-    { no: "12", name: "Swadharma",     sanskrit: "स्वधर्म",      what: "Temple setup, ritual planning, Dharmik event management", status: "consult" }
+    { no: "01", name: "Śabda", sanskrit: "शब्द", what: "Structured Sanskrit instruction at every level, from beginner śikṣā to vyākaraṇa, śāstra and Vedic adhyayana.", status: "live", href: "https://shabda-web-404772120601.asia-south1.run.app/" },
+    { no: "02", name: "MANI", sanskrit: "मणि", what: "Menu, appetite, nutrition and inventory — recipe planning and kitchen stock for households, satrams and festival cooking.", status: "live", href: "https://mani.vkg.works/" },
+    { no: "03", name: "Viyat", sanskrit: "वियत्", what: "Pañcāṅga, muhūrta and jyotiṣa workbench for traditional practitioners: a calculation aid, not a prediction service.", status: "live", href: "https://viyat-3fcf1.web.app/#/home" },
+    { no: "04", name: "Samudvāha", sanskrit: "समुद्वाह", what: "Dharmik matrimonial portal with values-aligned matchmaking and pre-marital counselling.", status: "live", href: "https://samudwaaha-portal.web.app/" },
+    { no: "05", name: "Samudyoga", sanskrit: "समुद्योग", what: "Connecting dharmik talent — scholars, purohitas, professionals, creators — to institutions and enterprises worldwide.", status: "live", href: "https://samudyoga.web.app/" },
+    { no: "06", name: "Dharma Satram", sanskrit: "धर्म सत्रम्", what: "Personal rituals, food and accommodation for pilgrims and yajamānas.", status: "live", href: "/", self: true },
+    { no: "07", name: "Nāmadheya", sanskrit: "नामधेय", what: "Traditional Sanskrit naming guidance: nakṣatra-based, gotra-aware, with meaning, prosody and cultural notes.", status: "soon" },
+    { no: "08", name: "Saṃvid Ghanam", sanskrit: "संविद् घनम्", what: "Curated knowledge hub and consultancy bridge: śāstra reference, scholar consultations, research collaboration.", status: "soon" },
+    { no: "09", name: "CBS — Clinical Buddy Suite", sanskrit: "", what: "Bedside medical reference for doctors and caregivers: concise and reliable at the point of care.", status: "live", href: "https://vkg.works/apps/cbs/" },
+    { no: "10", name: "Dravya", sanskrit: "द्रव्य", what: "Sourcing and delivery of materials for home needs, pūjā kits and larger dharmik events.", status: "live", href: "https://dravya-web-328586595579.asia-southeast1.run.app/" },
+    { no: "11", name: "Svadharma", sanskrit: "स्वधर्म", what: "Temple setup, ritual planning, dharmik event management, remote services — and whatever the other modules do not cover.", status: "consult" }
 ];
 
 /* ── Contact, offices ────────────────────────────────────────────────── */

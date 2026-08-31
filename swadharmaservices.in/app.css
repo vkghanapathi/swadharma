@@ -862,3 +862,23 @@ a.hub:hover { transform: translateY(-2px); box-shadow: var(--sw-shadow-md); bord
     html { scroll-behavior: auto; }
     a.card:hover, .dir-card:hover, .btn:hover, a.hub:hover { transform: none; }
 }
+
+/* ---- /suite -- generated page, styles live here so app.css stays hand-owned */
+.sw-suite-intro{max-width:62ch;margin:0 0 2rem}
+.sw-suite-intro .sw-lede{font-size:1.12rem;line-height:1.7}
+.sw-suite-h2{margin:2.5rem 0 1rem}
+.sw-suite-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.sw-suite-card{border:1px solid rgba(0,0,0,.12);border-radius:10px;padding:18px 18px 16px;background:#fff;display:flex;flex-direction:column;gap:10px}
+.sw-suite-card.is-soon{background:#FAF7F1;border-style:dashed}
+.sw-suite-head{display:grid;grid-template-columns:auto 1fr auto;align-items:start;gap:10px}
+.sw-suite-no{font-variant-numeric:tabular-nums;font-size:.8rem;opacity:.5;padding-top:.25rem}
+.sw-suite-head h3{margin:0;font-size:1.06rem;line-height:1.3}
+.sw-suite-dev{margin:.15rem 0 0;font-size:.9rem;opacity:.65}
+.sw-suite-badge{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.sw-suite-badge.s-live{background:#DDF0E9;color:#07412F}
+.sw-suite-badge.s-beta{background:#FDF0D5;color:#A8690A}
+.sw-suite-badge.s-in-development,.sw-suite-badge.s-by-consultation{background:#EFEDE9;color:#5A5754}
+.sw-suite-card p{margin:0;font-size:.94rem;line-height:1.6;flex:1}
+.sw-suite-go{margin-top:2px;font-size:.9rem;font-weight:600;text-decoration:none}
+.sw-suite-go.is-muted{opacity:.55;font-weight:400}
+.sw-suite-foot{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid rgba(0,0,0,.1)}
