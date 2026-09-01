@@ -613,9 +613,16 @@ const PAGES = [
             /do not send\s+WhatsApp or SMS/i.test(doc.body.textContent));
     }],
 
-    ["/about", ({ doc, label, check }) => {
-        check(`${label} suite rendered`, doc.getElementById("aboutSuite").children.length === 12,
-            `${doc.getElementById("aboutSuite").children.length} modules`);
+    ["/about", ({ doc, dom, label, check }) => {
+        // SW.SUITE is generated from site_rebuild/data/ecosystem.json, so the
+        // module count moves whenever VKG rules on the manifest -- Vitta came
+        // off on 2026-08-09. Freezing a number here would just break on every
+        // legitimate change. The invariant worth holding is that /about renders
+        // every module the catalogue defines, dropping none of them.
+        const defined = dom.window.SW?.SUITE?.length ?? 0;
+        const rendered = doc.getElementById("aboutSuite").children.length;
+        check(`${label} suite rendered`, defined > 0 && rendered === defined,
+            `${rendered} rendered of ${defined} in SW.SUITE`);
         check(`${label} contact rendered`, doc.getElementById("aboutContact").children.length === 4);
         check(`${label} offices rendered`, doc.getElementById("aboutOffices").children.length === 4);
     }],
