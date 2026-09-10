@@ -328,7 +328,7 @@ SW.NODES = [
 /* ── The Swadharma suite — dharmaposhanam.in/apps ───────────────────────── */
 /* SW.SUITE is GENERATED FROM site_rebuild/data/ecosystem.json BY render_apps.py -- DO NOT EDIT BY HAND */
 SW.SUITE = [
-    { no: "01", name: "Śabda", sanskrit: "शब्द", what: "Structured Sanskrit instruction at every level, from beginner śikṣā to vyākaraṇa, śāstra and Vedic adhyayana.", status: "live", href: "https://shabda-web-404772120601.asia-south1.run.app/" },
+    { no: "01", name: "Śabda", sanskrit: "शब्द", what: "Structured Sanskrit instruction at every level, from beginner śikṣā to vyākaraṇa, śāstra and Vedic adhyayana.", status: "live", href: "https://edu.swadharmaservices.in" },
     { no: "02", name: "MANI", sanskrit: "मणि", what: "Menu, appetite, nutrition and inventory — recipe planning and kitchen stock for households, satrams and festival cooking.", status: "live", href: "https://mani.vkg.works/" },
     { no: "03", name: "Viyat", sanskrit: "वियत्", what: "Pañcāṅga, muhūrta and jyotiṣa workbench for traditional practitioners: a calculation aid, not a prediction service.", status: "live", href: "https://viyat-3fcf1.web.app/#/home" },
     { no: "04", name: "Samudvāha", sanskrit: "समुद्वाह", what: "Dharmik matrimonial portal with values-aligned matchmaking and pre-marital counselling.", status: "live", href: "https://samudwaaha-portal.web.app/" },
