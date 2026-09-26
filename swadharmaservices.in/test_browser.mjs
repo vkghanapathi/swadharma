@@ -634,11 +634,18 @@ const PAGES = [
                 existsSync(join(ROOT, i.getAttribute("src").slice(1)))),
             [...doc.querySelectorAll(".jdt-banner img")].map((i) => i.getAttribute("src")).join(" "));
 
-        // The gallery stays hidden until VKG's photographs arrive, so an empty
-        // strip never ships.
-        check(`${label} empty gallery stays hidden`,
-            doc.getElementById("gallery").hidden &&
-            doc.getElementById("jdtGallery").children.length === 0);
+        // Six photographs are named ahead of their files. A tile whose file is
+        // absent removes itself, and the section stays hidden until one loads —
+        // so naming them early never puts a broken image on a live page.
+        check(`${label} six photographs are named`,
+            doc.querySelectorAll("#jdtGallery figure").length === 6 ||
+            doc.getElementById("gallery").hidden,
+            `${doc.querySelectorAll("#jdtGallery figure").length} tiles`);
+        check(`${label} gallery hidden while the files are absent`,
+            doc.getElementById("gallery").hidden);
+        check(`${label} every tile carries alt text`,
+            [...doc.querySelectorAll("#jdtGallery img")].every(
+                (i) => (i.getAttribute("alt") || "").length > 10));
 
         check(`${label} today's tithi shown`,
             !!doc.querySelector("#jdtToday .sw-today"),

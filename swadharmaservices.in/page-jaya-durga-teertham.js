@@ -74,11 +74,38 @@
     ];
 
     /* ── Photographs ──────────────────────────────────────────────────
-       VKG is adding these (2026-09-27). Put the files in images/ (prefix jdt-) and add
-       an entry here; the section stays hidden while the list is empty, so an
-       empty gallery never appears as a broken strip on the page. */
+       The six VKG sent on 2026-09-27, named and captioned here in advance.
+       Save the files into images/ under exactly these names and they appear;
+       nothing else needs editing.
+
+       A tile whose file is not there yet REMOVES ITSELF on the image's error
+       event, and the section stays hidden until at least one has loaded. So a
+       half-filled set never shows a broken-image icon on a live page, and the
+       list can be written before the files arrive.
+
+       Captions describe what is visible and stop there. Naming the specific
+       rite in a photograph is a claim about someone else's practice that I
+       cannot check from an image, and a wrong one would be published under the
+       kṣetram's own name. */
     var GALLERY = [
-        // { src: "/images/ (prefix jdt-)river-steps.jpg", alt: "The bathing steps on the Krishna" },
+        { src: "/images/jdt-tirtha.jpg",
+          alt: "The tīrtha on the Krishna, with the shrine standing in the water",
+          caption: "The tīrtha, with the shrine standing in the water and the ghāṭ steps above." },
+        { src: "/images/jdt-abhisheka.jpg",
+          alt: "Water poured over the riverside shrine",
+          caption: "Abhiṣeka at the riverside shrine, the Krishna behind." },
+        { src: "/images/jdt-arati-river.jpg",
+          alt: "Ārati offered at the water's edge",
+          caption: "Ārati offered at the water's edge." },
+        { src: "/images/jdt-sankalpa.jpg",
+          alt: "Materials handed to seated yajamānas before the rites",
+          caption: "Materials handed to the yajamānas before the rites begin." },
+        { src: "/images/jdt-hall.jpg",
+          alt: "The covered hall at the kṣetram, filled with seated devotees",
+          caption: "The covered hall, where the gathering sits." },
+        { src: "/images/jdt-annadana.jpg",
+          alt: "Volunteers serving food from large vessels after the rites",
+          caption: "Annadāna — the kitchen serving after the rites." }
     ];
 
     function esc(v) { return SW.esc(v); }
@@ -109,15 +136,35 @@
         }).join("");
     }
 
-    /* Gallery — hidden until there is something in it. */
+    /* Gallery. Each tile removes itself if its file is not there yet, and the
+       section only appears once one has actually loaded — so the list above
+       can name photographs that have not been uploaded without ever putting a
+       broken image on a live page. */
     var gallery = SW.el("jdtGallery");
-    if (gallery && GALLERY.length) {
+    var gallerySection = document.getElementById("gallery");
+    if (gallery && gallerySection && GALLERY.length) {
         gallery.innerHTML = GALLERY.map(function (g) {
             return '<figure><img src="' + esc(g.src) + '" alt="' + esc(g.alt) + '" loading="lazy">' +
                 (g.caption ? "<figcaption>" + esc(g.caption) + "</figcaption>" : "") +
                 "</figure>";
         }).join("");
-        document.getElementById("gallery").hidden = false;
+
+        Array.prototype.forEach.call(gallery.querySelectorAll("img"), function (img) {
+            img.addEventListener("error", function () {
+                var fig = img.closest("figure");
+                if (fig) fig.remove();
+                if (!gallery.querySelector("figure")) gallerySection.hidden = true;
+            });
+            img.addEventListener("load", function () {
+                gallerySection.hidden = false;
+            });
+            // A cached image may already have failed or finished before the
+            // listeners were attached.
+            if (img.complete) {
+                if (img.naturalWidth === 0) img.dispatchEvent(new Event("error"));
+                else gallerySection.hidden = false;
+            }
+        });
     }
 
     /* Today's tithi, so a visitor deciding on a date sees where the month is.
