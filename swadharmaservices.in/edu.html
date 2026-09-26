@@ -3,222 +3,423 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta property="og:title" content="Swadharma — Vedic Knowledge Portal">
-<meta property="og:description" content="Explore scholar-reviewed answers on Dharma, Veda, Sanskrit, and Indian heritage.">
+<meta property="og:title" content="Swadharma Education — अध्ययनम्">
+<meta property="og:description" content="Structured Sanskrit classes, guided practice with Shabda, and a student portal. Additional subjects are being introduced progressively.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="/assets/swadharma-share.png">
-<meta property="og:url" content="https://swadharma.dharmaposhanam.in">
+<meta property="og:url" content="https://swadharmaservices.in/edu">
 <meta name="twitter:card" content="summary_large_image">
-<title>Swadharma Classes अध्ययनम् — Swadharma Services</title>
-<meta name="description" content="Pooja, Mantras and Sanskrit — structured classes for every age group, in-person and online.">
+<title>Swadharma Education अध्ययनम् — Swadharma Services</title>
+<meta name="description" content="Learn Sanskrit through structured classes, guided practice and self-study. Sanskrit classes are available now; additional subjects are being introduced progressively.">
 <!--
-  Swadharma Classes — the education hub. Served at
+  Swadharma Education — the education GATEWAY. Served at
   https://swadharmaservices.in/edu  (nginx try_files resolves /edu → edu.html).
 
+  Rebuilt 2026-09-27 to shabda/swadharma_edu_redesign_spec.md: one page, one
+  primary journey (students). The page introduces and routes; the detailed
+  pages explain. Professional empanelment keeps one short section and links out.
+
   Self-contained by the same rule as classes.html, enrol.html and signup.html:
-  inline style and script, no external assets. The site's CSP is
-  `script-src 'self'`, so a CDN script or webfont here would be blocked
-  outright. Tokens mirror the :root block in classes.html — keep them in step.
+  inline style and script, no external assets (CSP). Tokens mirror the :root
+  block in classes.html — keep them in step.
 
-  This page LINKS OUT and does not itself call any API, so it needs no
-  connect-src entry in nginx.conf.
+  This page LINKS OUT and does not itself call any API.
 
-  Subject selection is carried to the registration page as ?subjects=a,b,c so a
-  student never has to state their interest twice.
+  Controlled CTA vocabulary (spec §16) — use these and no others:
+    JOIN A CLASS · EXPLORE CLASSES · STUDENT LOGIN · EXPLORE SHABDA ·
+    SPONSOR A STUDENT · PROFESSIONAL NETWORK · REGISTER YOUR INTEREST
 
-  THE MASTER PAGE (VKG, 2026-08-16). Every education surface is reached from
-  here — student registration, the classes prospectus, the Shabda app, the
-  student portal, the payment links, and Swadharma PRO empanelment. `enrol.html`
-  now redirects to the empanelment form rather than collecting its own answers,
-  because the two were separate doors onto the same question.
+  Destinations. The spec's URL map (/student, /sponsor, /professionals/…) does
+  not exist on this host yet; every route below is the live one that owns the
+  function, on the shabda-classroom service. edu.swadharmaservices.in reflects
+  its tab in the URL hash (#registration, #payments, #modules), so those
+  anchors land on the right panel. Absolute URLs because this host does not
+  forward /api/*.
 
-  Off-site links point at the shabda-classroom service, which owns the forms and
-  the database. Kept as absolute URLs rather than proxied paths: this host does
-  not forward /api/*, so a relative link would 404.
+  Subjects are carried to registration as ?subjects=a,b,c. The server
+  whitelists them (shabda-classroom src/routes/registration.js) and silently
+  drops unknown keys — so only whitelisted keys may appear here.
 -->
 <style>
 :root{
     --sw-navy:#1F3569; --sw-navy-dark:#152347; --sw-navy-light:#EAEEF7;
-    --sw-gold:#C89939; --sw-gold-dark:#9E7724;
+    --sw-gold:#C89939; --sw-gold-dark:#9E7724; --sw-gold-light:#FBF4E4;
     --sw-saffron:#0F766E; --sw-saffron-dark:#0B5A54; --sw-saffron-light:#E6F4F1;
     --sw-cream:#F4F8F6; --sw-text:#1F2A37; --sw-muted:#51606E;
     --sw-border:#D6DEDA;
     --sw-radius:10px; --sw-radius-lg:14px;
     --sw-shadow:0 1px 3px rgba(31,53,105,.06), 0 4px 12px rgba(31,53,105,.06);
+    --sw-focus:0 0 0 3px #fff, 0 0 0 5px var(--sw-navy);
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--sw-cream);color:var(--sw-text);font-size:16px;
-     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,
+       "Nirmala UI","Noto Sans Devanagari","Mangal",sans-serif;
      line-height:1.6}
-.wrap{max-width:960px;margin:0 auto;padding:36px 20px 72px}
-header{text-align:center;margin-bottom:10px}
-.lamp{font-size:34px;line-height:1}
-h1{font-family:Georgia,"Times New Roman",serif;font-size:34px;margin:6px 0 6px;
-   color:var(--sw-navy)}
-h1 .dev{color:var(--sw-saffron-dark)}
-.lede{color:var(--sw-muted);margin:0 auto;max-width:56ch}
-h2{font-family:Georgia,"Times New Roman",serif;font-size:20px;color:var(--sw-navy);
-   margin:38px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--sw-border)}
-.intro{background:#fff;border:1px solid var(--sw-border);border-left:3px solid var(--sw-gold);
-       border-radius:var(--sw-radius);padding:18px 20px;margin-top:22px;box-shadow:var(--sw-shadow)}
-.intro p{margin:0 0 10px}
-.intro p:last-child{margin:0}
-.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.dev{font-family:"Nirmala UI","Noto Sans Devanagari","Noto Serif Devanagari","Mangal",serif}
+.skip{position:absolute;left:-9999px;top:0}
+.skip:focus{left:12px;top:12px;background:#fff;padding:8px 12px;z-index:10;
+            border-radius:var(--sw-radius);box-shadow:var(--sw-focus)}
+a:focus-visible,button:focus-visible,input:focus-visible,label:focus-within{
+  outline:none;box-shadow:var(--sw-focus)}
+
+/* Top bar */
+.topbar{background:#fff;border-bottom:1px solid var(--sw-border)}
+.topbar .in{max-width:1240px;margin:0 auto;padding:12px 20px;display:flex;
+            align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-family:Georgia,serif;font-weight:700;color:var(--sw-navy);text-decoration:none;
+       letter-spacing:.08em;font-size:15px}
+.topbar nav{display:flex;gap:4px 18px;flex-wrap:wrap;margin-left:auto;font-size:14.5px}
+.topbar nav a{color:var(--sw-text);text-decoration:none;padding:4px 2px;border-radius:4px}
+.topbar nav a:hover{color:var(--sw-saffron-dark);text-decoration:underline}
+.topbar nav a[aria-current]{color:var(--sw-saffron-dark);font-weight:700}
+
+main{max-width:1240px;margin:0 auto;padding:0 20px 96px}
+section{padding:44px 0 8px}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:var(--sw-navy)}
+h2{font-size:24px;margin:0 0 6px}
+.sub{color:var(--sw-muted);margin:0 0 22px;max-width:62ch}
+
+/* Hero */
+.hero{text-align:center;padding:56px 0 40px}
+.hero .lamp{font-size:34px;line-height:1}
+.hero h1{font-size:40px;margin:8px 0 2px}
+.hero .dev{display:block;font-size:26px;color:var(--sw-saffron-dark);margin-bottom:14px}
+.hero p{color:var(--sw-muted);margin:0 auto 10px;max-width:58ch}
+.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+
+a.btn,button.btn{display:inline-block;padding:13px 24px;border:2px solid var(--sw-navy);
+     border-radius:var(--sw-radius);background:var(--sw-navy);color:#fff;font:inherit;
+     font-weight:700;letter-spacing:.04em;cursor:pointer;text-decoration:none;
+     transition:background .15s}
+a.btn:hover,button.btn:hover{background:var(--sw-navy-dark);border-color:var(--sw-navy-dark)}
+a.btn.ghost{background:transparent;color:var(--sw-navy)}
+a.btn.ghost:hover{background:var(--sw-navy-light)}
+a.btn.lg{padding:15px 32px;font-size:17px}
+
+/* Cards */
+.grid{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
 .card{background:#fff;border:1px solid var(--sw-border);border-radius:var(--sw-radius-lg);
-      padding:20px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--sw-shadow)}
-.card h3{margin:0;font-family:Georgia,serif;font-size:17px;color:var(--sw-navy)}
-.card p{margin:0;font-size:14.5px;color:var(--sw-muted)}
-.card a.go{margin-top:auto;padding-top:10px;color:var(--sw-saffron-dark);font-weight:700;
-           text-decoration:none;font-size:14.5px}
+      padding:22px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--sw-shadow)}
+.card h3{margin:0;font-size:19px}
+.card p{margin:0;font-size:15px;color:var(--sw-muted)}
+.card a.go{margin-top:auto;padding-top:12px;color:var(--sw-saffron-dark);font-weight:700;
+           text-decoration:none;font-size:14.5px;letter-spacing:.03em}
 .card a.go:hover{text-decoration:underline}
-fieldset{background:#fff;border:1px solid var(--sw-border);border-radius:var(--sw-radius-lg);
-         padding:20px;box-shadow:var(--sw-shadow);margin:0}
-legend{font-family:Georgia,serif;color:var(--sw-navy);font-size:16px;padding:0 6px}
-.subjects{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-          margin-top:6px}
+.card.live{border-top:4px solid var(--sw-saffron)}
+.card.soon{border-top:4px dashed var(--sw-gold)}
+
+/* Status labels — text, never colour alone */
+.status{align-self:flex-start;font-size:11.5px;font-weight:700;letter-spacing:.08em;
+        border-radius:99px;padding:2px 10px;border:1px solid}
+.status.now{color:var(--sw-saffron-dark);background:var(--sw-saffron-light);border-color:var(--sw-saffron)}
+.status.later{color:var(--sw-gold-dark);background:var(--sw-gold-light);border-color:var(--sw-gold)}
+
+/* Steps */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:14px;
+       grid-template-columns:repeat(5,1fr);counter-reset:step}
+.steps li{background:#fff;border:1px solid var(--sw-border);border-radius:var(--sw-radius-lg);
+          padding:18px;position:relative;box-shadow:var(--sw-shadow);font-size:15px}
+.steps li::before{counter-increment:step;content:"0" counter(step);display:block;
+                  font-family:Georgia,serif;font-size:24px;font-weight:700;color:var(--sw-gold-dark);
+                  margin-bottom:4px}
+.left{justify-content:flex-start}
+
+/* Placement dimensions */
+.dims{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
+.dims ul{margin:6px 0 0;padding-left:18px;color:var(--sw-muted);font-size:15px}
+
+/* Split panels */
+.panel{background:#fff;border:1px solid var(--sw-border);border-radius:var(--sw-radius-lg);
+       padding:26px;box-shadow:var(--sw-shadow)}
+.panel p{margin:0 0 10px}
+.panel ul{margin:0 0 6px;padding-left:18px;color:var(--sw-muted)}
+.two{display:grid;gap:18px;grid-template-columns:1fr 1fr}
+.light{background:var(--sw-gold-light);border-color:#EBD9AE;box-shadow:none}
+.quiet{background:transparent;box-shadow:none}
+
+/* Interest form */
+fieldset{border:0;margin:0;padding:0}
+legend{font-weight:700;color:var(--sw-navy);margin-bottom:6px}
+.subjects{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:6px}
 .subject{display:flex;align-items:center;gap:10px;border:1px solid var(--sw-border);
-         border-radius:var(--sw-radius);padding:11px 13px;cursor:pointer;font-size:15px;
-         background:#fff}
-.subject:has(input:checked){border-color:var(--sw-saffron);
-                            box-shadow:inset 0 0 0 1px var(--sw-saffron);
-                            background:var(--sw-saffron-light)}
+         border-radius:var(--sw-radius);padding:11px 13px;cursor:pointer;font-size:15px;background:#fff}
+.subject:has(input:checked){border-color:var(--sw-gold);box-shadow:inset 0 0 0 1px var(--sw-gold);
+                            background:var(--sw-gold-light)}
 .subject input{width:auto;margin:0}
-.soon{margin-left:auto;font-size:11px;color:var(--sw-muted);border:1px solid var(--sw-border);
-      border-radius:99px;padding:1px 8px}
-.cta{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-a.btn,button.btn{display:inline-block;padding:13px 22px;border:0;border-radius:var(--sw-radius);
-     background:var(--sw-navy);color:#fff;font:inherit;font-weight:700;cursor:pointer;
-     text-decoration:none;transition:background .15s}
-a.btn:hover,button.btn:hover{background:var(--sw-navy-dark)}
-.note{font-size:13px;color:var(--sw-muted);margin:0}
-footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--sw-border);
+.note{font-size:13.5px;color:var(--sw-muted);margin:10px 0 0}
+.formrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:16px}
+
+/* Final CTA */
+.final{text-align:center;padding:56px 0 24px}
+.final h2{font-size:28px}
+.final .sub{margin:0 auto 20px}
+.links{margin-top:16px;font-size:14.5px}
+.links a{color:var(--sw-saffron-dark)}
+
+footer{max-width:1240px;margin:0 auto;padding:22px 20px 40px;border-top:1px solid var(--sw-border);
        text-align:center;font-size:13px;color:var(--sw-muted)}
 footer a{color:var(--sw-saffron-dark)}
+footer p{margin:4px 0}
+.credit{margin-top:12px !important;font-style:italic}
+
+/* Mobile bottom action */
+.dock{display:none}
+
+@media (max-width:1024px){
+  .grid,.dims{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:640px){
+  .grid,.dims,.two,.steps{grid-template-columns:1fr}
+  .hero{padding:40px 0 28px}
+  .hero h1{font-size:32px}
+  .topbar nav{margin-left:0}
+  .dock{display:block;position:fixed;left:0;right:0;bottom:0;padding:10px 16px;
+        background:rgba(255,255,255,.96);border-top:1px solid var(--sw-border);z-index:5}
+  .dock a.btn{display:block;text-align:center}
+  footer{padding-bottom:96px}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
+<a class="skip" href="#main">Skip to content</a>
 
-  <header>
-    <div class="lamp">🪔</div>
-    <h1>Swadharma Classes <span class="dev">अध्ययनम्</span></h1>
-    <p class="lede">Pooja, Mantras &amp; Sanskrit — structured classes for every age
-      group, in-person and online.</p>
-  </header>
-
-  <div class="intro">
-    <p>Learning here begins with practice. Pooja and mantras are taught as they are
-      performed, and Sanskrit as the language that carries them — so that what a
-      student recites, they also understand.</p>
-    <p>Classes are graded by age and by starting point, from children meeting their
-      first verses to adults returning to study after many years. Teaching is by
-      scholars empanelled with Swadharma Services; sessions run both in person and
-      online, so distance need not decide whether someone can learn.</p>
-    <p>Sanskrit is where we begin. Other subjects are being added.</p>
+<header class="topbar">
+  <div class="in">
+    <a class="brand" href="/">SWADHARMA</a>
+    <nav aria-label="Education">
+      <a href="/edu" aria-current="page">Overview</a>
+      <a href="/classes">Classes</a>
+      <a href="#shabda">Shabda</a>
+      <a href="https://edu.swadharmaservices.in/portal">Student Portal</a>
+      <a href="/how-it-works">How it Works</a>
+      <a href="#professionals">Professionals</a>
+    </nav>
   </div>
+</header>
 
-  <h2>For students</h2>
-  <div class="grid">
-    <div class="card">
-      <h3>Register for lessons</h3>
-      <p>One form for every student. Tell us about yourself, complete a small
-        one-time verification, and we will place you in a class.</p>
-      <a class="go" href="https://edu.swadharmaservices.in/">Register →</a>
-    </div>
-    <div class="card">
-      <h3>Sanskrit Classes</h3>
-      <p>Structured monthly instruction, with fees set by region so that students
-        everywhere can take part.</p>
-      <a class="go" href="/classes">See classes →</a>
-    </div>
-    <div class="card">
-      <h3>Shabda — practice &amp; self-study</h3>
-      <p>Lessons, exercises and games for learning Sanskrit at your own pace.
-        Open to enrolled students on a monthly subscription.</p>
-      <a class="go" href="https://shabda-web-404772120601.asia-south1.run.app/">Open Shabda →</a>
-    </div>
-    <div class="card">
-      <h3>Your registration</h3>
-      <p>Sign in to see where your application stands, whether you have been
-        placed, and which classes you are on.</p>
-      <a class="go" href="https://edu.swadharmaservices.in/portal">Student portal →</a>
-    </div>
-    <div class="card">
-      <h3>Tuition &amp; sponsorship</h3>
-      <p>Start the monthly tuition once your place is confirmed, or sponsor a
-        student's learning.</p>
-      <a class="go" href="https://edu.swadharmaservices.in/#payments">Payment links →</a>
-    </div>
-  </div>
+<main id="main">
 
-  <h2>For teachers and professionals</h2>
-  <div class="intro" style="border-left-color:var(--sw-saffron)">
-    <p><strong>Swadharma PRO — one form for every professional.</strong> Teachers,
-      scholars, editors, reciters, purohitas, jyotiṣa and vāstu consultants,
-      musicians, translators — and those who make a ceremony possible: archakas,
-      decorators, cooks, helpers, event coordinators and bhoktas.</p>
-    <p>Tick everything you can offer, and say for each whether you can take it on
-      <strong>short term</strong> or <strong>long term</strong>. Many people can
-      do one and not the other, and saying so here saves being asked for the
-      wrong one later.</p>
-    <p><strong>There is no fee, at this or any later stage.</strong> What follows
-      is a short conversation — an acquaintance interview — so that we know one
-      another before anything is settled. Nothing you write is published until
-      you are empanelled and the wording is agreed with you.</p>
-  </div>
-  <div class="cta">
-    <a class="btn" href="https://edu.swadharmaservices.in/empanel.html">Offer your service →</a>
-    <a class="btn" style="background:var(--sw-saffron)"
-       href="https://edu.swadharmaservices.in/professionals.html">See who is empanelled →</a>
-    <a class="btn" style="background:var(--sw-gold-dark)"
-       href="https://edu.swadharmaservices.in/refer.html">Refer a professional →</a>
-    <p class="note">Replaces the earlier enrolment form — both now lead here.</p>
-    <p class="note">A referral is an introduction, not an application: we write
-      to the person once and they decide for themselves.</p>
-  </div>
+  <!-- 1 · Hero -->
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="lamp" aria-hidden="true">🪔</div>
+    <h1 id="hero-h">Swadharma Education</h1>
+    <span class="dev" lang="sa">अध्ययनम्</span>
+    <p>Learn Sanskrit and the knowledge traditions of our dharmic heritage through
+      structured classes, guided practice and self-study.</p>
+    <p>Sanskrit classes are available now. Additional subjects are being
+      introduced progressively.</p>
+    <div class="actions">
+      <a class="btn lg" href="https://edu.swadharmaservices.in/?subjects=sanskrit#registration">JOIN A CLASS</a>
+      <a class="btn lg ghost" href="/classes">EXPLORE CLASSES</a>
+    </div>
+  </section>
 
-  <h2 id="subjects-heading">Tell us what you would like to study</h2>
-  <form id="interest">
-    <fieldset>
-      <legend>Subjects of interest</legend>
-      <p class="note">Choose any number. Sanskrit is running now; the others are
-        being prepared, and your choice tells us what to open next.</p>
-      <div class="subjects" id="subjects"></div>
-      <div class="cta">
-        <button class="btn" type="submit">Continue to registration</button>
-        <p class="note" id="chosen">Nothing selected yet.</p>
+  <!-- 2 · What can I learn? -->
+  <section aria-labelledby="learn-h">
+    <h2 id="learn-h">What can I learn?</h2>
+    <p class="sub">Only Sanskrit is open for admission today. The other subjects are
+      being prepared — registering your interest tells us what to open next.</p>
+    <div class="grid">
+      <article class="card live">
+        <span class="status now">AVAILABLE NOW</span>
+        <h3>Sanskrit</h3>
+        <p>Structured instruction for different ages and starting levels, in person
+          and online.</p>
+        <a class="go" href="/classes">EXPLORE CLASSES →</a>
+      </article>
+      <article class="card soon">
+        <span class="status later">COMING SOON</span>
+        <h3>Pooja &amp; Mantra</h3>
+        <p>Taught as they are performed. Register your interest and we will write
+          when the programme opens.</p>
+        <a class="go" href="#interest">REGISTER YOUR INTEREST →</a>
+      </article>
+      <article class="card soon">
+        <span class="status later">DEVELOPING</span>
+        <h3>Other subjects</h3>
+        <p>Computational Linguistics, Music, Indian Languages and Career Advice are
+          in preparation.</p>
+        <a class="go" href="#interest">REGISTER YOUR INTEREST →</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- 3 · How learning works -->
+  <section aria-labelledby="how-h">
+    <h2 id="how-h">How learning works</h2>
+    <p class="sub">One application, from first step to first class.</p>
+    <ol class="steps">
+      <li>Choose what you want to learn</li>
+      <li>Tell us your age, level and location</li>
+      <li>We identify a suitable class</li>
+      <li>Confirm your place and tuition</li>
+      <li>Learn, and practise with Shabda</li>
+    </ol>
+    <div class="actions left">
+      <a class="btn" href="https://edu.swadharmaservices.in/?subjects=sanskrit#registration">JOIN A CLASS</a>
+    </div>
+  </section>
+
+  <!-- 4 · Find the right class -->
+  <section aria-labelledby="fit-h">
+    <h2 id="fit-h">Find the right class</h2>
+    <p class="sub">Every student is placed in a class by three things.</p>
+    <div class="dims">
+      <div class="panel">
+        <h3>Age</h3>
+        <ul><li>Children</li><li>Teenagers</li><li>Adults</li></ul>
       </div>
-    </fieldset>
-  </form>
+      <div class="panel">
+        <h3>Starting level</h3>
+        <ul><li>Beginner</li><li>Intermediate</li><li>Advanced</li></ul>
+      </div>
+      <div class="panel">
+        <h3>Location</h3>
+        <ul><li>Online</li><li>In person, where a local class runs</li></ul>
+      </div>
+    </div>
+    <div class="actions left">
+      <a class="btn ghost" href="/classes">EXPLORE CLASSES</a>
+    </div>
+  </section>
 
-  <footer>
-    <p>Swadharma Services ·
-      <a href="/">Home</a> ·
-      <a href="/classes">Sanskrit Classes</a> ·
-      <a href="https://edu.swadharmaservices.in/empanel.html">Empanelment</a> ·
-      <a href="https://edu.swadharmaservices.in/refer.html">Refer</a> ·
-      <a href="/credits">Credits</a> ·
-      <a href="/policies">Policies</a></p>
-    <p style="margin-top:6px">
-      <a href="/policies#disclaimer">Disclaimer</a> ·
-      <a href="/policies#terms">Terms</a> ·
-      <a href="/policies#refunds">Refunds</a> ·
-      <a href="/policies#privacy">Privacy &amp; Piracy</a>
+  <!-- 5 · Shabda -->
+  <section id="shabda" aria-labelledby="shabda-h">
+    <div class="panel two">
+      <div>
+        <h2 id="shabda-h">Shabda — practise between classes</h2>
+        <p>Shabda provides guided practice and self-study support for enrolled
+          learners.</p>
+        <div class="actions left">
+          <a class="btn" href="https://edu.swadharmaservices.in/#modules">EXPLORE SHABDA →</a>
+        </div>
+      </div>
+      <ul>
+        <li>Guided Sanskrit practice</li>
+        <li>Self-study</li>
+        <li>Exercises</li>
+        <li>Review and reinforcement</li>
+        <li>Continued learning between classes</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6 · Student Portal + 7 · Tuition -->
+  <section aria-labelledby="portal-h">
+    <div class="two">
+      <div class="panel">
+        <h2 id="portal-h">Student Portal</h2>
+        <p>Already applied or enrolled? Sign in to see your student application,
+          class placement, enrolment and tuition.</p>
+        <div class="actions left">
+          <a class="btn" href="https://edu.swadharmaservices.in/portal">STUDENT LOGIN</a>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Tuition</h2>
+        <p>Once your place is confirmed, start your monthly tuition.</p>
+        <div class="actions left">
+          <a class="btn ghost" href="https://edu.swadharmaservices.in/#payments">PAY TUITION</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · Support education -->
+  <section aria-labelledby="sponsor-h">
+    <div class="panel light">
+      <h2 id="sponsor-h">Support a student</h2>
+      <p>Help make structured learning accessible by sponsoring a student's
+        education.</p>
+      <div class="actions left">
+        <a class="btn ghost" href="https://edu.swadharmaservices.in/#payments">SPONSOR A STUDENT →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Register your interest (future subjects only) -->
+  <section id="interest" aria-labelledby="interest-h">
+    <div class="panel">
+      <h2 id="interest-h">Register your interest</h2>
+      <p class="sub" style="margin-bottom:12px">For subjects that are not yet open.
+        This is not a class registration — it tells us what to open next.</p>
+      <form id="interest-form">
+        <fieldset>
+          <legend>Subjects coming soon</legend>
+          <div class="subjects" id="subjects"></div>
+          <div class="formrow">
+            <button class="btn" type="submit">REGISTER YOUR INTEREST</button>
+            <p class="note" id="chosen" aria-live="polite">Nothing selected yet.</p>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </section>
+
+  <!-- 9 · Teachers & professionals -->
+  <section id="professionals" aria-labelledby="pro-h">
+    <div class="panel quiet">
+      <h2 id="pro-h">Are you a teacher or professional?</h2>
+      <p>Swadharma also works with teachers, scholars and service professionals. If
+        you would like to offer your expertise through the network, explore the
+        professional services area.</p>
+      <div class="actions left">
+        <a class="btn ghost" href="https://edu.swadharmaservices.in/empanel.html">PROFESSIONAL NETWORK →</a>
+        <a class="btn ghost" href="https://edu.swadharmaservices.in/professionals.html">FIND A PROFESSIONAL →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final" aria-labelledby="final-h">
+    <h2 id="final-h">Ready to begin?</h2>
+    <p class="sub">Choose your subject and tell us a little about your learning needs.</p>
+    <a class="btn lg" href="https://edu.swadharmaservices.in/?subjects=sanskrit#registration">JOIN A CLASS →</a>
+    <p class="links">
+      <a href="/classes">Explore Classes</a> ·
+      <a href="https://edu.swadharmaservices.in/portal">Student Portal</a> ·
+      <a href="/how-it-works">How it Works</a>
     </p>
-  </footer>
+  </section>
+
+</main>
+
+<footer>
+  <p>Swadharma Services ·
+    <a href="/">Home</a> ·
+    <a href="/classes">Classes</a> ·
+    <a href="/how-it-works">How it Works</a> ·
+    <a href="/about">Contact</a> ·
+    <a href="/credits">Credits</a></p>
+  <p>
+    <a href="/policies#disclaimer">Disclaimer</a> ·
+    <a href="/policies#terms">Terms</a> ·
+    <a href="/policies#refunds">Refunds</a> ·
+    <a href="/policies#privacy">Privacy &amp; Piracy</a>
+  </p>
+  <p class="credit">Product designed by VKG Foundation; Implemented by SD Ventures and Supplies for Dharma Poshanam, licensee</p>
+</footer>
+
+<div class="dock">
+  <a class="btn" href="https://edu.swadharmaservices.in/?subjects=sanskrit#registration">JOIN A CLASS</a>
 </div>
 
 <script>
-// Subject list. `live:false` marks a subject we are gauging interest in rather
-// than teaching yet — it stays selectable on purpose, because the selection is
-// the signal for what to open next.
+// Subjects NOT yet open for admission. Sanskrit is deliberately absent: it has
+// its own JOIN A CLASS path, and listing it here would turn interest
+// registration back into class registration (spec §2.2).
+//
+// Keys must be on the server whitelist in shabda-classroom
+// src/routes/registration.js — an unknown key is dropped silently. There is no
+// separate `pooja`/`mantra` key; Pooja & Mantra is carried as `swadharma`.
 var SUBJECTS = [
-  { key: 'swadharma',                label: 'Swadharma',                live: true  },
-  { key: 'sanskrit',                 label: 'Sanskrit',                 live: true  },
-  { key: 'computational_linguistics',label: 'Computational Linguistics',live: false },
-  { key: 'music',                    label: 'Music',                    live: false },
-  { key: 'indian_languages',         label: 'Indian Languages',         live: false },
-  { key: 'career_advice',            label: 'Career Advice',            live: false }
+  { key: 'swadharma',                 label: 'Pooja & Mantra' },
+  { key: 'computational_linguistics', label: 'Computational Linguistics' },
+  { key: 'music',                     label: 'Music' },
+  { key: 'indian_languages',          label: 'Indian Languages' },
+  { key: 'career_advice',             label: 'Career Advice' }
 ];
 
 var REGISTER_URL = 'https://edu.swadharmaservices.in/';
@@ -234,7 +435,6 @@ function esc(s) {
     return '<label class="subject">' +
              '<input type="checkbox" name="subject" value="' + esc(s.key) + '">' +
              '<span>' + esc(s.label) + '</span>' +
-             (s.live ? '' : '<span class="soon">coming</span>') +
            '</label>';
   }).join('');
 })();
@@ -259,14 +459,15 @@ document.getElementById('subjects').addEventListener('change', function () {
     : 'Nothing selected yet.';
 });
 
-document.getElementById('interest').addEventListener('submit', function (e) {
+document.getElementById('interest-form').addEventListener('submit', function (e) {
   e.preventDefault();
   var picked = selected();
-  // Carried on the query string so the registration form can pre-fill and the
-  // student never states their interest twice. Sanskrit is assumed when nothing
-  // is chosen, rather than blocking someone on a question they skipped.
-  var qs = picked.length ? '?subjects=' + encodeURIComponent(picked.join(',')) : '';
-  window.location.assign(REGISTER_URL + qs);
+  if (!picked.length) {
+    document.getElementById('chosen').textContent = 'Choose at least one subject.';
+    return;
+  }
+  window.location.assign(REGISTER_URL + '?subjects=' +
+    encodeURIComponent(picked.join(',')) + '#registration');
 });
 </script>
 </body>
