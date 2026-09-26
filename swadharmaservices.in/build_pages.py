@@ -83,6 +83,7 @@ SIDE_NAV = {
             ("Overview", "/network"),
             ("Professionals", "/network/professionals"),
             ("Temples & Organisations", "/network/temples"),
+            ("Jaya Durgā Tīrtham", "/jaya-durga-teertham"),
             ("Browse by territory", "/territories"),
         ],
         "Territory stays selected while you move between these pages.",

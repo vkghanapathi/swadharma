@@ -606,6 +606,48 @@ const PAGES = [
             /names and places are invented/.test(doc.body.textContent));
     }],
 
+    ["/jaya-durga-teertham", ({ doc, label, check }) => {
+        // The kṣetram's own rites, each opening a booking with its territory.
+        const rites = doc.querySelectorAll("#jdtRites a.card");
+        check(`${label} eight rites listed`, rites.length === 8, `${rites.length}`);
+        check(`${label} every rite books with the kṣetram's territory`,
+            [...rites].every((a) => {
+                const h = a.getAttribute("href");
+                return h.startsWith("/request?service=") && h.includes("city=Undavalli");
+            }),
+            rites[0]?.getAttribute("href"));
+
+        // Telugu is shown beside the English, not instead of it. This is the
+        // kṣetram's own wording and it must survive the build intact.
+        check(`${label} Telugu retained on the rite cards`,
+            [...rites].every((a) => a.querySelector('h3[lang="te"]')?.textContent.trim()));
+        check(`${label} Telugu banner line present`,
+            /జయ దుర్గా తీర్థం/.test(doc.body.textContent));
+        check(`${label} facilities keep their Telugu`,
+            /యజమానులు, పురోహితులు, అర్చకులు/.test(doc.body.textContent) &&
+            /వంటలు, సమారాధనలు/.test(doc.body.textContent));
+
+        check(`${label} six vidyālaya pillars`,
+            doc.querySelectorAll("#jdtVidyalaya .card").length === 6);
+        check(`${label} banners resolve to real files`,
+            [...doc.querySelectorAll(".jdt-banner img")].every((i) =>
+                existsSync(join(ROOT, i.getAttribute("src").slice(1)))),
+            [...doc.querySelectorAll(".jdt-banner img")].map((i) => i.getAttribute("src")).join(" "));
+
+        // The gallery stays hidden until VKG's photographs arrive, so an empty
+        // strip never ships.
+        check(`${label} empty gallery stays hidden`,
+            doc.getElementById("gallery").hidden &&
+            doc.getElementById("jdtGallery").children.length === 0);
+
+        check(`${label} today's tithi shown`,
+            !!doc.querySelector("#jdtToday .sw-today"),
+            doc.getElementById("jdtToday").textContent.slice(0, 60));
+        check(`${label} contact details present`,
+            !!doc.querySelector('a[href="tel:+918985952122"]') &&
+            !!doc.querySelector('a[href="mailto:jayadurgateertham@gmail.com"]'));
+    }],
+
     ["/how-it-works", ({ doc, label, check }) => {
         check(`${label} payment routes table present`,
             doc.querySelectorAll("table.tbl tbody tr").length === 3);

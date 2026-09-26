@@ -857,6 +857,26 @@ a.hub:hover { transform: translateY(-2px); box-shadow: var(--sw-shadow-md); bord
 .next-date span { font-size: 12.5px; color: var(--sw-muted); line-height: 1.4; }
 .next-date .dir-link { margin-top: 5px; font-size: 13px; }
 
+/* ── Kṣetram page — Jaya Durgā Tīrtham ───────────────────────────────── */
+.jdt-banner { margin: 0 0 22px; border-radius: var(--sw-radius-lg); overflow: hidden;
+    border: 1px solid var(--sw-border); box-shadow: var(--sw-shadow); background: #fff; }
+.jdt-banner img { display: block; width: 100%; height: auto; }
+.jdt-banner--inline { margin: 6px 0 20px; }
+
+/* Telugu sits beside the English, never instead of it. Given its own line
+   height because Telugu conjuncts are taller than Latin at the same size. */
+.jdt-sub-te { font-size: 16px; color: var(--sw-saffron-dark); line-height: 1.7;
+    margin: 0 0 12px; }
+.jdt-te { color: var(--sw-saffron-dark); line-height: 1.75; margin: 2px 0 6px !important; }
+[lang="te"] { line-height: 1.7; }
+
+.jdt-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px; }
+.jdt-gallery figure { margin: 0; background: #fff; border: 1px solid var(--sw-border);
+    border-radius: var(--sw-radius-lg); overflow: hidden; box-shadow: var(--sw-shadow-xs); }
+.jdt-gallery img { display: block; width: 100%; height: 190px; object-fit: cover; }
+.jdt-gallery figcaption { padding: 9px 12px; font-size: 12.5px; color: var(--sw-muted); }
+
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
     html { scroll-behavior: auto; }

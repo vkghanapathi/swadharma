@@ -321,7 +321,11 @@ SW.TERRITORY_SEED = [
 SW.NODES = [
     { name: "Datta Mukti Kshetram", city: "Rajahmundry", state: "Andhra Pradesh", country: "IN" },
     { name: "Vaivasvatam", city: "Rajahmundry", state: "Andhra Pradesh", country: "IN" },
-    { name: "Jaya Durga Teertham", city: "Vijayawada", state: "Andhra Pradesh", country: "IN" },
+    // `page` gives a node its own page on this site. Only Jaya Durgā Tīrtham
+    // has one so far; the others render as plain cards until they do.
+    { name: "Jaya Durgā Tīrtham", city: "Undavalli, near Vijayawada", state: "Andhra Pradesh",
+      country: "IN", page: "/jaya-durga-teertham",
+      description: "Dhārmika kṣetram on the Krishna — nadī snāna, tarpaṇa, tīrtha and ābdika śrāddha, smārta karma, vrata, śānti and śrauta iṣṭi. Kitchen and samārādhana on site." },
     { name: "Sripadavallabha Anagha Datta Kshetram", city: "Pithapuram", state: "Andhra Pradesh", country: "IN" }
 ];
 

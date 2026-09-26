@@ -46,10 +46,19 @@
     var nodes = SW.el("orgNodes");
     if (nodes) {
         nodes.innerHTML = SW.NODES.map(function (n) {
-            return SW.cards.organisation({
+            var card = SW.cards.organisation({
                 name: n.name, city: n.city, state: n.state,
-                description: "Operational node — ceremonies arranged through the Swadharma desk."
+                description: n.description ||
+                    "Operational node — ceremonies arranged through the Swadharma desk."
             });
+            // A node with its own page on this site links to it rather than
+            // off-site, so the card's action stays on Swadharma.
+            if (n.page) {
+                card = card.replace("</article>",
+                    '<div class="dir-act"><a class="dir-link" href="' + SW.esc(n.page) +
+                    '">See the kṣetram →</a></div></article>');
+            }
+            return card;
         }).join("");
     }
 })();
