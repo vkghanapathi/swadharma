@@ -147,6 +147,7 @@ legend{font-weight:700;color:var(--sw-navy);margin-bottom:6px}
 .subject:has(input:checked){border-color:var(--sw-gold);box-shadow:inset 0 0 0 1px var(--sw-gold);
                             background:var(--sw-gold-light)}
 .subject input{width:auto;margin:0}
+.also{display:block;font-size:13px;color:var(--sw-muted);font-weight:400}
 .note{font-size:13.5px;color:var(--sw-muted);margin:10px 0 0}
 .formrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:16px}
 
@@ -231,7 +232,7 @@ footer p{margin:4px 0}
       </article>
       <article class="card soon">
         <span class="status later">COMING SOON</span>
-        <h3>Pooja &amp; Mantra</h3>
+        <h3>Pooja &amp; Mantra<span class="also">(Swadharma)</span></h3>
         <p>Taught as they are performed. Register your interest and we will write
           when the programme opens.</p>
         <a class="go" href="#interest">REGISTER YOUR INTEREST →</a>
@@ -413,9 +414,11 @@ footer p{margin:4px 0}
 //
 // Keys must be on the server whitelist in shabda-classroom
 // src/routes/registration.js — an unknown key is dropped silently. There is no
-// separate `pooja`/`mantra` key; Pooja & Mantra is carried as `swadharma`.
+// separate `pooja`/`mantra` key: Pooja & Mantra come under Swadharma (VKG,
+// 2026-09-27). Shown as "Pooja & Mantra" with "(Swadharma)" beneath, because
+// the plain word Swadharma does not tell a visitor what is taught.
 var SUBJECTS = [
-  { key: 'swadharma',                 label: 'Pooja & Mantra' },
+  { key: 'swadharma',                 label: 'Pooja & Mantra', also: 'Swadharma' },
   { key: 'computational_linguistics', label: 'Computational Linguistics' },
   { key: 'music',                     label: 'Music' },
   { key: 'indian_languages',          label: 'Indian Languages' },
@@ -434,7 +437,9 @@ function esc(s) {
   document.getElementById('subjects').innerHTML = SUBJECTS.map(function (s) {
     return '<label class="subject">' +
              '<input type="checkbox" name="subject" value="' + esc(s.key) + '">' +
-             '<span>' + esc(s.label) + '</span>' +
+             '<span>' + esc(s.label) +
+               (s.also ? '<span class="also">(' + esc(s.also) + ')</span>' : '') +
+             '</span>' +
            '</label>';
   }).join('');
 })();
