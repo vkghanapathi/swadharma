@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta property="og:title" content="Swadharma Education — अध्ययनम्">
-<meta property="og:description" content="Structured Sanskrit classes, guided practice with Shabda, and a student portal. Additional subjects are being introduced progressively.">
+<meta property="og:description" content="Structured classes in Sanskrit, and in Pooja &amp; Mantra, with guided practice on Shabda and a student portal.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="/assets/swadharma-share.png">
 <meta property="og:url" content="https://swadharmaservices.in/edu">
 <meta name="twitter:card" content="summary_large_image">
 <title>Swadharma Education अध्ययनम् — Swadharma Services</title>
-<meta name="description" content="Learn Sanskrit through structured classes, guided practice and self-study. Sanskrit classes are available now; additional subjects are being introduced progressively.">
+<meta name="description" content="Learn Sanskrit, and Pooja &amp; Mantra, through structured classes, guided practice and self-study. Both are open for admission now.">
 <!--
   Swadharma Education — the education GATEWAY. Served at
   https://swadharmaservices.in/edu  (nginx try_files resolves /edu → edu.html).
@@ -207,12 +207,12 @@ footer p{margin:4px 0}
     <div class="lamp" aria-hidden="true">🪔</div>
     <h1 id="hero-h">Swadharma Education</h1>
     <span class="dev" lang="sa">अध्ययनम्</span>
-    <p>Learn Sanskrit and the knowledge traditions of our dharmic heritage through
+    <p>Learn Sanskrit, Pooja and Mantra — the knowledge traditions of our dharmic heritage — through
       structured classes, guided practice and self-study.</p>
-    <p>Sanskrit classes are available now. Additional subjects are being
-      introduced progressively.</p>
+    <p>Sanskrit and Pooja &amp; Mantra classes are open now. Further subjects
+      are being introduced progressively.</p>
     <div class="actions">
-      <a class="btn lg" href="https://edu.swadharmaservices.in/?subjects=sanskrit#registration">JOIN A CLASS</a>
+      <a class="btn lg" href="https://edu.swadharmaservices.in/#registration">JOIN A CLASS</a>
       <a class="btn lg ghost" href="/classes">EXPLORE CLASSES</a>
     </div>
   </section>
@@ -220,22 +220,22 @@ footer p{margin:4px 0}
   <!-- 2 · What can I learn? -->
   <section aria-labelledby="learn-h">
     <h2 id="learn-h">What can I learn?</h2>
-    <p class="sub">Only Sanskrit is open for admission today. The other subjects are
-      being prepared — registering your interest tells us what to open next.</p>
+    <p class="sub">Sanskrit and Pooja &amp; Mantra are open for admission. The other
+      subjects are being prepared — registering your interest tells us what to open next.</p>
     <div class="grid">
       <article class="card live">
         <span class="status now">AVAILABLE NOW</span>
         <h3>Sanskrit</h3>
         <p>Structured instruction for different ages and starting levels, in person
           and online.</p>
-        <a class="go" href="/classes">EXPLORE CLASSES →</a>
+        <a class="go" href="https://edu.swadharmaservices.in/?subjects=sanskrit#registration">JOIN A CLASS →</a>
       </article>
-      <article class="card soon">
-        <span class="status later">COMING SOON</span>
+      <article class="card live">
+        <span class="status now">AVAILABLE NOW</span>
         <h3>Pooja &amp; Mantra<span class="also">(Swadharma)</span></h3>
-        <p>Taught as they are performed. Register your interest and we will write
-          when the programme opens.</p>
-        <a class="go" href="#interest">REGISTER YOUR INTEREST →</a>
+        <p>Taught for decades, and taught as they are performed — so that what a
+          student recites, they also understand.</p>
+        <a class="go" href="https://edu.swadharmaservices.in/?subjects=swadharma#registration">JOIN A CLASS →</a>
       </article>
       <article class="card soon">
         <span class="status later">DEVELOPING</span>
@@ -259,7 +259,7 @@ footer p{margin:4px 0}
       <li>Learn, and practise with Shabda</li>
     </ol>
     <div class="actions left">
-      <a class="btn" href="https://edu.swadharmaservices.in/?subjects=sanskrit#registration">JOIN A CLASS</a>
+      <a class="btn" href="https://edu.swadharmaservices.in/#registration">JOIN A CLASS</a>
     </div>
   </section>
 
@@ -377,7 +377,7 @@ footer p{margin:4px 0}
   <section class="final" aria-labelledby="final-h">
     <h2 id="final-h">Ready to begin?</h2>
     <p class="sub">Choose your subject and tell us a little about your learning needs.</p>
-    <a class="btn lg" href="https://edu.swadharmaservices.in/?subjects=sanskrit#registration">JOIN A CLASS →</a>
+    <a class="btn lg" href="https://edu.swadharmaservices.in/#registration">JOIN A CLASS →</a>
     <p class="links">
       <a href="/classes">Explore Classes</a> ·
       <a href="https://edu.swadharmaservices.in/portal">Student Portal</a> ·
@@ -404,21 +404,21 @@ footer p{margin:4px 0}
 </footer>
 
 <div class="dock">
-  <a class="btn" href="https://edu.swadharmaservices.in/?subjects=sanskrit#registration">JOIN A CLASS</a>
+  <a class="btn" href="https://edu.swadharmaservices.in/#registration">JOIN A CLASS</a>
 </div>
 
 <script>
-// Subjects NOT yet open for admission. Sanskrit is deliberately absent: it has
-// its own JOIN A CLASS path, and listing it here would turn interest
-// registration back into class registration (spec §2.2).
+// Subjects NOT yet open for admission. Sanskrit and Pooja & Mantra are
+// deliberately absent: both are taught now and have their own JOIN A CLASS
+// path, and listing them here would turn interest registration back into class
+// registration (spec §2.2). Pooja & Mantra have been taught for decades (VKG,
+// 2026-09-27) — never label them "coming soon".
 //
 // Keys must be on the server whitelist in shabda-classroom
 // src/routes/registration.js — an unknown key is dropped silently. There is no
-// separate `pooja`/`mantra` key: Pooja & Mantra come under Swadharma (VKG,
-// 2026-09-27). Shown as "Pooja & Mantra" with "(Swadharma)" beneath, because
-// the plain word Swadharma does not tell a visitor what is taught.
+// separate `pooja`/`mantra` key: Pooja & Mantra come under Swadharma, carried
+// as `swadharma` and shown as "Pooja & Mantra" with "(Swadharma)" beneath.
 var SUBJECTS = [
-  { key: 'swadharma',                 label: 'Pooja & Mantra', also: 'Swadharma' },
   { key: 'computational_linguistics', label: 'Computational Linguistics' },
   { key: 'music',                     label: 'Music' },
   { key: 'indian_languages',          label: 'Indian Languages' },
