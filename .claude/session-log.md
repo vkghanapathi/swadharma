@@ -832,3 +832,405 @@ _No modified files at session end._
 
 ### Modified files (no PUA):
 - `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-08-17 14:52:58 | Branch: feat/operator-mobile-app
+
+_No modified files at session end._
+
+## Session ended 2026-08-17 15:18:26 | Branch: feat/operator-mobile-app
+
+## Session ended 2026-08-19 19:58:42 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/edu.html`
+
+## Session ended 2026-08-20 07:37:58 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/edu.html`
+
+## Session ended 2026-08-20 07:57:44 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/edu.html`
+
+## Session ended 2026-08-20 08:35:32 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/edu.html`
+
+## Session ended 2026-08-20 08:42:10 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/edu.html`
+
+## Session ended 2026-08-20 18:20:19 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/edu.html`
+
+## Session ended 2026-08-21 00:47:19 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/edu.html`
+
+## Session ended 2026-08-21 00:52:43 | Branch: feat/operator-mobile-app
+
+## Session ended 2026-08-21 01:11:51 | Branch: feat/operator-mobile-app
+
+## Session ended 2026-08-22 07:38:10 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `.tmp_spec.txt`
+- `swadharmaservices.in/app.css`
+- `swadharmaservices.in/app.js`
+- `swadharmaservices.in/build_pages.py`
+- `swadharmaservices.in/catalogue.js`
+- `swadharmaservices.in/page-home.js`
+- `swadharmaservices.in/page-network.js`
+- `swadharmaservices.in/page-professionals.js`
+- `swadharmaservices.in/page-service.js`
+- `swadharmaservices.in/page-services.js`
+- `swadharmaservices.in/page-temples.js`
+- `swadharmaservices.in/page-territories.js`
+
+## Session ended 2026-08-22 09:19:01 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+- `swadharmaservices.in/DEPLOY_RUNBOOK.md`
+- `swadharmaservices.in/Dockerfile`
+- `swadharmaservices.in/classes.html`
+- `swadharmaservices.in/edu.html`
+- `swadharmaservices.in/enrol.html`
+- `swadharmaservices.in/index.html`
+- `swadharmaservices.in/manual.html`
+- `swadharmaservices.in/nginx.conf`
+- `swadharmaservices.in/privacy.html`
+- `swadharmaservices.in/signup.html`
+- `swadharmaservices.in/FRONTEND_REWIRE.md`
+- `swadharmaservices.in/about.html`
+- `swadharmaservices.in/app.css`
+- `swadharmaservices.in/app.js`
+- `swadharmaservices.in/build_pages.py`
+- `swadharmaservices.in/catalogue.js`
+- `swadharmaservices.in/how-it-works.html`
+- `swadharmaservices.in/network-professionals.html`
+- `swadharmaservices.in/network-temples.html`
+- `swadharmaservices.in/network.html`
+- `swadharmaservices.in/organisations.html`
+- `swadharmaservices.in/page-about.js`
+- `swadharmaservices.in/page-home.js`
+- `swadharmaservices.in/page-network.js`
+- `swadharmaservices.in/page-organisations.js`
+- `swadharmaservices.in/page-professionals.js`
+- `swadharmaservices.in/page-request.js`
+- `swadharmaservices.in/page-service.js`
+- `swadharmaservices.in/page-services.js`
+- `swadharmaservices.in/page-temples.js`
+- `swadharmaservices.in/page-territories.js`
+- `swadharmaservices.in/request.html`
+- `swadharmaservices.in/serve_local.py`
+- `swadharmaservices.in/service.html`
+- `swadharmaservices.in/services.html`
+- `swadharmaservices.in/signin.html`
+- `swadharmaservices.in/territories.html`
+- `swadharmaservices.in/test_browser.mjs`
+- `swadharmaservices.in/test_site.py`
+
+## Session ended 2026-08-22 09:19:15 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+- `swadharmaservices.in/DEPLOY_RUNBOOK.md`
+- `swadharmaservices.in/Dockerfile`
+- `swadharmaservices.in/classes.html`
+- `swadharmaservices.in/edu.html`
+- `swadharmaservices.in/enrol.html`
+- `swadharmaservices.in/index.html`
+- `swadharmaservices.in/manual.html`
+- `swadharmaservices.in/nginx.conf`
+- `swadharmaservices.in/privacy.html`
+- `swadharmaservices.in/signup.html`
+- `swadharmaservices.in/FRONTEND_REWIRE.md`
+- `swadharmaservices.in/about.html`
+- `swadharmaservices.in/app.css`
+- `swadharmaservices.in/app.js`
+- `swadharmaservices.in/build_pages.py`
+- `swadharmaservices.in/catalogue.js`
+- `swadharmaservices.in/how-it-works.html`
+- `swadharmaservices.in/network-professionals.html`
+- `swadharmaservices.in/network-temples.html`
+- `swadharmaservices.in/network.html`
+- `swadharmaservices.in/organisations.html`
+- `swadharmaservices.in/page-about.js`
+- `swadharmaservices.in/page-home.js`
+- `swadharmaservices.in/page-network.js`
+- `swadharmaservices.in/page-organisations.js`
+- `swadharmaservices.in/page-professionals.js`
+- `swadharmaservices.in/page-request.js`
+- `swadharmaservices.in/page-service.js`
+- `swadharmaservices.in/page-services.js`
+- `swadharmaservices.in/page-temples.js`
+- `swadharmaservices.in/page-territories.js`
+- `swadharmaservices.in/request.html`
+- `swadharmaservices.in/serve_local.py`
+- `swadharmaservices.in/service.html`
+- `swadharmaservices.in/services.html`
+- `swadharmaservices.in/signin.html`
+- `swadharmaservices.in/territories.html`
+- `swadharmaservices.in/test_browser.mjs`
+- `swadharmaservices.in/test_site.py`
+
+## Session ended 2026-08-22 09:22:08 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+- `swadharmaservices.in/DEPLOY_RUNBOOK.md`
+- `swadharmaservices.in/Dockerfile`
+- `swadharmaservices.in/FRONTEND_REWIRE.md`
+- `swadharmaservices.in/_layout/pages/about.html`
+- `swadharmaservices.in/_layout/pages/how-it-works.html`
+- `swadharmaservices.in/_layout/pages/index.html`
+- `swadharmaservices.in/_layout/pages/network-professionals.html`
+- `swadharmaservices.in/_layout/pages/network-temples.html`
+- `swadharmaservices.in/_layout/pages/network.html`
+- `swadharmaservices.in/_layout/pages/organisations.html`
+- `swadharmaservices.in/_layout/pages/request.html`
+- `swadharmaservices.in/_layout/pages/service.html`
+- `swadharmaservices.in/_layout/pages/services.html`
+- `swadharmaservices.in/_layout/pages/signin.html`
+- `swadharmaservices.in/_layout/pages/territories.html`
+- `swadharmaservices.in/_layout/relink_legacy.py`
+- `swadharmaservices.in/_layout/shell.html`
+- `swadharmaservices.in/about.html`
+- `swadharmaservices.in/app.css`
+- `swadharmaservices.in/app.js`
+- `swadharmaservices.in/build_pages.py`
+- `swadharmaservices.in/catalogue.js`
+- `swadharmaservices.in/classes.html`
+- `swadharmaservices.in/edu.html`
+- `swadharmaservices.in/enrol.html`
+- `swadharmaservices.in/how-it-works.html`
+- `swadharmaservices.in/index.html`
+- `swadharmaservices.in/manual.html`
+- `swadharmaservices.in/network-professionals.html`
+- `swadharmaservices.in/network-temples.html`
+- `swadharmaservices.in/network.html`
+- `swadharmaservices.in/nginx.conf`
+- `swadharmaservices.in/organisations.html`
+- `swadharmaservices.in/page-about.js`
+- `swadharmaservices.in/page-home.js`
+- `swadharmaservices.in/page-network.js`
+- `swadharmaservices.in/page-organisations.js`
+- `swadharmaservices.in/page-professionals.js`
+- `swadharmaservices.in/page-request.js`
+- `swadharmaservices.in/page-service.js`
+- `swadharmaservices.in/page-services.js`
+- `swadharmaservices.in/page-temples.js`
+- `swadharmaservices.in/page-territories.js`
+- `swadharmaservices.in/privacy.html`
+- `swadharmaservices.in/request.html`
+- `swadharmaservices.in/serve_local.py`
+- `swadharmaservices.in/service.html`
+- `swadharmaservices.in/services.html`
+- `swadharmaservices.in/signin.html`
+- `swadharmaservices.in/signup.html`
+- `swadharmaservices.in/territories.html`
+- `swadharmaservices.in/test_browser.mjs`
+- `swadharmaservices.in/test_site.py`
+
+## Session ended 2026-08-22 09:33:12 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-08-22 14:30:46 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-08-24 01:08:04 | Branch: feat/operator-mobile-app
+
+### Modified files (no PUA):
+- `swadharmaservices.in/FRONTEND_REWIRE.md`
+
+## Session ended 2026-08-24 02:50:13 | Branch: feat/operator-mobile-app
+
+## Session ended 2026-08-24 03:29:55 | Branch: feat/operator-mobile-app
+
+## Session ended 2026-09-23 07:48:32 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-24 06:13:07 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-24 06:16:11 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-24 06:30:01 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-24 06:31:47 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-24 06:37:44 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-25 03:56:32 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-27 05:08:17 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-27 05:09:45 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-27 05:29:29 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-27 05:42:33 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-27 05:49:20 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-27 06:35:40 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-27 06:39:25 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-27 14:22:48 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-27 14:23:38 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-27 14:23:53 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-27 14:24:23 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-28 05:14:31 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-29 01:43:37 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-29 01:53:56 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
+
+## Session ended 2026-09-29 02:41:58 | Branch: feat/operator-mobile-app
+
+### Modified files with PUA (Vedic accent markers):
+- `swadharma-server.zip` -- 20 PUA character(s)
+
+### Modified files (no PUA):
+- `swadharmaservices.in/.claude/session-log.md`
