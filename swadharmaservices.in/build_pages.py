@@ -70,7 +70,11 @@ FOOTER_LINKS = [
     ("Enrol as a professional", "/enrol"),
     ("Sign in", "/signin"),
     ("About", "/about"),
+    ("Contact", "/contact"),
+    ("Pricing", "/pricing"),
+    ("Terms", "/terms"),
     ("Privacy", "/privacy"),
+    ("Cancellation &amp; refunds", "/refund"),
     ("Policies", "/policies"),
 ]
 
