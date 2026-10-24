@@ -75,7 +75,7 @@ FOOTER_LINKS = [
     ("Terms", "/terms"),
     ("Privacy", "/privacy"),
     ("Cancellation &amp; refunds", "/refund"),
-    ("Pay Sanskrit Classes tuition", "https://vedavishtaram.in/pay"),
+    ("Subscribe to Sanskrit Classes", "https://vedavishtaram.in/pay"),
 ]
 
 # SideNav contexts. The services context is generated from catalogue.js so a new
