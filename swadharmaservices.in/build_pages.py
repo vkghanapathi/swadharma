@@ -75,6 +75,7 @@ FOOTER_LINKS = [
     ("Terms", "/terms"),
     ("Privacy", "/privacy"),
     ("Cancellation &amp; refunds", "/refund"),
+    ("Organisations without a payment gateway", "/without-gateway"),
     ("Subscribe to Sanskrit Classes", "https://vedavishtaram.in/pay"),
 ]
 
