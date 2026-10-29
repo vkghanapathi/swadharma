@@ -1,0 +1,423 @@
+/* ===========================================================================
+   panchanga.js — the Chandramāna half of the site
+   ---------------------------------------------------------------------------
+   Loads panchanga.json (built from Viyat's tables by _layout/build_panchanga.py)
+   and gives the rest of the site two things it could not do before:
+
+     1. Monthly programmes as DATES. Amāvāsyā, Ekādaśī, Pradoṣa, Saṅkaṣṭī and
+        the rest are derived from the lunar day, so the calendar is generated
+        rather than retyped each year.
+
+     2. Booking in either calendar. A devotee who knows only "my father's tithi
+        is Śrāvaṇa Kṛṣṇa Saptamī" can reach the Gregorian date, and a devotee
+        who knows only the Gregorian date can see what tithi it falls on.
+
+   Everything is one fetch of a static same-origin file, cached for the visit.
+   No auth, and nothing here depends on another service being reachable — the
+   Viyat API is authenticated and a public page cannot call it.
+   ========================================================================= */
+
+window.SW = window.SW || {};
+
+(function () {
+    "use strict";
+
+    /* The table is a JS module, not a JSON fetch, and that is a transfer-size
+       decision rather than a stylistic one. swadharmaservices.in sits behind
+       Firebase Hosting, which re-serves an origin application/json response
+       UNCOMPRESSED: the Cloud Run origin gzips this file to 21 KB and the
+       browser was still receiving 146 KB. Firebase does compress
+       application/javascript. Same bytes, same parse, one seventh the transfer.
+
+       Loaded by injecting a <script> on demand, so the pages that never touch
+       the calendar never pay for it. */
+    var URL_PATH = "/panchanga.data.js";
+    var cache = null;
+    var pending = null;
+
+    var MASA_ORDER = [
+        "Caitra", "Vaiśākha", "Jyeṣṭha", "Āṣāḍha", "Śrāvaṇa", "Bhādrapada",
+        "Āśvayuja", "Kārtika", "Mārgaśira", "Puṣya", "Māgha", "Phālguṇa"
+    ];
+
+    var TITHI_ORDER = [
+        { n: 1, name: "Pratipat" }, { n: 2, name: "Dvitīyā" }, { n: 3, name: "Tṛtīyā" },
+        { n: 4, name: "Caturthī" }, { n: 5, name: "Pañcamī" }, { n: 6, name: "Ṣaṣṭhī" },
+        { n: 7, name: "Saptamī" }, { n: 8, name: "Aṣṭamī" }, { n: 9, name: "Navamī" },
+        { n: 10, name: "Daśamī" }, { n: 11, name: "Ekādaśī" }, { n: 12, name: "Dvādaśī" },
+        { n: 13, name: "Trayodaśī" }, { n: 14, name: "Caturdaśī" }
+    ];
+
+    var GREGORIAN_MONTHS = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    function iso(date) {
+        return date.getFullYear() + "-" +
+            String(date.getMonth() + 1).padStart(2, "0") + "-" +
+            String(date.getDate()).padStart(2, "0");
+    }
+
+    function parseIso(s) {
+        var p = String(s).split("-");
+        return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    }
+
+    /* ── Locality ────────────────────────────────────────────────────────
+       The tables are computed for one place, and which tithi stands at sunrise
+       depends on that place. So "today" here means today WHERE THE PAÑCĀṄGA IS
+       RECKONED, not on the visitor's clock. A devotee opening this at 22:00 in
+       Texas is already on the next day in Mysore, and must be shown Mysore's
+       tithi — that is the one their rite is being scheduled against. */
+
+    function locality() {
+        return (cache && cache.meta && cache.meta.locality) || SW.LOCALITY || {
+            name: "Mysore", region: "Karnataka, India",
+            timezone: "Asia/Kolkata", tzLabel: "IST"
+        };
+    }
+
+    /** Parts of `when` rendered in the locality's timezone. */
+    function localParts(when) {
+        var tz = locality().timezone;
+        try {
+            var fmt = new Intl.DateTimeFormat("en-CA", {
+                timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit",
+                hour: "2-digit", minute: "2-digit", hour12: false
+            });
+            var out = {};
+            fmt.formatToParts(when || new Date()).forEach(function (p) {
+                out[p.type] = p.value;
+            });
+            return out;
+        } catch (e) {
+            // A browser without that timezone falls back to its own clock. The
+            // date shown may then be a day out near midnight; the label still
+            // says which locality is meant, so it is wrong-but-honest rather
+            // than wrong-and-silent.
+            var d = when || new Date();
+            return {
+                year: String(d.getFullYear()),
+                month: String(d.getMonth() + 1).padStart(2, "0"),
+                day: String(d.getDate()).padStart(2, "0"),
+                hour: String(d.getHours()).padStart(2, "0"),
+                minute: String(d.getMinutes()).padStart(2, "0"),
+                approximate: true
+            };
+        }
+    }
+
+    SW.panchanga = {
+        MASA_ORDER: MASA_ORDER,
+        TITHI_ORDER: TITHI_ORDER,
+        GREGORIAN_MONTHS: GREGORIAN_MONTHS,
+        iso: iso,
+        parseIso: parseIso,
+        locality: locality,
+
+        /** Today's date in the locality — the only "today" that means anything here. */
+        todayIso: function (when) {
+            var p = localParts(when);
+            return p.year + "-" + p.month + "-" + p.day;
+        },
+
+        /** "09:14 IST" in the locality's timezone. */
+        localityTime: function (when) {
+            var p = localParts(when);
+            return p.hour + ":" + p.minute + " " + locality().tzLabel;
+        },
+
+        /** The record for the locality's current day, or null if uncovered. */
+        today: function (when) {
+            return SW.panchanga.day(SW.panchanga.todayIso(when));
+        },
+
+        /** Resolves to the whole table. Loaded once per visit. */
+        load: function () {
+            if (cache) return Promise.resolve(cache);
+            if (pending) return pending;
+
+            pending = new Promise(function (resolve, reject) {
+                // Already on the page (a second caller, or a page that chose to
+                // include the data eagerly).
+                if (window.SW_PANCHANGA_DATA) {
+                    return resolve(window.SW_PANCHANGA_DATA);
+                }
+
+                var script = document.createElement("script");
+                script.src = URL_PATH;
+                script.async = true;
+                script.onload = function () {
+                    if (window.SW_PANCHANGA_DATA) resolve(window.SW_PANCHANGA_DATA);
+                    else reject(new Error("panchanga data script loaded but set nothing"));
+                };
+                script.onerror = function () {
+                    reject(new Error("could not load " + URL_PATH));
+                };
+                document.head.appendChild(script);
+            }).then(function (data) {
+                cache = data;
+                pending = null;
+                return data;
+            }).catch(function (e) {
+                pending = null;
+                throw e;
+            });
+
+            return pending;
+        },
+
+        /** True once loaded, so callers can render synchronously afterwards. */
+        ready: function () { return cache !== null; },
+
+        meta: function () { return cache ? cache.meta : null; },
+
+        /** The record for one Gregorian date, or null if outside the table. */
+        day: function (dateIso) {
+            if (!cache) return null;
+            var d = cache.days[dateIso];
+            if (!d) return null;
+            return Object.assign({ date: dateIso }, d);
+        },
+
+        /** Is this date inside the published year at all? */
+        covers: function (dateIso) {
+            return !!(cache && cache.days[dateIso]);
+        },
+
+        /** Every day in a Gregorian month, in order. year is full, month 0-11. */
+        gregorianMonth: function (year, month) {
+            if (!cache) return [];
+            var out = [];
+            var cursor = new Date(year, month, 1);
+            while (cursor.getMonth() === month) {
+                var key = iso(cursor);
+                if (cache.days[key]) out.push(SW.panchanga.day(key));
+                cursor.setDate(cursor.getDate() + 1);
+            }
+            return out;
+        },
+
+        /**
+         * Every day of one lunar month, in order. A year with an intercalary
+         * month has two Jyeṣṭhas; `adhika` picks which. Returns [] if that
+         * combination is not in the table.
+         */
+        lunarMonth: function (masa, adhika) {
+            if (!cache) return [];
+            var want = adhika === true;
+            return Object.keys(cache.days).sort().filter(function (k) {
+                var d = cache.days[k];
+                return d.ms === masa && (d.adhika === true) === want;
+            }).map(SW.panchanga.day);
+        },
+
+        /** Which lunar months the table actually contains, adhika marked. */
+        lunarMonths: function () {
+            if (!cache) return [];
+            var seen = {}, out = [];
+            Object.keys(cache.days).sort().forEach(function (k) {
+                var d = cache.days[k];
+                var id = d.ms + (d.adhika ? "|adhika" : "");
+                if (seen[id]) return;
+                seen[id] = true;
+                out.push({ masa: d.ms, adhika: !!d.adhika, id: id, from: k });
+            });
+            return out;
+        },
+
+        /**
+         * Chandramāna -> Gregorian. Give it {masa, paksha, tithi} and it returns
+         * every matching day in the table, most often one.
+         *
+         * A tithi can be missed by a sunrise (kṣaya) or span two (vṛddhi), so
+         * the second tithi of a day counts as a match too, flagged `late` —
+         * Māgha Pūrṇimā 2027 exists only that way, and a booking form that
+         * ignored it would offer twelve Satyanārāyaṇa dates in a year of
+         * thirteen.
+         */
+        find: function (query) {
+            if (!cache) return [];
+            var out = [];
+            Object.keys(cache.days).sort().forEach(function (k) {
+                var d = cache.days[k];
+                if (query.masa && d.ms !== query.masa) return;
+                if (query.adhika !== undefined && (!!d.adhika) !== !!query.adhika) return;
+                if (query.paksha && d.pk !== query.paksha) return;
+
+                if (query.tithi) {
+                    if (d.tn === query.tithi) {
+                        out.push(Object.assign(SW.panchanga.day(k), { late: false }));
+                    } else if (d.tn2 === query.tithi) {
+                        out.push(Object.assign(SW.panchanga.day(k), {
+                            late: true, lateFrom: d.ti2End || ""
+                        }));
+                    }
+                    return;
+                }
+                out.push(SW.panchanga.day(k));
+            });
+            return out;
+        },
+
+        /**
+         * The next `count` days carrying an observance, optionally only those
+         * belonging to one catalogue service. This is what turns a service page
+         * from prose into dates.
+         */
+        upcoming: function (opts) {
+            if (!cache) return [];
+            var o = opts || {};
+            var from = o.from || SW.panchanga.todayIso();
+            var out = [];
+            var keys = Object.keys(cache.days).sort();
+
+            for (var i = 0; i < keys.length && out.length < (o.count || 6); i += 1) {
+                var k = keys[i];
+                if (k < from) continue;
+                var d = cache.days[k];
+                var obs = (d.ob || []).filter(function (ob) {
+                    if (o.service && ob.service !== o.service) return false;
+                    if (o.short && ob.short !== o.short) return false;
+                    return true;
+                });
+                if (obs.length) {
+                    out.push(Object.assign(SW.panchanga.day(k), { ob: obs }));
+                }
+            }
+            return out;
+        },
+
+        /** Distinct observances in the table, for a filter control. */
+        observanceTypes: function () {
+            if (!cache) return [];
+            var seen = {};
+            Object.keys(cache.days).forEach(function (k) {
+                (cache.days[k].ob || []).forEach(function (ob) {
+                    if (!seen[ob.short]) seen[ob.short] = { short: ob.short, service: ob.service, count: 0 };
+                    seen[ob.short].count += 1;
+                });
+            });
+            return Object.keys(seen).sort().map(function (s) { return seen[s]; });
+        },
+
+        /* ── Formatting ─────────────────────────────────────────────── */
+
+        /** "Śrāvaṇa Śukla Dvādaśī" — how the day is named in the lunar calendar. */
+        lunarLabel: function (d) {
+            if (!d) return "";
+            return (d.adhika ? "Adhika " : "") + d.ms + " " + d.pk + " " + d.ti;
+        },
+
+        /** "Monday, 24 August 2026" */
+        gregorianLabel: function (dateIso) {
+            var dt = parseIso(dateIso);
+            return dt.toLocaleDateString("en-GB", {
+                weekday: "long", day: "numeric", month: "long", year: "numeric"
+            });
+        },
+
+        shortLabel: function (dateIso) {
+            var dt = parseIso(dateIso);
+            return dt.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+        },
+
+        /**
+         * Today, in one object: the Gregorian date, the clock in the locality,
+         * and the tithi. Shared by the landing page and the embeddable widget
+         * so an account holder's portal and this site never disagree about what
+         * day it is.
+         */
+        todayLine: function (when) {
+            var dateIso = SW.panchanga.todayIso(when);
+            var loc = locality();
+            var day = SW.panchanga.day(dateIso);
+
+            return {
+                date: dateIso,
+                gregorian: SW.panchanga.gregorianLabel(dateIso),
+                time: SW.panchanga.localityTime(when),
+                locality: loc,
+                covered: !!day,
+                day: day,
+                lunar: day ? SW.panchanga.lunarLabel(day) : "",
+                nakshatra: day ? day.nk : "",
+                observances: day ? (day.ob || []) : [],
+                printed: day ? day.vs : ""
+            };
+        },
+
+        /**
+         * Renders the welcome strip. `opts.href` makes the tithi a link (the
+         * public site points it at /calendar; a tenant portal may not want to
+         * send people off its own domain, so it is optional).
+         */
+        renderToday: function (node, opts) {
+            if (!node) return;
+            var o = opts || {};
+            var t = SW.panchanga.todayLine();
+            var esc = (window.SW && SW.esc) || function (v) {
+                return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) {
+                    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+                });
+            };
+
+            if (!t.covered) {
+                // Outside the published year. Say the date and stop, rather
+                // than print a tithi we do not have.
+                node.innerHTML =
+                    '<div class="sw-today is-bare">' +
+                    '<span class="sw-today-g">' + esc(t.gregorian) + "</span>" +
+                    '<span class="sw-today-t">' + esc(t.time) + "</span>" +
+                    "</div>";
+                return t;
+            }
+
+            var chips = t.observances.map(function (ob) {
+                return '<span class="sw-today-ob">' + esc(ob.short) + "</span>";
+            }).join("");
+
+            var lunar = '<b>' + esc(t.lunar) + "</b>" +
+                (t.nakshatra ? '<span class="sw-today-n">' + esc(t.nakshatra) + "</span>" : "");
+
+            node.innerHTML =
+                '<div class="sw-today">' +
+                '<span class="sw-today-g">' + esc(t.gregorian) + "</span>" +
+                '<span class="sw-today-t">' + esc(t.time) + "</span>" +
+                '<span class="sw-today-sep" aria-hidden="true">·</span>' +
+                (o.href
+                    ? '<a class="sw-today-l" href="' + esc(o.href) + '">' + lunar + "</a>"
+                    : '<span class="sw-today-l">' + lunar + "</span>") +
+                chips +
+                // Whose tithi this is. Never omitted: the same calendar read
+                // from Texas is still Mysore's reckoning.
+                '<span class="sw-today-loc" title="' + esc(t.locality.note || "") + '">' +
+                esc(t.locality.name) + "</span>" +
+                "</div>";
+
+            return t;
+        },
+
+        /**
+         * The windows to avoid, as the pañcāṅga gives them. Rāhukāla and
+         * durmuhūrta are plain clock ranges. Varjya and the tithi end times
+         * carry the printed markers (M, N, E, te) and are passed through
+         * unchanged — that convention is not documented in the source tables,
+         * and inventing a reading of it would put wrong times in front of
+         * someone arranging a funeral rite.
+         */
+        cautions: function (d) {
+            if (!d) return [];
+            var out = [];
+            if (d.rk) out.push({ label: "Rāhukāla", value: d.rk, exact: true });
+            (d.dm || []).forEach(function (v) {
+                out.push({ label: "Durmuhūrta", value: v, exact: true });
+            });
+            (d.vj || []).forEach(function (v) {
+                out.push({ label: "Varjya", value: v, exact: false });
+            });
+            return out;
+        }
+    };
+})();

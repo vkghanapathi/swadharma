@@ -1,0 +1,153 @@
+openapi: 3.0.3
+info:
+  title: Swadharma Service Module (SSM) API
+  version: "1.0"
+  description: >
+    API v1 for the Swadharma Dharmik Services platform.
+    Project of Dharma Poshanam · Operated by ShukaTech.com.
+    Starter contract — extend per docs/swadharma-app-database-spec.md §7.
+servers:
+  - url: https://api.swadharmaservices.in/api/v1
+paths:
+  /fsp/applications:
+    post:
+      summary: Submit an FSP registration application
+      description: >
+        Target of the web registration form (web/fsp-registration-form.html).
+        Creates users + fsp_profiles + fsp_services + fsp_travel +
+        fsp_availability + consents rows and sets empanelment_status = SUBMITTED.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FspApplication'
+      responses:
+        "201":
+          description: Application accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  applicationId: { type: string, example: SWD-FSP-2026-8KX2QF }
+                  empanelmentStatus: { type: string, example: SUBMITTED }
+        "400": { description: Validation error }
+        "409": { description: Duplicate mobile number }
+
+  /fsp/me:
+    get:
+      summary: Get own profile and empanelment status
+      security: [ { bearerAuth: [] } ]
+      responses:
+        "200": { description: Profile }
+
+  /fsp/me/availability:
+    put:
+      summary: Replace weekly availability template
+      security: [ { bearerAuth: [] } ]
+      responses:
+        "200": { description: Updated }
+
+  /fsp/offers/{offerId}/respond:
+    post:
+      summary: Accept or decline a booking offer
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - { name: offerId, in: path, required: true, schema: { type: string } }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                response: { type: string, enum: [accepted, declined] }
+                declineReason: { type: string }
+      responses:
+        "200": { description: Recorded }
+
+  /fsp/bookings/{bookingId}:
+    get:
+      summary: Booking detail (address fields gated)
+      description: >
+        event_address and event_geo are included ONLY when
+        now() >= event_location_visible_from. Gating is server-side.
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - { name: bookingId, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: Booking }
+
+  /devotee/match:
+    get:
+      summary: Ranked FSP matches for an event
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - { name: pin, in: query, required: true, schema: { type: string } }
+        - { name: category, in: query, required: true, schema: { type: string } }
+        - { name: date, in: query, required: true, schema: { type: string, format: date } }
+      responses:
+        "200": { description: Ranked FSP cards (distance band, never address) }
+
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+  schemas:
+    FspApplication:
+      type: object
+      required: [services, profile, qualifications, affiliation, availability, dravya4uFranchise, consents]
+      properties:
+        services:
+          type: array
+          items:
+            type: string
+            enum: [purohita, archaka, veda_parayana, pachaka, helper,
+                   bhokta, apara_karma, event_coordinator, temple_manager]
+        profile:
+          type: object
+          required: [fullName, mobile, country, address, city, pinZip]
+          properties:
+            fullName: { type: string }
+            dob: { type: string, format: date }
+            mobile: { type: string, description: E.164 }
+            whatsapp: { type: string }
+            email: { type: string, format: email }
+            country: { type: string, enum: [IN, US, TT, OTHER] }
+            address: { type: string }
+            city: { type: string }
+            pinZip: { type: string }
+        qualifications:
+          type: object
+          properties:
+            experienceYears: { type: string }
+            vedaShakha: { type: string }
+            sampradaya: { type: string }
+            trainingInstitution: { type: string }
+            languages: { type: string }
+            specializations: { type: string }
+            certifications: { type: string }
+        affiliation:
+          type: object
+          properties:
+            affiliated: { type: string, enum: [yes, no] }
+            details: { type: string }
+            restriction: { type: string, enum: [none, partial, na] }
+        availability:
+          type: object
+          properties:
+            days: { type: array, items: { type: string } }
+            slots: { type: array, items: { type: string } }
+            noticePeriod: { type: string }
+            travel: { type: array, items: { type: string } }
+            passport: { type: string, enum: [yes, no] }
+            longTermPlacement: { type: string, enum: [yes, no, maybe] }
+        dravya4uFranchise: { type: string, enum: [yes, info, no] }
+        consents:
+          type: object
+          required: [pinSharing, verification, communication, declaration]
+          properties:
+            pinSharing: { type: boolean }
+            verification: { type: boolean }
+            communication: { type: boolean }
+            declaration: { type: boolean }
+            timestamp: { type: string, format: date-time }

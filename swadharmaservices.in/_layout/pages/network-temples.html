@@ -1,0 +1,70 @@
+title: Temples &amp; Organisations · The Swadharma Network
+description: Empanelled Kṣetrams, temples and trusts on Swadharma — each with its own service catalogue and booking portal, browsable by territory.
+route: /network/temples
+context: network
+crumbs: Network>/network | Temples &amp; Organisations
+scripts: page-temples.js
+out: network-temples.html
+---
+<div class="sw-page-head">
+    <span class="mark">Directory</span>
+    <h1 class="sw-h1">Temples &amp; organisations</h1>
+    <p class="sub">
+        Institutions empanelled with Swadharma. Each runs its own Swadharma address, publishes
+        its own service catalogue and takes its own bookings — <em>collections settle to the
+        institution, not to the platform</em>.
+    </p>
+</div>
+
+<div class="terr-bar" id="orgTerr"></div>
+
+<form class="filters" id="orgFilters" role="search" autocomplete="off">
+    <div class="field">
+        <label for="gName">Name</label>
+        <input type="search" id="gName" placeholder="Temple or trust" maxlength="80" />
+    </div>
+    <div class="field">
+        <label for="gPin">PIN / ZIP</label>
+        <input type="search" id="gPin" placeholder="533107" maxlength="12" inputmode="numeric" />
+    </div>
+    <div class="field">
+        <label for="gState">State</label>
+        <input type="search" id="gState" placeholder="Andhra Pradesh" maxlength="60" />
+    </div>
+    <div class="field">
+        <label for="gCountry">Country</label>
+        <select id="gCountry">
+            <option value="">Any country</option>
+            <option value="IN">India</option>
+            <option value="US">United States</option>
+        </select>
+    </div>
+    <button type="button" class="btn-clear" id="gClear">Clear</button>
+</form>
+
+<section class="sw-sec">
+    <div class="sw-sec-head">
+        <h2>Organisations</h2>
+        <span class="sw-count" id="orgCount"></span>
+    </div>
+    <div class="dir-grid" id="orgGrid"></div>
+    <div class="dir-state" id="orgState" aria-live="polite">Loading organisations…</div>
+    <button type="button" class="dir-more" id="orgMore" hidden>Show more</button>
+</section>
+
+<section class="sw-sec">
+    <div class="sw-sec-head"><h2>Operational nodes</h2></div>
+    <p class="sub">Kṣetrams Swadharma works with directly, whether or not they run their own portal.</p>
+    <div class="dir-grid" id="orgNodes"></div>
+</section>
+
+<section class="sw-sec">
+    <div class="cta-band">
+        <div>
+            <h2>Empanel your temple or trust</h2>
+            <p>Your own branded portal at swadharma.yourdomain, wired to the Ṛtvik network,
+               with payments settling to your own account.</p>
+        </div>
+        <a class="btn" href="/organisations">See the offering</a>
+    </div>
+</section>

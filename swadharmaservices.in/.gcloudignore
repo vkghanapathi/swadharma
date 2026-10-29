@@ -1,0 +1,40 @@
+# What `gcloud run deploy --source swadharmaservices.in` uploads to Cloud Build.
+#
+# This is NOT the same question as what the Dockerfile COPYs. Without this file
+# gcloud uploads the whole directory to a Cloud Build source bucket, and this
+# directory holds things that must not go there:
+#
+#   Edu/          student rosters — personal data. The repository already
+#                 refuses them (.gitignore, "keep student rosters out of the
+#                 repository"); a GCS build bucket is no better a home.
+#   _layout/      the page sources, plus build_pages.py and relink_legacy.py
+#   *.md          DEPLOY_RUNBOOK, ONBOARDING_API, PROFESSIONAL_ENROLMENT_API —
+#                 internal notes and API contracts
+#   test_*.py     the test suites
+#   .claude/      session logs
+#
+# So this is an allowlist, not a denylist: everything is excluded, then the five
+# things the image actually needs are added back. A file dropped into this
+# folder later is excluded by default rather than uploaded by default, which is
+# the safer way round for a directory that has held personal data.
+
+*
+
+!Dockerfile
+!nginx.conf
+!*.html
+!*.css
+!*.js
+
+# Deity images for the Seva Karta wall. Re-including a file inside an excluded
+# directory needs the directory re-included FIRST — `!images/*.jpg` on its own
+# uploads nothing, because `*` above already excluded the folder it lives in.
+# Verified against gcloud, not assumed: without the `!images/` line the manifest
+# contains zero of these files while looking perfectly reasonable.
+!images/
+!images/*.jpg
+
+# There is deliberately no !*.json. The site serves no JSON — the pañcāṅga ships
+# as panchanga.data.js, covered by the rule above — and this workspace has
+# Firebase service-account keys sitting in neighbouring folders. A blanket
+# !*.json would let one into a build context the moment somebody copied it in.

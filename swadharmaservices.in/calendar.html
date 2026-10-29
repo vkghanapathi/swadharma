@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Calendar · Swadharma Services</title>
+<meta name="description" content="The monthly programmes as dates, not prose — Amāvāsyā, Ekādaśī, Pradoṣa, Saṅkaṣṭī, Māsa Śivarātri and Mahālaya, with tithi, nakṣatra and the muhūrta windows to avoid. Browse by Gregorian month or by Chandramāna māsa, and book from any day." />
+<link rel="canonical" href="https://swadharmaservices.in/calendar" />
+<meta property="og:title" content="Calendar · Swadharma Services" />
+<meta property="og:description" content="The monthly programmes as dates, not prose — Amāvāsyā, Ekādaśī, Pradoṣa, Saṅkaṣṭī, Māsa Śivarātri and Mahālaya, with tithi, nakṣatra and the muhūrta windows to avoid. Browse by Gregorian month or by Chandramāna māsa, and book from any day." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://swadharmaservices.in/calendar" />
+<link rel="icon" href="https://dharmaposhanam.in/favicon.ico" />
+<link rel="stylesheet" href="/app.css" />
+</head>
+<body class="">
+
+<a class="sw-skip" href="#main">Skip to content</a>
+<div class="band" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<!-- TopNav — global destinations only. Context lives in the SideNav; the two
+     never repeat each other (spec section 10). -->
+<nav class="sw-top" aria-label="Primary">
+    <a class="brand" href="/">
+        <span class="glyph">॥</span>
+        <span class="wm"><b>Swadharma Services</b><small>Dharma Satram · धर्म सत्रम्</small></span>
+    </a>
+    <div class="sw-top-links">
+        <a href="/services">Services</a>
+        <a href="/suite">The Suite</a>
+        <a href="/calendar">Calendar</a>
+        <a href="/network">Network</a>
+        <a href="/territories">Territories</a>
+        <a href="/organisations">Organisations</a>
+        <a href="/how-it-works">How it Works</a>
+        <a href="/about">About</a>
+    </div>
+    <div class="sw-top-act">
+        <a class="sw-signin" href="/signin">Sign In</a>
+        <a class="sw-cta" href="/request">Start a Service Request</a>
+        <button class="sw-burger" id="swBurger" type="button" aria-label="Open menu" aria-controls="swDrawer"><i></i></button>
+    </div>
+</nav>
+
+<div class="sw-drawer" id="swDrawer" hidden>
+    <div class="sw-drawer-panel" role="dialog" aria-label="Menu" aria-modal="true">
+        <div class="sw-drawer-head">
+            <b>Swadharma</b>
+            <button class="sw-drawer-close" type="button" aria-label="Close menu">&times;</button>
+        </div>
+        <a href="/services">Services</a>
+        <a href="/suite">The Suite</a>
+        <a href="/calendar">Calendar</a>
+        <a href="/network">Network</a>
+        <a href="/territories">Territories</a>
+        <a href="/organisations">Organisations</a>
+        <a href="/how-it-works">How it Works</a>
+        <a href="/about">About</a>
+        <div class="sw-drawer-sep">Your account</div>
+        <a href="/signin">Sign in</a>
+        <a href="/enrol">Enrol as a professional</a>
+        <a href="/signup">Subscribe an organisation</a>
+        <div class="sw-drawer-sep">Reference</div>
+        <a href="/manual">Service Manual</a>
+        <a href="/classes">Sanskrit Classes</a>
+        <a href="/privacy">Privacy</a>
+        <a class="sw-cta" href="/request">Start a Service Request</a>
+    </div>
+</div>
+
+<div class="sw-shell">
+<aside class="sw-side">
+    <div class="sw-side-group">
+        <h2>Services</h2>
+        <div class="sw-side-inner">
+            <a href="/services">All services</a>
+            <a href="/calendar">Calendar</a>
+            <a href="/services/ceremonies">Ceremonies & Daivikam</a>
+            <a href="/services/shraaddha">Śrāddha & Apara Karma</a>
+            <a href="/services/homa">Homa & Yajña</a>
+            <a href="/services/samskaras">The Sixteen Saṃskāras</a>
+            <a href="/services/vedic-events">Vedic Events & Ṛtvik Support</a>
+            <a href="/services/classes">Classes, Sanskrit & Training</a>
+            <a href="/services/dravya">Dravya — Materials & Door Delivery</a>
+            <a href="/services/pilgrim-support">Pilgrim Support & Remote Seva</a>
+            <a href="/services/knowledge-hub">Swadharma Knowledge Hub</a>
+        </div>
+        <p class="sw-side-note">Every service page carries a Start a Service Request action.</p>
+    </div>
+</aside>
+<main class="sw-main" id="main">
+<nav class="sw-crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span class="sep">/</span>
+    <span aria-current="page">Calendar</span>
+</nav>
+<div class="sw-page-head">
+    <span class="mark">Pañcāṅga</span>
+    <h1 class="sw-h1">The monthly programmes, <em>as dates</em></h1>
+    <p class="sub">
+        Every recurring observance is derived from the lunar day rather than kept as a list,
+        so the dates are right for the whole year. Each day shows its tithi and nakṣatra, the
+        muhūrta windows to avoid, and a way to book the rite that belongs to it.
+    </p>
+    <div class="notice gold" id="calLocality">
+        <b>These dates are reckoned for Mysore, India.</b>
+        A tithi begins and ends at a moment in time, so which one stands at sunrise depends on
+        where you are — and sunrise, rāhukāla and durmuhūrta are local outright. Every Swadharma
+        account is set to its own locality when the account is created; this public calendar,
+        and the demo installation, use Mysore.
+    </div>
+</div>
+
+<!-- Calendar switch. The whole point of the amalgamated table is that neither
+     reckoning is the primary one. -->
+<div class="cal-switch" role="tablist" aria-label="Calendar">
+    <button type="button" role="tab" id="calTabG" aria-selected="true">Gregorian month</button>
+    <button type="button" role="tab" id="calTabC" aria-selected="false">Chandramāna māsa</button>
+</div>
+
+<div class="cal-bar">
+    <button type="button" class="cal-nav" id="calPrev" aria-label="Previous">&#8592;</button>
+    <div class="cal-pick">
+        <span id="calGregorian">
+            <select id="calMonth" aria-label="Month"></select>
+            <select id="calYear" aria-label="Year"></select>
+        </span>
+        <span id="calChandra" hidden>
+            <select id="calMasa" aria-label="Māsa"></select>
+        </span>
+    </div>
+    <button type="button" class="cal-nav" id="calNext" aria-label="Next">&#8594;</button>
+    <select id="calFilter" aria-label="Show only">
+        <option value="">All observances</option>
+    </select>
+    <button type="button" class="btn-clear" id="calToday">Today</button>
+</div>
+
+<p class="cal-caption" id="calCaption"></p>
+
+<div id="calBody">
+    <div class="dir-state">Loading the pañcāṅga…</div>
+</div>
+
+<!-- Day detail, opened from a cell. -->
+<div class="cal-detail" id="calDetail" hidden></div>
+
+<section class="sw-sec" style="margin-top:36px">
+    <div class="sw-sec-head"><h2>Book by Chandramāna date</h2></div>
+    <p class="sub">
+        If you know the rite by its lunar date — a Māsika Śrāddha on the tithi of a death, say —
+        name it here and we will show you when it falls.
+    </p>
+    <form class="filters" id="lunarLookup" autocomplete="off">
+        <div class="field">
+            <label for="luMasa">Māsa</label>
+            <select id="luMasa"></select>
+        </div>
+        <div class="field">
+            <label for="luPaksha">Pakṣa</label>
+            <select id="luPaksha">
+                <option value="Śukla">Śukla — waxing</option>
+                <option value="Kṛṣṇa">Kṛṣṇa — waning</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="luTithi">Tithi</label>
+            <select id="luTithi"></select>
+        </div>
+        <div class="field">
+            <label for="luService">For which service</label>
+            <select id="luService"><option value="">Not sure yet</option></select>
+        </div>
+        <button type="submit" class="btn sm">Find the date</button>
+    </form>
+    <div id="lunarResult"></div>
+</section>
+
+<section class="sw-sec">
+    <div class="notice plain" id="calSource"></div>
+</section>
+</main>
+</div>
+
+<footer class="sw-foot">
+    <p class="fshloka">॥ स्वधर्म ॥</p>
+    <p>Swadharma Services · Dharma Satram — under <a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">Dharma Poshanam Inc</a></p>
+    <div class="flinks">
+        <a href="/services">Services</a>
+        <a href="/suite">The Suite</a>
+        <a href="/calendar">Calendar</a>
+        <a href="/network">Network</a>
+        <a href="/territories">Territories</a>
+        <a href="/organisations">Organisations</a>
+        <a href="/how-it-works">How it works</a>
+        <a href="/manual">Service Manual</a>
+        <a href="/classes">Sanskrit Classes</a>
+        <a href="/enrol">Enrol as a professional</a>
+        <a href="/signin">Sign in</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/refund">Cancellation &amp; refunds</a>
+        <a href="/without-gateway">Organisations without a payment gateway</a>
+        <a href="https://vedavishtaram.in/pay">Subscribe to Sanskrit Classes</a>
+    </div>
+
+    <div class="foffices">
+        <div><b>McKinney · Texas</b>800 Stacy Rd, McKinney, TX 75070, USA</div>
+        <div><b>Frisco · Texas</b>14600 Marigold Dr, Frisco, TX 75035, USA</div>
+        <div><b>Omaha · Nebraska</b>5703 S 159th Street, Omaha, NE 68135, USA</div>
+        <div><b>Mysore · India</b><a href="https://dharmaposhanam.in" target="_blank" rel="noreferrer">dharmaposhanam.in</a></div>
+    </div>
+
+    <p class="fnodes">
+        <b>Operational nodes</b><br>
+        Datta Mukti Kshetram, Rajahmundry · Vaivasvatam, Rajahmundry ·
+        Jaya Durga Teertham, Vijayawada · Sripadavallabha Anagha Datta Kshetram, Pithapuram
+    </p>
+    <p class="fine">EIN 85-3784241 · 501(c)(3) tax-exempt since 2020</p>
+    <p class="fine">Connect · Engage · Empower · स्वधर्म</p>
+    <p class="fine credit">Product designed by VKG Foundation; Implemented by SD Ventures and Supplies for Dharma Poshanam, licensee</p>
+</footer>
+
+<script src="/catalogue.js"></script>
+<script src="/app.js"></script>
+<script src="/panchanga.js"></script>
+<script src="/page-calendar.js"></script>
+</body>
+</html>

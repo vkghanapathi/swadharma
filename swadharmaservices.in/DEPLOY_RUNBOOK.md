@@ -104,8 +104,9 @@ gcloud run services update vitta-api --project aayojana --region asia-south1 \
 
 ## Step 3 — Redeploy the static signup site (has the Vitta wiring)
 ```bash
-# Copy the current index.html + signup.html into the Cloud Run build dir, then:
-gcloud run deploy swadharmaservices --source <build-dir> \
+# Run from the repository root. The build dir is this folder — it holds the
+# Dockerfile and nginx.conf, so there is nothing to copy anywhere first.
+gcloud run deploy swadharmaservices --source swadharmaservices.in \
   --project swadharma-service-management --region asia-south1 \
   --allow-unauthenticated --port 8080 --min-instances 0 --max-instances 2 --quiet
 ```
@@ -133,3 +134,24 @@ curl -s -X POST https://vitta-api-ijxrwoeiyq-el.a.run.app/portal/signup-request 
 - All new env vars default to empty → endpoints degrade to 503 / confirmation fallback
   if a value is missing, so a partial rollout never charges incorrectly.
 - Keep Stripe/Razorpay in TEST mode until Step 4 passes, then swap to live keys.
+
+---
+
+## Static site — the public pages
+
+The public front end was rewired on 2026-08-22 into a multi-route site with a
+generated shell. **Do not hand-edit the root `*.html` files that build_pages.py
+owns** — see [FRONTEND_REWIRE.md](FRONTEND_REWIRE.md).
+
+Before any `gcloud run deploy swadharmaservices`:
+
+```bash
+cd swadharmaservices.in
+python build_pages.py --check    # committed pages match _layout/
+python test_site.py              # links, routes, assets, markup
+node   test_browser.mjs          # every page in a real DOM (needs SW_JSDOM)
+```
+
+The Dockerfile now copies `*.js` as well as `*.html` and `*.css`. A build that
+skipped them would serve pages that render but do not work.
+

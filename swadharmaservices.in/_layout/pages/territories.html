@@ -1,0 +1,58 @@
+title: Territories · Swadharma Services
+description: Browse the Swadharma network geographically — Country to State or Province to Region to City and PIN/ZIP. India and the United States.
+route: /territories
+context: network
+crumbs: Territories
+scripts: page-territories.js
+---
+<div class="sw-page-head">
+    <span class="mark">Geographic discovery</span>
+    <h1 class="sw-h1">Browse by <em>territory</em></h1>
+    <p class="sub">
+        Country → State or Province → Region → City → PIN&nbsp;/&nbsp;ZIP. Pick a territory and it
+        stays selected while you move through the network, the services and a service request.
+    </p>
+</div>
+
+<div class="terr-bar" id="terrBar"></div>
+
+<section class="sw-sec">
+    <div class="terr-cols" id="terrCols">
+        <div class="terr-col"><h3>Country</h3><p class="empty">Loading…</p></div>
+    </div>
+    <p class="rail-note">
+        Counts are live listings — professionals plus organisations. A territory with a zero count
+        is one Swadharma operates in but has not yet published listings for; a service request
+        there still reaches the network.
+    </p>
+</section>
+
+<section class="sw-sec" id="terrResults" hidden>
+    <div class="sw-sec-head">
+        <h2 id="terrResultsTitle">In this territory</h2>
+        <a class="more" href="/network">Whole network →</a>
+    </div>
+
+    <h3 style="font-size:15px;color:var(--sw-navy);margin:0 0 10px">Professionals</h3>
+    <div class="dir-grid" id="terrPros"></div>
+    <div class="dir-state" id="terrProsState" aria-live="polite">Loading…</div>
+
+    <h3 style="font-size:15px;color:var(--sw-navy);margin:26px 0 10px">Temples &amp; organisations</h3>
+    <div class="dir-grid" id="terrOrgs"></div>
+    <div class="dir-state" id="terrOrgsState" aria-live="polite">Loading…</div>
+
+    <div class="btn-row" style="margin-top:24px">
+        <a class="btn" href="/request" id="terrRequest">Start a Service Request here</a>
+        <a class="btn ghost" href="/network/professionals" id="terrAllPros">All professionals here</a>
+    </div>
+</section>
+
+<section class="sw-sec">
+    <div class="sw-sec-head"><h2>Where Swadharma operates</h2></div>
+    <div class="tbl-wrap">
+        <table class="tbl">
+            <thead><tr><th>Country</th><th>State / Province</th><th>Region</th><th>Cities</th></tr></thead>
+            <tbody id="terrSeed"></tbody>
+        </table>
+    </div>
+</section>

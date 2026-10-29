@@ -1,0 +1,93 @@
+title: Sign In · Swadharma Services
+description: Sign in to Swadharma as a devotee, a service professional or an institution — or join the network.
+route: /signin
+context: none
+scripts:
+---
+<div class="home-body">
+    <nav class="sw-crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span class="sep">/</span>
+        <span aria-current="page">Sign In</span>
+    </nav>
+
+    <div class="sw-page-head">
+        <span class="mark">The Swadharma App</span>
+        <h1 class="sw-h1">Sign in to <em>your</em> Swadharma</h1>
+        <p class="sub">
+            The public site is for finding and requesting. The signed-in application is where the
+            work happens — your engagements, your schedule, your institution's console.
+        </p>
+    </div>
+
+    <!--! STATUS PILLS ARE LOAD-BEARING: "Live" means the destination exists today; "Soon" means
+          it is specified but not built, and the card is deliberately not a link so it cannot 404.
+          Promote a card to a link only when its destination is actually deployed.
+
+          Sign-in URLs point at the DEMO installation, swadharma.dharmaposhanam.in (VKG, 2026-08-12).
+          They pointed at swadharma.dattamukti.in until then — a live customer's installation, with
+          real devotees, real addresses and a real admin console. Prospects clicking "Office sign-in"
+          were landing in another institution's back office. Never point these at a customer.
+
+          This block opens with the build-only marker, so build_pages.py strips it and the
+          incident note above never ships in the served page. -->
+    <section class="sw-sec">
+        <div class="sw-sec-head"><h2>Sign in</h2></div>
+        <div class="hubgrid">
+            <a class="hub" href="https://swadharma.dharmaposhanam.in/login">
+                <b>Devotees <span class="pill live">Live</span></b>
+                <span>Book a seva, see your engagements, view live arrival.</span>
+            </a>
+            <a class="hub" href="https://swadharma.dharmaposhanam.in/provider">
+                <b>Service professionals <span class="pill live">Live</span></b>
+                <span>Your schedule, availability and today's engagements.</span>
+            </a>
+            <a class="hub" href="https://swadharma.dharmaposhanam.in/admin">
+                <b>Institutions <span class="pill live">Live</span></b>
+                <span>Administrator and operator console for your temple or trust.</span>
+            </a>
+        </div>
+        <p class="rail-note">
+            Each institution has its own Swadharma address. The links above open the demo
+            installation — <a class="dir-link" href="https://swadharma.dharmaposhanam.in">swadharma.dharmaposhanam.in</a>.
+            If your temple has its own portal, sign in there instead.
+        </p>
+    </section>
+
+    <section class="sw-sec">
+        <div class="sw-sec-head"><h2>Not on Swadharma yet?</h2></div>
+        <div class="hubgrid">
+            <a class="hub" href="/signup">
+                <b>Empanel an institution <span class="pill live">Live</span></b>
+                <span>Onboard your temple, trust or organisation and get your own address.</span>
+            </a>
+            <a class="hub" href="/enrol">
+                <b>Enrol as a professional <span class="pill live">Live</span></b>
+                <span>Purohita, Archaka, Decorator, Cook, Helper or Event Coordinator.
+                Register, book your empanelment interview, get a listed profile page.</span>
+            </a>
+            <a class="hub" href="/request">
+                <b>Just need a ceremony arranged <span class="pill live">Live</span></b>
+                <span>No account needed. Start a service request and we will come back to you.</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="sw-sec">
+        <div class="sw-sec-head"><h2>Find your way around</h2></div>
+        <div class="hubgrid">
+            <a class="hub" href="/manual">
+                <b>Service Manual <span class="pill live">Live</span></b>
+                <span>Who does what — devotees, professionals, institutions and the platform.</span>
+            </a>
+            <a class="hub" href="/how-it-works">
+                <b>How it works <span class="pill live">Live</span></b>
+                <span>Matching, verification, and who takes your payment on each route.</span>
+            </a>
+            <a class="hub" href="/privacy">
+                <b>Privacy Policy <span class="pill live">Live</span></b>
+                <span>What we collect, who receives it, and what we never store.</span>
+            </a>
+        </div>
+    </section>
+</div>

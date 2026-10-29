@@ -49,3 +49,17 @@ logs/
 # OS generated files
 Thumbs.db
 ehthumbs.db
+
+# Office lock files
+~$*
+
+# Nested repository with its own remote (Dharma-Poshanam/swadharma-service-management).
+# Tracked there, not here — an accidental `git add -A` turns it into a gitlink
+# that clones of this repo cannot resolve.
+swadharma-service-management/
+
+# Student rosters are personal data and must never enter the repository.
+# The Dockerfile copies only *.html and *.css, so this folder is not published
+# by a deploy — but it sits in the deploy directory, one `git add .` away from
+# being committed to a remote. Ignored so that cannot happen by accident.
+swadharmaservices.in/Edu/
