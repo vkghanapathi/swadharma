@@ -46,6 +46,8 @@ the ones the UI reasons about.
 from __future__ import annotations
 
 import json
+import os
+import re
 import sys
 from collections import OrderedDict
 from pathlib import Path
@@ -54,15 +56,22 @@ ROOT = Path(__file__).parent.parent
 SOURCE = Path(
     r"C:\Users\Datta\Documents\VK\Code Programming\viyat\panchangam_data\panchangam_en.json"
 )
+# The Telugu edition of the same tables. Its tithi end times carry unambiguous
+# markers (ఉ morning, ప day, సా evening, రా night, తె before dawn); the English
+# edition folds ఉ and రా into one "M", so "M 7.00" there is 19:00 as often as
+# 07:00. Tithi clock times are read from here (VKG 2026-11-21, Ishti ruling).
+SOURCE_TE = SOURCE.with_name("panchangam_te.json")
 TARGET = ROOT / "panchanga.data.js"
 
 # The tenant portals need the same table. It is written to both places by this
 # one script rather than copied by hand, because two copies of a year of tithis
 # drifting apart is the sort of thing nobody notices until a Śrāddha is booked
-# on the wrong day. Skipped silently if the SSM checkout is not beside this one.
-PORTAL_TARGET = (
-    ROOT.parent / "swadharma-service-management" / "frontend" / "public" / "panchanga.data.js"
-)
+# on the wrong day. Skipped silently if the portal checkout is not beside this
+# one. The portal is swadharma_2026 (the old SSM checkout is frozen, 2026-10-29);
+# PANCHANGA_PORTAL_TARGET overrides the path, e.g. from a git worktree.
+PORTAL_TARGET = Path(os.environ.get("PANCHANGA_PORTAL_TARGET") or (
+    ROOT.parent / "swadharma_2026" / "frontend" / "public" / "panchanga.data.js"
+))
 
 # ── Vocabulary ───────────────────────────────────────────────────────────
 # Every value the source can hold, mapped to (display name, number). The
@@ -127,13 +136,7 @@ WEEKDAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Sa
 # somebody retypes each year.
 
 MONTHLY = {
-    ("Kṛṣṇa", 30): [{
-        "name": "Amāvāsyā — Darśa Śrāddha & Tarpaṇam",
-        "short": "Amāvāsyā",
-        "service": "shraaddha",
-        "kala": "Aparāhṇa",
-        "note": "The monthly offering to the pitṛs. Performed in the afternoon.",
-    }],
+    # Amāvāsyā is not here: it is a clock-window rule now (TIME_RULES below).
     ("Śukla", 15): [{
         "name": "Pūrṇimā — Satyanārāyaṇa Vratam",
         "short": "Pūrṇimā",
@@ -208,6 +211,137 @@ MONTHLY = {
         "note": "Monthly Subrahmaṇya observance.",
     }],
 }
+
+# ── Clock-window observances (VKG 2026-11-21) ────────────────────────────
+# Some rites are owed on the day a tithi is PRESENT during a stretch of clock
+# time, not on the day it holds at sunrise:
+#
+#   "Ishti will be performed between 7-1 PM; if Pratipat is present during
+#    that time, we will perform on that day."
+#   "Amaavaasya = Pinda Pitru Yajna, Tarpanam; if Amaavaasya present from
+#    12 Noon."
+#
+# `at` is a moment the tithi must cover; `during` is a window it must touch.
+# Times are minutes from local midnight, Mysore (the table's locality).
+# `code` is what other programs match on (the portal's Ishti Seva slots).
+TIME_RULES = [
+    {
+        "tithi": 1,                       # Pratipat, either pakṣa
+        "during": (7 * 60, 13 * 60),
+        "ob": {
+            "code": "ISHTI",
+            "name": "Pratipat — Iṣṭi",
+            "short": "Iṣṭi",
+            "service": "ceremonies",
+            "kala": "7 AM – 1 PM",
+            "note": "Iṣṭi is performed between 7 AM and 1 PM, on the day "
+                    "Pratipat is present in that window.",
+        },
+    },
+    {
+        "tithi": 30,                      # Amāvāsyā
+        "at": 12 * 60,
+        "ob": {
+            "code": "PINDA_PITR_YAJNA",
+            "name": "Amāvāsyā — Piṇḍa Pitṛ Yajña & Tarpaṇam",
+            "short": "Piṇḍa Pitṛ Yajña",
+            "service": "shraaddha",
+            "kala": "From 12 noon",
+            "note": "On the day Amāvāsyā is present at 12 noon.",
+        },
+    },
+]
+
+# Telugu time markers -> how a printed "h.mm" becomes minutes from the day's
+# own midnight. Checked against the whole table: with this reading 388 of 391
+# consecutive tithi durations fall in 18.5–27.5 hours; the other three sit
+# beside two source slips (2026-08-01, 2026-09-26), which are reported.
+TE_MARK = {
+    "ఉ": lambda h: h,                             # udayaṁ, morning
+    "ప": lambda h: h if h >= 11 else h + 12,      # pagalu, midday
+    "మ": lambda h: h if h >= 11 else h + 12,      # madhyāhnaṁ
+    "సా": lambda h: h + 12,                       # sāyaṁ, evening
+    "రా": lambda h: h + 12 if h >= 6 else h + 24,  # rātri, night (past 12 = next day)
+    "తె": lambda h: h + 24,                       # tellavāru, before next dawn
+}
+TE_TIME_RE = re.compile(r"^(\S+)\s+(\d{1,2})[.,](\d{2})")
+TE_FULL = "పూర్తి"     # pūrti: the tithi runs past the next sunrise
+
+
+def te_minutes(value: str | None) -> int | None | str:
+    """Minutes from the day's midnight; None for pūrti; "?" when unreadable."""
+    v = norm(value)
+    if not v:
+        return "?"
+    if v.startswith(TE_FULL):
+        return None
+    m = TE_TIME_RE.match(v)
+    if not m or m.group(1) not in TE_MARK:
+        return "?"
+    return TE_MARK[m.group(1)](int(m.group(2))) * 60 + int(m.group(3))
+
+
+def clock(minutes: int) -> str:
+    """'19:00', or '05:07 (+1)' for a time after the following midnight."""
+    plus, rest = divmod(minutes, 24 * 60)
+    return f"{rest // 60:02d}:{rest % 60:02d}" + (f" (+{plus})" if plus else "")
+
+
+def apply_time_rules(days: "OrderedDict[str, dict]", te: dict) -> None:
+    """Tithi clock times from the Telugu edition, then the TIME_RULES."""
+    ordered = list(days)
+    ends = []          # (absolute minute, tithi number), in order
+    unreadable = set()
+    for i, date in enumerate(ordered):
+        day, row = days[date], te.get(date, {})
+        for key, tn, out in (("tithiTime1", day["tn"], "tiEndMin"),
+                             ("tithiTime2", day.get("tn2"), "ti2EndMin")):
+            if tn is None:
+                continue
+            m = te_minutes(row.get(key))
+            if m == "?":
+                unreadable.add(i)
+                warnings.append(f"{date}: Telugu {key} {row.get(key)!r} unreadable — "
+                                "clock-window rules skip the days beside it")
+                continue
+            if m is None:       # pūrti: no end on this day
+                continue
+            day[out] = m
+            ends.append((i * 1440 + m, tn, i))
+
+    # A tithi runs from the previous end to its own. A duration outside any
+    # real tithi means a misprint on one side: both neighbours are unsafe.
+    segments = []
+    for (a, _, ia), (b, tn, ib) in zip(ends, ends[1:]):
+        hours = (b - a) / 60
+        if not 18.5 <= hours <= 27.5:
+            unreadable.update({ia, ib})
+            warnings.append(f"{ordered[ia]}..{ordered[ib]}: a tithi of {hours:.1f} h — "
+                            "misprint upstream; clock-window rules skip these days")
+            continue
+        segments.append((a, b, tn, ia, ib))
+
+    for i, date in enumerate(ordered):
+        day0 = i * 1440
+        for rule in TIME_RULES:
+            if "at" in rule:
+                lo = hi = day0 + rule["at"]
+            else:
+                lo, hi = day0 + rule["during"][0], day0 + rule["during"][1]
+            if lo == hi:      # present AT a moment
+                hits = [s for s in segments if s[2] == rule["tithi"] and s[0] <= lo < s[1]]
+            else:             # present at any time DURING a window
+                hits = [s for s in segments if s[2] == rule["tithi"] and s[0] < hi and s[1] > lo]
+            if not hits:
+                continue
+            if any(j in unreadable for s in hits for j in (s[3], s[4])):
+                continue
+            a, b = hits[0][0], hits[0][1]
+            entry = dict(rule["ob"])
+            entry["tithiFrom"] = clock(a - day0) if a >= day0 else clock(a - day0 + 1440) + " (-1)"
+            entry["tithiTo"] = clock(b - day0)
+            days[date].setdefault("ob", []).append(entry)
+
 
 # Mahālaya Pakṣa — the whole dark fortnight of Bhādrapada, when Śrāddha is owed
 # for every ancestor rather than one. A pakṣa-level rule, not a tithi one.
@@ -485,6 +619,12 @@ def build() -> dict:
 
         days[date] = day
 
+    # Clock-window observances need the Telugu edition's tithi times.
+    if SOURCE_TE.is_file():
+        apply_time_rules(days, json.loads(SOURCE_TE.read_text(encoding="utf-8")))
+    else:
+        problems.append(f"Telugu pañcāṅga not found at {SOURCE_TE}; Iṣṭi and Amāvāsyā days cannot be reckoned")
+
     dates = list(days)
     return {
         "meta": {
@@ -561,7 +701,7 @@ def main() -> int:
             not PORTAL_TARGET.is_file()
             or PORTAL_TARGET.read_text(encoding="utf-8") != text
         ):
-            stale.append(str(PORTAL_TARGET.relative_to(ROOT.parent)))
+            stale.append(str(PORTAL_TARGET))
         if stale:
             print("Stale (run python _layout/build_panchanga.py): " + ", ".join(stale))
             return 1
@@ -584,7 +724,7 @@ def main() -> int:
     if portal_stale:
         with open(PORTAL_TARGET, "w", encoding="utf-8", newline="") as fh:
             fh.write(text)
-        print(f"Also wrote {PORTAL_TARGET.relative_to(ROOT.parent)}")
+        print(f"Also wrote {PORTAL_TARGET}")
 
     meta = data["meta"]
     print(
